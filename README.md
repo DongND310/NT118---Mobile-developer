@@ -23,6 +23,7 @@
 | 3 | 21521113  | Châu Hoàng Tuệ Mẫn |Thành viên |[TueManChau309](https://github.com/TueManChau309)        |21521113@gm.uit.edu.vn   |
 
 ## ĐỒ ÁN CUỐI KÌ
+- Tên đề tài: Xây dựng ứng dụng MXH về short video
 - Framework: Flutter
 - UX/UI: <a href="https://www.figma.com/file/BfMECEUUiFOPxp0o5YXWNz/%5BNT118%5D-MOBILE?type=design&node-id=0%3A1&mode=design&t=fMKpjsw6MxIq7xeS-1"> Short Video Social Media
 - IDE: Visual Studio Code
