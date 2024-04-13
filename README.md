@@ -16,8 +16,8 @@
 * **Giảng viên**: ThS. Trần Hồng Nghi
 
 ## THÀNH VIÊN NHÓM
-|STT| MSSV      | Họ và Tên          |Chức Vụ    | Github                                                  | Email                   |
-|---|:---------:| ------------------:|----------:|--------------------------------------------------------:|-------------------------:
+|STT| MSSV      |      Họ và Tên     |Chức Vụ    |                  Github                                 | Email                   |
+|:-:|:---------:|:-------------------|:---------:|:--------------------------------------------------------|:-------------------------
 | 1 | 21521956  | Nguyễn Duy Đông    |Nhóm trưởng|[DongND310](https://github.com/DongND310)                |21521956@gm.uit.edu.vn   |
 | 2 | 21522663  | Trần Ái Thủy       |Thành viên |[Tranaithuy03](https://github.com/Tranaithuy03)          |21522663@gm.uit.edu.vn   |
 | 3 | 21521113  | Châu Hoàng Tuệ Mẫn |Thành viên |[TueManChau309](https://github.com/TueManChau309)        |21521113@gm.uit.edu.vn   |
