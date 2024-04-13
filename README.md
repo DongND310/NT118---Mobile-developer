@@ -15,9 +15,16 @@
 * **Năm học:** HK2 (2023 - 2024)
 * **Giảng viên**: ThS. Trần Hồng Nghi
 
+## THÀNH VIÊN NHÓM
+|STT| MSSV      | Họ và Tên          |Chức Vụ    | Github                                                  | Email                   |
+|---|:---------:| ------------------:|----------:|--------------------------------------------------------:|-------------------------:
+| 1 | 21521956  | Nguyễn Duy Đông    |Nhóm trưởng|[DongND310](https://github.com/DongND310)                |21521956@gm.uit.edu.vn   |
+| 2 | 21522663  | Trần Ái Thủy       |Thành viên |[Tranaithuy03](https://github.com/Tranaithuy03)          |21522663@gm.uit.edu.vn   |
+| 3 | 21521113  | Châu Hoàng Tuệ Mẫn |Thành viên |[TueManChau309](https://github.com/TueManChau309)        |21521113@gm.uit.edu.vn   |
+
 ## ĐỒ ÁN CUỐI KÌ
-- Ngôn ngữ: Flutter
-- UI Framework: Winform
+- Language: Flutter
+- UX/UI: <a href="https://www.figma.com/file/BfMECEUUiFOPxp0o5YXWNz/%5BNT118%5D-MOBILE?type=design&node-id=0%3A1&mode=design&t=fMKpjsw6MxIq7xeS-1"> Short Video Social Media
 - IDE: Visual Studio Code
 - Database: Firebase
 - File report: <a href=""> Final Report
