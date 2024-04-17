@@ -5,10 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mobile_project/constants.dart';
+import 'package:mobile_project/screen/login.dart';
 import 'verifyemail.dart';
 
-class ForgotPassScreen extends StatelessWidget {
-  const ForgotPassScreen({super.key});
+class SuccessNotiScreen extends StatelessWidget {
+  const SuccessNotiScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +34,14 @@ class ForgotPassScreen extends StatelessWidget {
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            SvgPicture.asset(
+                'assets/icons/Check-Circle--Streamline-Core.svg.svg'),
+            SizedBox(
+              height: 50,
+            ),
             Text(
-              'Quên mật khẩu',
+              'Thành công',
               style: TextStyle(
                 fontSize: 40,
                 color: Colors.blue,
@@ -44,8 +49,11 @@ class ForgotPassScreen extends StatelessWidget {
                 letterSpacing: 2,
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
             Text(
-              'Nhập địa chỉ email để nhận mã xác thực',
+              'Mật khẩu của bạn đã được thay đổi thành công',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -53,49 +61,31 @@ class ForgotPassScreen extends StatelessWidget {
                 letterSpacing: 0,
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0.0),
+            SizedBox(
+              height: 40,
+            ),
+            // button
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
+              },
               child: Container(
-                //height: MediaQuery.of(context).size.height,
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height,
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    //Email, password
-                    InputText(label: "Email", hint: "Nhập email người dùng"),
-
-                    SizedBox(
-                      height: 25,
-                    ),
-
-                    // button
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => VerifyEmailScreen()));
-                      },
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'TIẾP TỤC',
-                            style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                letterSpacing: 2),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                height: 50,
+                width: 340,
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Center(
+                  child: Text(
+                    'ĐĂNG NHẬP',
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 2),
+                  ),
                 ),
               ),
             ),
@@ -106,7 +96,7 @@ class ForgotPassScreen extends StatelessWidget {
   }
 }
 
-Widget InputText({label, hint, obscureText = false}) {
+Widget InputPass({label, hint, obscureText = true}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [

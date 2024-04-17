@@ -5,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mobile_project/constants.dart';
-import 'verifyemail.dart';
+import 'successnoti.dart';
 
-class ForgotPassScreen extends StatelessWidget {
-  const ForgotPassScreen({super.key});
+class ResetPassScreen extends StatelessWidget {
+  const ResetPassScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class ForgotPassScreen extends StatelessWidget {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
-              'Quên mật khẩu',
+              'Tạo mới mật khẩu',
               style: TextStyle(
                 fontSize: 40,
                 color: Colors.blue,
@@ -45,7 +45,7 @@ class ForgotPassScreen extends StatelessWidget {
               ),
             ),
             Text(
-              'Nhập địa chỉ email để nhận mã xác thực',
+              'Nhập mật khẩu mới',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -63,7 +63,10 @@ class ForgotPassScreen extends StatelessWidget {
                   children: [
                     SizedBox(height: 20),
                     //Email, password
-                    InputText(label: "Email", hint: "Nhập email người dùng"),
+                    InputPass(label: "Mật khẩu mới", hint: "Nhập mật khẩu mới"),
+                    InputPass(
+                        label: "Nhập lại mật khẩu",
+                        hint: "Nhập lại mật khẩu mới để xác nhận"),
 
                     SizedBox(
                       height: 25,
@@ -75,7 +78,7 @@ class ForgotPassScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => VerifyEmailScreen()));
+                                builder: (context) => SuccessNotiScreen()));
                       },
                       child: Container(
                         height: 50,
@@ -85,7 +88,7 @@ class ForgotPassScreen extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            'TIẾP TỤC',
+                            'XÁC NHẬN',
                             style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,
@@ -106,7 +109,7 @@ class ForgotPassScreen extends StatelessWidget {
   }
 }
 
-Widget InputText({label, hint, obscureText = false}) {
+Widget InputPass({label, hint, obscureText = true}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [

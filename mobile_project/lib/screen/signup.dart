@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'verifyemail.dart';
 import 'login.dart';
 import 'welcome.dart';
+import 'inputinfor.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -80,7 +81,7 @@ class SignUpScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => VerifyEmailScreen()));
+                                builder: (context) => InputInfoScreen()));
                       },
                       child: Container(
                         height: 55,
@@ -216,18 +217,19 @@ Widget InputText({label, hint, obscureText = false}) {
       TextField(
         obscureText: obscureText,
         decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(
-              fontSize: 12,
-              color: Colors.black45,
-            ),
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue),
-                borderRadius: BorderRadius.circular(5)),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue),
-                borderRadius: BorderRadius.circular(5))),
+          hintText: hint,
+          hintStyle: TextStyle(
+            fontSize: 12,
+            color: Colors.black45,
+          ),
+          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(width: 2, color: Colors.black12),
+              borderRadius: BorderRadius.circular(5)),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(width: 2, color: Colors.blue),
+              borderRadius: BorderRadius.circular(5)),
+        ),
       )
     ],
   );
@@ -247,18 +249,19 @@ Widget InputPass({label, hint, obscureText = true}) {
       TextField(
         obscureText: obscureText,
         decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(
-              fontSize: 12,
-              color: Colors.black45,
-            ),
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue),
-                borderRadius: BorderRadius.circular(5)),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue),
-                borderRadius: BorderRadius.circular(5))),
+          hintText: hint,
+          hintStyle: TextStyle(
+            fontSize: 12,
+            color: Colors.black45,
+          ),
+          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(width: 2, color: Colors.black12),
+              borderRadius: BorderRadius.circular(5)),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(width: 2, color: Colors.blue),
+              borderRadius: BorderRadius.circular(5)),
+        ),
       )
     ],
   );

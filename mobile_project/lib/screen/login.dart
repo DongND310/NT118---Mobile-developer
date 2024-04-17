@@ -262,11 +262,11 @@ Widget InputText({label, hint, obscureText = false}) {
             ),
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue),
+                borderSide: BorderSide(width: 2, color: Colors.black12),
                 borderRadius: BorderRadius.circular(5)),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue),
-                borderRadius: BorderRadius.circular(5))),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(width: 2, color: Colors.blue),
+                borderRadius: BorderRadius.circular(5)),),
       )
     ],
   );
@@ -291,13 +291,12 @@ Widget InputPass({label, hint, obscureText = true}) {
               fontSize: 12,
               color: Colors.black45,
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue),
+                borderSide: BorderSide(width: 2, color: Colors.black12),
                 borderRadius: BorderRadius.circular(5)),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue),
-                borderRadius: BorderRadius.circular(5))),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(width: 2, color: Colors.blue),
+                borderRadius: BorderRadius.circular(5)),),
       )
     ],
   );
