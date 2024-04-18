@@ -61,6 +61,9 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   final List<String> yearList =
       List.generate(2015 - 1970, (index) => (2015 - index).toString());
 
+  final List<String> nationList = [];
+  final List<String> gender = ["Nam", "Nữ"];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +83,6 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
         ),
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height,
         width: double.infinity,
         child: ListView(
             padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
@@ -119,6 +121,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                       hint: "Nhập họ và tên người dùng"),
                   InputText(label: "Số điện thoại", hint: "Nhập số điện thoại"),
 
+                  //dob
                   SizedBox(height: 20),
                   Text(
                     'Ngày sinh',
@@ -128,21 +131,59 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                         fontWeight: FontWeight.w500),
                   ),
                   SizedBox(height: 5),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      InputDropDown(options: dayList, hintText: "Ngày"),
+                      InputDropDown(
+                        options: dayList,
+                        hintText: "Ngày",
+                        width: 90,
+                      ),
                       SizedBox(width: 15),
-                      InputDropDown(options: monthList, hintText: "Tháng"),
+                      InputDropDown(
+                          options: monthList, hintText: "Tháng", width: 90),
                       SizedBox(width: 15),
-                      InputDropDown(options: yearList, hintText: "Năm"),
+                      InputDropDown(
+                          options: yearList, hintText: "Năm", width: 90),
                     ],
                   ),
 
-                  // InputDropDown(hint: "Năm"),
+                  //gender
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Giới tính',
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      RadioButtonList(
+                        options: gender,
+                        selectedOption: "Nam",
+                      )
+                    ],
+                  ),
+
+                  //nation
+                  SizedBox(height: 20),
+                  Text(
+                    'Quốc gia',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(height: 5),
+                  InputDropDown(
+                      options: nationList,
+                      hintText: "Quốc gia",
+                      width: double.infinity),
+
                   SizedBox(
-                    height: 5,
+                    height: 25,
                   ),
 
                   SizedBox(
@@ -221,12 +262,14 @@ class InputDropDown extends StatefulWidget {
   final List<String> options;
   final String? hintText;
   final ValueChanged<String>? onChanged;
+  final double? width;
 
   const InputDropDown({
     Key? key,
     required this.options,
     this.hintText,
     this.onChanged,
+    this.width,
   }) : super(key: key);
 
   @override
@@ -239,7 +282,7 @@ class _InputDropDownState extends State<InputDropDown> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 90,
+      width: widget.width,
       child: InputDecorator(
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -280,6 +323,63 @@ class _InputDropDownState extends State<InputDropDown> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class RadioButtonList extends StatefulWidget {
+  final List<String> options;
+  final String? selectedOption;
+  final ValueChanged<String>? onChanged;
+
+  const RadioButtonList({
+    Key? key,
+    required this.options,
+    this.selectedOption,
+    this.onChanged,
+  }) : super(key: key);
+
+  @override
+  _RadioButtonListState createState() => _RadioButtonListState();
+}
+
+class _RadioButtonListState extends State<RadioButtonList> {
+  String? _selectedOption;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedOption = widget.selectedOption;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: widget.options.map((option) {
+        return Row(
+          children: [
+            Radio<String>(
+              value: option,
+              groupValue: _selectedOption,
+              onChanged: (value) {
+                setState(() {
+                  _selectedOption = value;
+                });
+                if (widget.onChanged != null) {
+                  widget.onChanged!(value!);
+                }
+              },
+              activeColor: Colors.blue,
+            ),
+            Text(option,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                )),
+          ],
+        );
+      }).toList(),
     );
   }
 }
