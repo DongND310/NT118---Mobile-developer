@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mobile_project/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'verifyemail.dart';
 import 'login.dart';
 import 'welcome.dart';
-import 'inputinfor.dart';
+import 'inputinfo.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -34,170 +31,168 @@ class SignUpScreen extends StatelessWidget {
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: double.infinity,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              'Xin chào!',
-              style: TextStyle(
-                fontSize: 40,
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
+        child: ListView(
+            padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
+            children: [
+              Text(
+                'Xin chào!',
+                style: TextStyle(
+                  fontSize: 40,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
               ),
-            ),
-            Text(
-              'Tạo tài khoản mới',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.normal,
-                letterSpacing: 0,
+              Text(
+                'Tạo tài khoản mới',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal,
+                  letterSpacing: 0,
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0.0),
-              child: Container(
-                //height: MediaQuery.of(context).size.height,
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height,
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    //Email, password
-                    InputText(label: "Email", hint: "Nhập email người dùng"),
-                    InputPass(label: "Mật khẩu", hint: "Nhập mật khẩu"),
-                    InputPass(
-                        label: "Nhập lại mật khẩu",
-                        hint: "Nhập lại mật khẩu để xác nhận"),
-                    SizedBox(
-                      height: 40,
-                    ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0.0),
+                child: Container(
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
+                      //Email, password
+                      InputText(label: "Email", hint: "Nhập email người dùng"),
+                      InputPass(label: "Mật khẩu", hint: "Nhập mật khẩu"),
+                      InputPass(
+                          label: "Nhập lại mật khẩu",
+                          hint: "Nhập lại mật khẩu để xác nhận"),
+                      SizedBox(
+                        height: 30,
+                      ),
 
-                    // signup button
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => InputInfoScreen()));
-                      },
-                      child: Container(
-                        height: 55,
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'ĐĂNG KÝ',
-                            style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                letterSpacing: 2),
+                      // signup button
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => InputInfoScreen(
+                                        title: '',
+                                      )));
+                        },
+                        child: Container(
+                          height: 55,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'ĐĂNG KÝ',
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 2),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 60),
+                      SizedBox(height: 40),
 
-                    // signup gg/fb
-                    Text(
-                      'Hoặc đăng ký với',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: const Color.fromARGB(190, 0, 0, 0),
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                              width: 150,
-                              height: 65,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                // border: Border.all(color: Colors.black38),
-                                borderRadius: BorderRadius.circular(5),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 0.5,
-                                    blurRadius: 8,
-                                    offset: Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              child: Image(
-                                  image: AssetImage('assets/images/gg.png')),
-                            ),
-                            Container(
-                              width: 150,
-                              height: 65,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                // border: Border.all(color: Colors.blue),
-                                borderRadius: BorderRadius.circular(5),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 0.5,
-                                    blurRadius: 8,
-                                    offset: Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              child: Image(
-                                  image: AssetImage('assets/images/fb.png')),
-                            ),
-                          ]),
-                    ),
-
-                    // login
-                    SizedBox(height: 60),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Đã có tài khoản? ',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: const Color.fromARGB(190, 0, 0, 0),
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 0,
-                          ),
+                      // signup gg/fb
+                      Text(
+                        'Hoặc đăng ký với',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: const Color.fromARGB(190, 0, 0, 0),
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 0,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginScreen()));
-                          },
-                          child: Text(
-                            'Đăng nhập',
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
+                                width: 110,
+                                height: 65,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  // border: Border.all(color: Colors.black38),
+                                  borderRadius: BorderRadius.circular(5),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 0.5,
+                                      blurRadius: 8,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Image(
+                                    image: AssetImage('assets/images/gg.png')),
+                              ),
+                              Container(
+                                width: 110,
+                                height: 65,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  // border: Border.all(color: Colors.blue),
+                                  borderRadius: BorderRadius.circular(5),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 0.5,
+                                      blurRadius: 8,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Image(
+                                    image: AssetImage('assets/images/fb.png')),
+                              ),
+                            ]),
+                      ),
+
+                      // login
+                      SizedBox(height: 40),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Đã có tài khoản? ',
                             style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: const Color.fromARGB(190, 0, 0, 0),
+                              fontWeight: FontWeight.w500,
                               letterSpacing: 0,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()));
+                            },
+                            child: Text(
+                              'Đăng nhập',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ]),
-        ),
+            ]),
       ),
     );
   }

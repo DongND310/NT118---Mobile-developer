@@ -1,10 +1,6 @@
-import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:mobile_project/constants.dart';
 import 'resetpass.dart';
 
 class VerifyEmailScreen extends StatelessWidget {
@@ -32,136 +28,150 @@ class VerifyEmailScreen extends StatelessWidget {
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: double.infinity,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              'Mã xác thực',
-              style: TextStyle(
-                fontSize: 40,
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
+        child: ListView(
+            padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
+            children: [
+              Text(
+                'Mã xác thực',
+                style: TextStyle(
+                  fontSize: 40,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Text(
-              'Một mã xác thực vừa được gửi đến email ',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.normal,
-                letterSpacing: 0,
+              SizedBox(
+                height: 15,
               ),
-            ),
-            Text(
-              '@gmail.com',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0,
+              Text(
+                'Một mã xác thực vừa được gửi đến',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal,
+                  letterSpacing: 0,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Text(
-              'Nhập mã xác thực để tiếp tục',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.normal,
-                letterSpacing: 0,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0.0),
-              child: Container(
-                //height: MediaQuery.of(context).size.height,
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height,
-                child: Column(
-                  children: [
-                    SizedBox(height: 30),
-
-                    //Email
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InputCode(first: true, last: false, context: context),
-                        InputCode(first: false, last: false, context: context),
-                        InputCode(first: false, last: false, context: context),
-                        InputCode(first: false, last: false, context: context),
-                        InputCode(first: false, last: false, context: context),
-                        InputCode(first: false, last: true, context: context),
-                      ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'email ',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
+                      letterSpacing: 0,
                     ),
-
-                    SizedBox(
-                      height: 25,
+                  ),
+                  Text(
+                    '@gmail.com',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0,
                     ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                'Nhập mã xác thực để tiếp tục',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal,
+                  letterSpacing: 0,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0.0),
+                child: Container(
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 30),
 
-                    // button
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ResetPassScreen()));
-                      },
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'XÁC NHẬN',
-                            style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                letterSpacing: 2),
+                      //Email
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InputCode(first: true, last: false, context: context),
+                          InputCode(
+                              first: false, last: false, context: context),
+                          InputCode(
+                              first: false, last: false, context: context),
+                          InputCode(
+                              first: false, last: false, context: context),
+                          InputCode(
+                              first: false, last: false, context: context),
+                          InputCode(first: false, last: true, context: context),
+                        ],
+                      ),
+
+                      SizedBox(
+                        height: 25,
+                      ),
+
+                      // button
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ResetPassScreen()));
+                        },
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'XÁC NHẬN',
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 2),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Chưa nhận được mã? ',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: const Color.fromARGB(190, 0, 0, 0),
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 0,
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Chưa nhận được mã? ',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: const Color.fromARGB(190, 0, 0, 0),
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'Gửi lại mã',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0,
+                          Text(
+                            'Gửi lại mã',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0,
+                            ),
                           ),
-                        ),
-                        //
-                      ],
-                    ),
-                  ],
+                          //
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ]),
-        ),
+            ]),
       ),
     );
   }
@@ -182,9 +192,9 @@ class InputCode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: 50,
       child: AspectRatio(
-        aspectRatio: 1.0,
+        aspectRatio: 3.5 / 4.0,
         child: TextField(
           autofocus: true,
           onChanged: (value) {

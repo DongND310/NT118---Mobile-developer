@@ -1,12 +1,7 @@
-import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/screen/login.dart';
-import 'verifyemail.dart';
 
 class SuccessNotiScreen extends StatelessWidget {
   const SuccessNotiScreen({super.key});
@@ -34,7 +29,11 @@ class SuccessNotiScreen extends StatelessWidget {
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            SizedBox(
+              height: 120,
+            ),
             SvgPicture.asset(
                 'assets/icons/Check-Circle--Streamline-Core.svg.svg'),
             SizedBox(
