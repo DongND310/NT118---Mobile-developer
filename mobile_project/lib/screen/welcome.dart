@@ -26,7 +26,7 @@ class WelcomeScreen extends StatelessWidget {
               width: 300,
             ),
             SizedBox(
-              height: 20,
+              height: 30,
             ),
             Text(
               'Hello!',
@@ -37,7 +37,7 @@ class WelcomeScreen extends StatelessWidget {
                   letterSpacing: 5),
             ),
             SizedBox(
-              height: 20,
+              height: 30,
             ),
             GestureDetector(
               onTap: () {
@@ -45,7 +45,7 @@ class WelcomeScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => LoginScreen()));
               },
               child: Container(
-                height: 40,
+                height: 55,
                 width: 240,
                 decoration: BoxDecoration(
                   color: Colors.blue,
@@ -55,7 +55,7 @@ class WelcomeScreen extends StatelessWidget {
                   child: Text(
                     'LOGIN',
                     style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 25,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         letterSpacing: 2),
@@ -64,7 +64,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 15,
             ),
             GestureDetector(
               onTap: () {
@@ -72,7 +72,7 @@ class WelcomeScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => SignUpScreen()));
               },
               child: Container(
-                height: 40,
+                height: 55,
                 width: 240,
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -82,7 +82,7 @@ class WelcomeScreen extends StatelessWidget {
                   child: Text(
                     'SIGNUP',
                     style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 25,
                         fontWeight: FontWeight.bold,
                         color: Colors.blue,
                         letterSpacing: 2),
