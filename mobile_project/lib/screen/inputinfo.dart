@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
+import 'regisnoti.dart';
+import 'package:http/http.dart' as http;
 
 class InputInfoScreen extends StatefulWidget {
   InputInfoScreen({key, required this.title}) : super(key: key);
@@ -61,7 +65,30 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   final List<String> yearList =
       List.generate(2015 - 1970, (index) => (2015 - index).toString());
 
-  final List<String> nationList = [];
+  List<String> nationList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    final response =
+        await http.get(Uri.parse('https://restcountries.com/v3.1/all'));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      setState(() {
+        nationList = data
+            .map<String>((country) => country['name']['common'] as String)
+            .toList();
+        nationList.sort();
+      });
+    } else {
+      throw Exception('Failed to load countries');
+    }
+  }
+
   final List<String> gender = ["Nam", "Nữ"];
 
   @override
@@ -108,13 +135,12 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                   letterSpacing: 0,
                 ),
               ),
-
-              // user name, name, phone,...
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 10),
-                  //input
+
+                  // user name, name, phone,...
                   InputText(label: "Tên tài khoản", hint: "Nhập tên tài khoản"),
                   InputText(
                       label: "Tên người dùng",
@@ -132,26 +158,24 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                   ),
                   SizedBox(height: 5),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InputDropDown(
                         options: dayList,
                         hintText: "Ngày",
-                        width: 90,
+                        width: 95,
                       ),
-                      SizedBox(width: 15),
                       InputDropDown(
-                          options: monthList, hintText: "Tháng", width: 90),
-                      SizedBox(width: 15),
+                          options: monthList, hintText: "Tháng", width: 95),
                       InputDropDown(
-                          options: yearList, hintText: "Năm", width: 90),
+                          options: yearList, hintText: "Năm", width: 95),
                     ],
                   ),
 
                   //gender
                   SizedBox(height: 20),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
                         'Giới tính',
@@ -159,6 +183,9 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                             fontSize: 18,
                             color: Colors.black,
                             fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(
+                        width: 50,
                       ),
                       RadioButtonList(
                         options: gender,
@@ -178,9 +205,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                   ),
                   SizedBox(height: 5),
                   InputDropDown(
-                      options: nationList,
-                      hintText: "Quốc gia",
-                      width: double.infinity),
+                      options: nationList, hintText: "Quốc gia", width: 400),
 
                   SizedBox(
                     height: 25,
@@ -192,10 +217,10 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                   // button
                   GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => HomeScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterSuccessScreen()));
                     },
                     child: Container(
                       height: 50,
@@ -316,7 +341,13 @@ class _InputDropDownState extends State<InputDropDown> {
             items: widget.options.map((option) {
               return DropdownMenuItem(
                 value: option,
-                child: Text(option),
+                //child: Text(option),
+                child: SizedBox(
+                    width: widget.width! * 0.5,
+                    child: Text(
+                      option,
+                      overflow: TextOverflow.ellipsis,
+                    )),
               );
             }).toList(),
             menuMaxHeight: 250,
