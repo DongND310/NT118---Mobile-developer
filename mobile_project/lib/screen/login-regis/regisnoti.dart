@@ -1,6 +1,7 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/screen/homepage/homepage.dart';
+import 'package:mobile_project/components/button.dart';
 
 class RegisterSuccessScreen extends StatelessWidget {
   const RegisterSuccessScreen({super.key});
@@ -64,33 +65,15 @@ class RegisterSuccessScreen extends StatelessWidget {
               height: 40,
             ),
             // button
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomePageScreen()));
-              },
-              child: Container(
-                height: 60,
-                width: 340,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Center(
-                  child: Text(
-                    'ĐẾN TRANG CHỦ',
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 2),
-                  ),
-                ),
-              ),
+            MyButton(
+              onTap: SuccessRegis,
+              text: "ĐẾN TRANG CHỦ",
             ),
           ]),
         ),
       ),
     );
   }
+
+  SuccessRegis() {}
 }

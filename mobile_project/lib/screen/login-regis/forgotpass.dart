@@ -1,5 +1,6 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/components/inputtext.dart';
+import 'package:mobile_project/components/button.dart';
 
 import 'package:flutter/material.dart';
 import 'verifyemail.dart';
@@ -69,30 +70,9 @@ class ForgotPassScreen extends StatelessWidget {
                       ),
 
                       // button
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => VerifyEmailScreen()));
-                        },
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'TIẾP TỤC',
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  letterSpacing: 2),
-                            ),
-                          ),
-                        ),
+                      MyButton(
+                        onTap: forgotPassword(),
+                        text: "TIẾP TỤC",
                       ),
                     ],
                   ),
@@ -102,4 +82,6 @@ class ForgotPassScreen extends StatelessWidget {
       ),
     );
   }
+
+  forgotPassword() {}
 }

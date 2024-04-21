@@ -1,4 +1,5 @@
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile_project/components/button.dart';
 
 import 'package:flutter/material.dart';
 import 'resetpass.dart';
@@ -117,30 +118,9 @@ class VerifyEmailScreen extends StatelessWidget {
                       ),
 
                       // button
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ResetPassScreen()));
-                        },
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'XÁC NHẬN',
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  letterSpacing: 2),
-                            ),
-                          ),
-                        ),
+                      MyButton(
+                        onTap: verifyEmail,
+                        text: "XÁC NHẬN",
                       ),
                       SizedBox(height: 30),
                       Row(
@@ -175,6 +155,8 @@ class VerifyEmailScreen extends StatelessWidget {
       ),
     );
   }
+
+  verifyEmail() {}
 }
 
 class InputCode extends StatelessWidget {
