@@ -1,10 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter/material.dart';
-import 'package:mobile_project/screen/login.dart';
 
-class SuccessNotiScreen extends StatelessWidget {
-  const SuccessNotiScreen({super.key});
+class HomePageScreen extends StatelessWidget {
+  HomePageScreen({super.key});
+
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,8 @@ class SuccessNotiScreen extends StatelessWidget {
               height: 10,
             ),
             Text(
-              'Mật khẩu của bạn đã được thay đổi thành công',
+              'Đăng nhập thành công, chào mừng ' + user.email!,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -64,30 +67,6 @@ class SuccessNotiScreen extends StatelessWidget {
               height: 40,
             ),
             // button
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()));
-              },
-              child: Container(
-                height: 50,
-                width: 340,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Center(
-                  child: Text(
-                    'ĐĂNG NHẬP',
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 2),
-                  ),
-                ),
-              ),
-            ),
           ]),
         ),
       ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:mobile_project/components/inputtext.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +67,10 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       List.generate(2015 - 1970, (index) => (2015 - index).toString());
 
   List<String> nationList = [];
+
+  final accountnameController = TextEditingController();
+  final usernameController = TextEditingController();
+  final phoneController = TextEditingController();
 
   @override
   void initState() {
@@ -141,11 +146,21 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                   SizedBox(height: 10),
 
                   // user name, name, phone,...
-                  InputText(label: "Tên tài khoản", hint: "Nhập tên tài khoản"),
-                  InputText(
+                  MyTextField(
+                      controller: accountnameController,
+                      label: "Tên tài khoản",
+                      hint: "Nhập tên tài khoản",
+                      obscureText: false),
+                  MyTextField(
+                      controller: usernameController,
                       label: "Tên người dùng",
-                      hint: "Nhập họ và tên người dùng"),
-                  InputText(label: "Số điện thoại", hint: "Nhập số điện thoại"),
+                      hint: "Nhập tên người dùng",
+                      obscureText: false),
+                  MyTextField(
+                      controller: phoneController,
+                      label: "Số điện thoại",
+                      hint: "Nhập số điện thoại người dùng",
+                      obscureText: false),
 
                   //dob
                   SizedBox(height: 20),
@@ -249,38 +264,6 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       ),
     );
   }
-}
-
-Widget InputText({label, hint, obscureText = false}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(height: 20),
-      Text(
-        label,
-        style: TextStyle(
-            fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500),
-      ),
-      SizedBox(height: 5),
-      TextField(
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(
-            fontSize: 12,
-            color: Colors.black45,
-          ),
-          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Colors.black12),
-              borderRadius: BorderRadius.circular(5)),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Colors.blue),
-              borderRadius: BorderRadius.circular(5)),
-        ),
-      )
-    ],
-  );
 }
 
 class InputDropDown extends StatefulWidget {

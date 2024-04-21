@@ -1,13 +1,66 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'login.dart';
+import 'package:mobile_project/components/inputtext.dart';
+import 'package:flutter/material.dart';
+import 'forgotpass.dart';
+import 'signup.dart';
 import 'welcome.dart';
-import 'inputinfo.dart';
 
-class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  void signUserIn() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+              child: CircularProgressIndicator(
+            color: Colors.blue,
+          ));
+        });
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text, password: passwordController.text);
+
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      if (e.code == 'user-not-found') {
+        wrongEmailMessage();
+      } else if (e.code == 'wrong-password') {
+        wrongPassWordMessage();
+      }
+    }
+  }
+
+  void wrongEmailMessage() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Text('Tài khoản Email không tồn tại.'),
+          );
+        });
+  }
+
+  void wrongPassWordMessage() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Text('Sai mật khẩu, vui lòng nhập lại mật khẩu.'),
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +88,7 @@ class SignUpScreen extends StatelessWidget {
             padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
             children: [
               Text(
-                'Xin chào!',
+                'Chào mừng!',
                 style: TextStyle(
                   fontSize: 40,
                   color: Colors.blue,
@@ -44,7 +97,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                'Tạo tài khoản mới',
+                'Đăng nhập để tiếp tục',
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black,
@@ -60,25 +113,71 @@ class SignUpScreen extends StatelessWidget {
                     children: [
                       SizedBox(height: 20),
                       //Email, password
-                      InputText(label: "Email", hint: "Nhập email người dùng"),
-                      InputPass(label: "Mật khẩu", hint: "Nhập mật khẩu"),
-                      InputPass(
-                          label: "Nhập lại mật khẩu",
-                          hint: "Nhập lại mật khẩu để xác nhận"),
+                      MyTextField(
+                          controller: emailController,
+                          label: "Email",
+                          hint: "Nhập email người dùng",
+                          obscureText: false),
+                      MyTextField(
+                          controller: passwordController,
+                          label: "Password",
+                          hint: "Nhập mật khẩu",
+                          obscureText: true),
+
                       SizedBox(
-                        height: 30,
+                        height: 5,
                       ),
 
-                      // signup button
+                      //remember - forgot pass
+                      Container(
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                child: Row(
+                                  children: [
+                                    Checkbox(
+                                      value: false,
+                                      onChanged: (newValue) {
+                                        print('New value: $newValue');
+                                      },
+                                      activeColor: Colors.blue,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(45)),
+                                      // visualDensity: VisualDensity.compact,
+                                    ),
+                                    Text(
+                                      'Nhớ mật khẩu?',
+                                      style: TextStyle(
+                                          color: Colors.black87, fontSize: 13),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ForgotPassScreen()));
+                                },
+                                child: Text(
+                                  'Quên mật khẩu?',
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              )
+                            ]),
+                      ),
+                      SizedBox(height: 10),
+
+                      // login button
                       GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => InputInfoScreen(
-                                        title: '',
-                                      )));
-                        },
+                        onTap: signUserIn,
                         child: Container(
                           height: 55,
                           decoration: BoxDecoration(
@@ -87,7 +186,7 @@ class SignUpScreen extends StatelessWidget {
                           ),
                           child: Center(
                             child: Text(
-                              'ĐĂNG KÝ',
+                              'ĐĂNG NHẬP',
                               style: TextStyle(
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
@@ -99,9 +198,9 @@ class SignUpScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 40),
 
-                      // signup gg/fb
+                      // login gg/fb
                       Text(
-                        'Hoặc đăng ký với',
+                        'Hoặc đăng nhập với',
                         style: TextStyle(
                           fontSize: 15,
                           color: const Color.fromARGB(190, 0, 0, 0),
@@ -155,13 +254,13 @@ class SignUpScreen extends StatelessWidget {
                             ]),
                       ),
 
-                      // login
+                      // sign up
                       SizedBox(height: 40),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Đã có tài khoản? ',
+                            'Chưa có tài khoản? ',
                             style: TextStyle(
                               fontSize: 15,
                               color: const Color.fromARGB(190, 0, 0, 0),
@@ -174,10 +273,10 @@ class SignUpScreen extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => LoginScreen()));
+                                      builder: (context) => SignUpScreen()));
                             },
                             child: Text(
-                              'Đăng nhập',
+                              'Đăng ký',
                               style: TextStyle(
                                 fontSize: 15,
                                 color: Colors.blue,
@@ -196,68 +295,4 @@ class SignUpScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget InputText({label, hint, obscureText = false}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(height: 20),
-      Text(
-        label,
-        style: TextStyle(
-            fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500),
-      ),
-      SizedBox(height: 5),
-      TextField(
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(
-            fontSize: 12,
-            color: Colors.black45,
-          ),
-          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Colors.black12),
-              borderRadius: BorderRadius.circular(5)),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Colors.blue),
-              borderRadius: BorderRadius.circular(5)),
-        ),
-      )
-    ],
-  );
-}
-
-Widget InputPass({label, hint, obscureText = true}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(height: 20),
-      Text(
-        label,
-        style: TextStyle(
-            fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500),
-      ),
-      SizedBox(height: 5),
-      TextField(
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(
-            fontSize: 12,
-            color: Colors.black45,
-          ),
-          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Colors.black12),
-              borderRadius: BorderRadius.circular(5)),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Colors.blue),
-              borderRadius: BorderRadius.circular(5)),
-        ),
-      )
-    ],
-  );
 }

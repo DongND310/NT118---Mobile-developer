@@ -1,10 +1,12 @@
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile_project/components/inputtext.dart';
 
 import 'package:flutter/material.dart';
-import 'verifyemail.dart';
+import 'successnoti.dart';
 
-class ForgotPassScreen extends StatelessWidget {
-  const ForgotPassScreen({super.key});
+class ResetPassScreen extends StatelessWidget {
+  ResetPassScreen({super.key});
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class ForgotPassScreen extends StatelessWidget {
             padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
             children: [
               Text(
-                'Quên mật khẩu',
+                'Tạo mới \nmật khẩu',
                 style: TextStyle(
                   fontSize: 40,
                   color: Colors.blue,
@@ -39,8 +41,11 @@ class ForgotPassScreen extends StatelessWidget {
                   letterSpacing: 2,
                 ),
               ),
+              SizedBox(
+                height: 15,
+              ),
               Text(
-                'Nhập địa chỉ email để nhận mã xác thực',
+                'Nhập mật khẩu mới',
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black,
@@ -56,10 +61,19 @@ class ForgotPassScreen extends StatelessWidget {
                     children: [
                       SizedBox(height: 20),
                       //Email, password
-                      InputText(label: "Email", hint: "Nhập email người dùng"),
+                      MyTextField(
+                          controller: passwordController,
+                          label: "Mật khẩu mới",
+                          hint: "Nhập mật khẩu mới",
+                          obscureText: true),
 
+                      MyTextField(
+                          controller: passwordController,
+                          label: "Nhập lại mật khẩu mới",
+                          hint: "Nhập lại mật khẩu vừa tạo để xác nhận",
+                          obscureText: true),
                       SizedBox(
-                        height: 35,
+                        height: 25,
                       ),
 
                       // button
@@ -68,7 +82,7 @@ class ForgotPassScreen extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => VerifyEmailScreen()));
+                                  builder: (context) => SuccessNotiScreen()));
                         },
                         child: Container(
                           height: 50,
@@ -78,7 +92,7 @@ class ForgotPassScreen extends StatelessWidget {
                           ),
                           child: Center(
                             child: Text(
-                              'TIẾP TỤC',
+                              'XÁC NHẬN',
                               style: TextStyle(
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
@@ -96,36 +110,4 @@ class ForgotPassScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget InputText({label, hint, obscureText = false}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(height: 20),
-      Text(
-        label,
-        style: TextStyle(
-            fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500),
-      ),
-      SizedBox(height: 5),
-      TextField(
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(
-            fontSize: 12,
-            color: Colors.black45,
-          ),
-          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Colors.black12),
-              borderRadius: BorderRadius.circular(5)),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Colors.blue),
-              borderRadius: BorderRadius.circular(5)),
-        ),
-      )
-    ],
-  );
 }

@@ -1,10 +1,12 @@
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile_project/components/inputtext.dart';
 
 import 'package:flutter/material.dart';
-import 'successnoti.dart';
+import 'verifyemail.dart';
 
-class ResetPassScreen extends StatelessWidget {
-  const ResetPassScreen({super.key});
+class ForgotPassScreen extends StatelessWidget {
+  ForgotPassScreen({super.key});
+  final usernameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class ResetPassScreen extends StatelessWidget {
             padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
             children: [
               Text(
-                'Tạo mới \nmật khẩu',
+                'Quên mật khẩu',
                 style: TextStyle(
                   fontSize: 40,
                   color: Colors.blue,
@@ -39,11 +41,8 @@ class ResetPassScreen extends StatelessWidget {
                   letterSpacing: 2,
                 ),
               ),
-              SizedBox(
-                height: 15,
-              ),
               Text(
-                'Nhập mật khẩu mới',
+                'Nhập địa chỉ email để nhận mã xác thực',
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black,
@@ -59,13 +58,14 @@ class ResetPassScreen extends StatelessWidget {
                     children: [
                       SizedBox(height: 20),
                       //Email, password
-                      InputPass(
-                          label: "Mật khẩu mới", hint: "Nhập mật khẩu mới"),
-                      InputPass(
-                          label: "Nhập lại mật khẩu",
-                          hint: "Nhập lại mật khẩu mới để xác nhận"),
+
+                      MyTextField(
+                          controller: usernameController,
+                          label: "Email",
+                          hint: "Nhập email người dùng",
+                          obscureText: false),
                       SizedBox(
-                        height: 25,
+                        height: 35,
                       ),
 
                       // button
@@ -74,7 +74,7 @@ class ResetPassScreen extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SuccessNotiScreen()));
+                                  builder: (context) => VerifyEmailScreen()));
                         },
                         child: Container(
                           height: 50,
@@ -84,7 +84,7 @@ class ResetPassScreen extends StatelessWidget {
                           ),
                           child: Center(
                             child: Text(
-                              'XÁC NHẬN',
+                              'TIẾP TỤC',
                               style: TextStyle(
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
@@ -102,36 +102,4 @@ class ResetPassScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget InputPass({label, hint, obscureText = true}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(height: 20),
-      Text(
-        label,
-        style: TextStyle(
-            fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500),
-      ),
-      SizedBox(height: 5),
-      TextField(
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(
-            fontSize: 12,
-            color: Colors.black45,
-          ),
-          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Colors.black12),
-              borderRadius: BorderRadius.circular(5)),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Colors.blue),
-              borderRadius: BorderRadius.circular(5)),
-        ),
-      )
-    ],
-  );
 }
