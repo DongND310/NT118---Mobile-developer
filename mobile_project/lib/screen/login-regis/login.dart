@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/components/inputtext.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_project/screen/homepage/homepage.dart';
 import 'forgotpass.dart';
 import 'signup.dart';
 import 'welcome.dart';
@@ -32,32 +33,34 @@ class _LoginScreenState extends State<LoginScreen> {
           email: emailController.text, password: passwordController.text);
 
       Navigator.pop(context);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomePageScreen()));
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
-      if (e.code == 'user-not-found') {
-        wrongEmailMessage();
-      } else if (e.code == 'wrong-password') {
-        wrongPassWordMessage();
+      String errorMessage = 'Failed to sign in';
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case 'user-not-found':
+            errorMessage = 'No user found for that email.';
+            break;
+          case 'wrong-password':
+            errorMessage = 'Wrong password provided for that user.';
+            break;
+          default:
+            errorMessage = e.message ?? 'An error occurred while signing in.';
+        }
       }
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(errorMessage)));
     }
   }
 
-  void wrongEmailMessage() {
+  void wrongMessage(String errorMessage) {
     showDialog(
         context: context,
         builder: (context) {
-          return const AlertDialog(
-            title: Text('Tài khoản Email không tồn tại.'),
-          );
-        });
-  }
-
-  void wrongPassWordMessage() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const AlertDialog(
-            title: Text('Sai mật khẩu, vui lòng nhập lại mật khẩu.'),
+          return AlertDialog(
+            title: Text(errorMessage),
           );
         });
   }
