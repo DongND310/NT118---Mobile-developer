@@ -1,17 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile_project/screen/homepage/homepage.dart';
 import 'login.dart';
 import 'welcome.dart';
 import 'inputinfo.dart';
 import 'package:mobile_project/components/inputtext.dart';
+import 'package:mobile_project/components/button.dart';
 
-class SignUpScreen extends StatelessWidget {
+import 'package:firebase_auth/firebase_auth.dart';
+
+class SignUpScreen extends StatefulWidget {
   SignUpScreen({super.key});
 
-  final usernameController = TextEditingController();
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmpasswordController = TextEditingController();
+
+  void signUserUp() async {
+    // var errorMessage;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+              child: CircularProgressIndicator(
+            color: Colors.blue,
+          ));
+        });
+    try {
+      if (passwordController.text == confirmpasswordController.text) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text);
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => InputInfoScreen(title: "")));
+      } else {
+        wrongMessage("Mật khẩu không trùng khớp.");
+      }
+
+      // Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      wrongMessage(e.code);
+    }
+  }
+
+  void wrongMessage(String errorMessage) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(errorMessage),
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +113,7 @@ class SignUpScreen extends StatelessWidget {
                       SizedBox(height: 20),
 
                       MyTextField(
-                          controller: usernameController,
+                          controller: emailController,
                           label: "Email",
                           hint: "Nhập email người dùng",
                           obscureText: false),
@@ -77,7 +125,7 @@ class SignUpScreen extends StatelessWidget {
                           obscureText: true),
 
                       MyTextField(
-                          controller: passwordController,
+                          controller: confirmpasswordController,
                           label: "Nhập lại mật khẩu",
                           hint: "Nhập lại mật khẩu để xác nhận",
                           obscureText: true),
@@ -86,33 +134,9 @@ class SignUpScreen extends StatelessWidget {
                         height: 30,
                       ),
 
-                      // signup button
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => InputInfoScreen(
-                                        title: '',
-                                      )));
-                        },
-                        child: Container(
-                          height: 55,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'ĐĂNG KÝ',
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  letterSpacing: 2),
-                            ),
-                          ),
-                        ),
+                      MyButton(
+                        onTap: signUserUp,
+                        text: "ĐĂNG KÝ",
                       ),
                       SizedBox(height: 40),
 
