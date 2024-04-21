@@ -33,6 +33,8 @@ class SearchScreen extends StatefulWidget {
   ];
   final bool showmore = false;
   final bool showresult= false;
+  final String account ="Account";
+  final String descript ="description";
   final List<String> hashtag = ["#hastag1", "#hashtag2"];
   @override
   State<StatefulWidget> createState() => _SearchScreenState();
@@ -72,11 +74,11 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                       ),
                       SizedBox(
-                        width: double.maxFinite,
-                        height: 70,
+                        height: double.maxFinite,
                         child: TabBarView(
                           children: [
                             Container(
+                                height: double.maxFinite,
                                 padding:  EdgeInsets.only(left: 10, right: 5),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -102,6 +104,36 @@ class _SearchScreenState extends State<SearchScreen> {
                                               width: 30,
                                               height: 30,
                                             )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: 60,
+                                          height: 60,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(color: Colors.black, width: 2),
+                                          ),
+                                          child: ClipOval(
+                                            child: Image.network(
+                                              'https://i.pinimg.com/736x/fd/7f/48/fd7f480aa83946195f004f34a0da9ad8.jpg',
+                                              width: 60,
+                                              height: 60,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 40),
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(widget.account, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                            Text(widget.descript, style: TextStyle(fontSize: 20)),
                                           ],
                                         )
                                       ],
