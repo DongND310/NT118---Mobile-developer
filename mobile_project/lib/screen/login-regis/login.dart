@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/components/inputtext.dart';
+import 'package:mobile_project/components/button.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/screen/homepage/homepage.dart';
 import 'forgotpass.dart';
@@ -179,25 +180,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: 10),
 
                       // login button
-                      GestureDetector(
+                      MyButton(
                         onTap: signUserIn,
-                        child: Container(
-                          height: 55,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'ĐĂNG NHẬP',
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  letterSpacing: 2),
-                            ),
-                          ),
-                        ),
+                        text: "ĐĂNG NHẬP",
                       ),
                       SizedBox(height: 40),
 
