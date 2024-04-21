@@ -127,7 +127,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(width: 40),
+                                        const SizedBox(width: 40),
                                         Column(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           crossAxisAlignment: CrossAxisAlignment.start,
