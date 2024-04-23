@@ -39,7 +39,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => InputInfoScreen(title: "")));
+                builder: (context) => InputInfoScreen(
+                      email: emailController.text,
+                    )));
       } else {
         wrongMessage("Mật khẩu không trùng khớp.");
       }

@@ -1,17 +1,17 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobile_project/components/inputtext.dart';
 import 'package:mobile_project/components/button.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
-import 'regisnoti.dart';
+import 'package:mobile_project/screen/login-regis/successnoti.dart';
 import 'package:http/http.dart' as http;
 
 class InputInfoScreen extends StatefulWidget {
-  InputInfoScreen({key, required this.title}) : super(key: key);
-
-  final String title;
-
+  InputInfoScreen({key, required this.email}) : super(key: key);
+  final String email;
   @override
   State<InputInfoScreen> createState() => _InputInfoScreenState();
 }
@@ -30,6 +30,18 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
     "Oct",
     "Nov",
     "Dec"
+    // "1",
+    // "2",
+    // "3",
+    // "4",
+    // "5",
+    // "6",
+    // "7",
+    // "8",
+    // "9",
+    // "10",
+    // "11",
+    // "12"
   ];
   final List<String> dayList = [
     "1",
@@ -66,13 +78,16 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   ];
   final List<String> yearList =
       List.generate(2015 - 1970, (index) => (2015 - index).toString());
-
   List<String> nationList = [];
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final accountnameController = TextEditingController();
   final usernameController = TextEditingController();
   final phoneController = TextEditingController();
-
+  String? selectedDay;
+  String? selectedMonth;
+  String? selectedYear;
+  final genderController = TextEditingController();
+  String? selectedNation;
   @override
   void initState() {
     super.initState();
@@ -96,6 +111,55 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   }
 
   final List<String> gender = ["Nam", "Nữ"];
+  // void dispose() {
+  //   accountnameController.dispose();
+  //   usernameController.dispose();
+  //   phoneController.dispose();
+  //   dayController.dispose();
+  //   monthController.dispose();
+  //   yearController.dispose();
+  //   genderController.dispose();
+  //   nationController.dispose();
+  //   super.dispose();
+  // }
+  Future inputPersonalInfo() async {
+    String day = selectedDay.toString();
+    String month = selectedMonth.toString();
+    String year = selectedYear.toString();
+    String dob = '$month $day, $year';
+    String genderText = genderController.text.trim().toLowerCase();
+    bool gender;
+    if (genderText == 'true') {
+      gender = true;
+    } else
+      gender = false;
+    String nation = selectedNation.toString();
+    // DateTime dob = DateTime(yearInt, monthInt, dayInt);
+    addPersonalDetail(
+      accountnameController.text.trim(),
+      usernameController.text.trim(),
+      phoneController.text.trim(),
+      dob,
+      widget.email,
+      gender,
+      nation,
+    );
+  }
+
+  Future addPersonalDetail(String ID, String name, String phone, String dob,
+      String email, bool gender, String nation) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'ID': ID,
+      'Name': name,
+      'Phone': phone,
+      'DOB': dob,
+      'Email': email,
+      'Gender': gender,
+      'Nation': nation,
+    });
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => SuccessNotiScreen()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +209,6 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 10),
-
                   // user name, name, phone,...
                   MyTextField(
                       controller: accountnameController,
@@ -162,7 +225,6 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                       label: "Số điện thoại",
                       hint: "Nhập số điện thoại người dùng",
                       obscureText: false),
-
                   //dob
                   SizedBox(height: 20),
                   Text(
@@ -187,7 +249,6 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                           options: yearList, hintText: "Năm", width: 95),
                     ],
                   ),
-
                   //gender
                   SizedBox(height: 20),
                   Row(
@@ -209,7 +270,6 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                       )
                     ],
                   ),
-
                   //nation
                   SizedBox(height: 20),
                   Text(
@@ -222,11 +282,9 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                   SizedBox(height: 5),
                   InputDropDown(
                       options: nationList, hintText: "Quốc gia", width: 400),
-
                   SizedBox(
                     height: 25,
                   ),
-
                   SizedBox(
                     height: 25,
                   ),
@@ -244,10 +302,6 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       ),
     );
   }
-
-  inputPersonalInfo() {
-    
-  }
 }
 
 class InputDropDown extends StatefulWidget {
@@ -255,7 +309,6 @@ class InputDropDown extends StatefulWidget {
   final String? hintText;
   final ValueChanged<String>? onChanged;
   final double? width;
-
   const InputDropDown({
     Key? key,
     required this.options,
@@ -263,14 +316,12 @@ class InputDropDown extends StatefulWidget {
     this.onChanged,
     this.width,
   }) : super(key: key);
-
   @override
   _InputDropDownState createState() => _InputDropDownState();
 }
 
 class _InputDropDownState extends State<InputDropDown> {
   String? _selectedOption;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -308,7 +359,6 @@ class _InputDropDownState extends State<InputDropDown> {
             items: widget.options.map((option) {
               return DropdownMenuItem(
                 value: option,
-                //child: Text(option),
                 child: SizedBox(
                     width: widget.width! * 0.5,
                     child: Text(
@@ -329,21 +379,18 @@ class RadioButtonList extends StatefulWidget {
   final List<String> options;
   final String? selectedOption;
   final ValueChanged<String>? onChanged;
-
   const RadioButtonList({
     Key? key,
     required this.options,
     this.selectedOption,
     this.onChanged,
   }) : super(key: key);
-
   @override
   _RadioButtonListState createState() => _RadioButtonListState();
 }
 
 class _RadioButtonListState extends State<RadioButtonList> {
   String? _selectedOption;
-
   @override
   void initState() {
     super.initState();
