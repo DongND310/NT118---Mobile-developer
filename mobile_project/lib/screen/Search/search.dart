@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobile_project/Search/widget/account_detail.dart';
-import 'package:mobile_project/Search/widget/hashtag.dart';
-import 'package:mobile_project/Search/widget/search_history_detail.dart';
-import 'package:mobile_project/Search/widget/suggest_detail.dart';
-import 'package:mobile_project/Search/widget/video_search.dart';
+import 'package:mobile_project/screen/Search/widget/account_detail.dart';
+import 'package:mobile_project/screen/Search/widget/hashtag.dart';
+import 'package:mobile_project/screen/Search/widget/search_history_detail.dart';
+import 'package:mobile_project/screen/Search/widget/suggest_detail.dart';
+import 'package:mobile_project/screen/Search/widget/video_search.dart';
 class SearchScreen extends StatefulWidget {
   final List<String> searchhistory = ["1","2","3","4","5","6","7","8","9","1","2","3","4","5","6","7","8","9","1","2","3","4","5","6","7","8","9"];
   final bool showmore = false;
