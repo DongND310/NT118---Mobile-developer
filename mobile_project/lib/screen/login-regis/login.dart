@@ -129,36 +129,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           obscureText: true),
 
                       SizedBox(
-                        height: 5,
+                        height: 15,
                       ),
 
                       //remember - forgot pass
                       Container(
                         child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Container(
-                                child: Row(
-                                  children: [
-                                    Checkbox(
-                                      value: false,
-                                      onChanged: (newValue) {
-                                        print('New value: $newValue');
-                                      },
-                                      activeColor: Colors.blue,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(45)),
-                                      // visualDensity: VisualDensity.compact,
-                                    ),
-                                    Text(
-                                      'Nhớ mật khẩu?',
-                                      style: TextStyle(
-                                          color: Colors.black87, fontSize: 13),
-                                    ),
-                                  ],
-                                ),
-                              ),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -170,14 +148,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Text(
                                   'Quên mật khẩu?',
                                   style: TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 13,
+                                    color: Colors.blue,
+                                    fontSize: 16,
                                   ),
                                 ),
                               )
                             ]),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 15),
 
                       // login button
                       MyButton(
