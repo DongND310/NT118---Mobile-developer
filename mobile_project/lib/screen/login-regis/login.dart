@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/components/inputtext.dart';
+import 'package:mobile_project/components/button.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_project/screen/homepage/home_page.dart';
 import 'forgotpass.dart';
 import 'signup.dart';
 import 'welcome.dart';
@@ -32,32 +34,34 @@ class _LoginScreenState extends State<LoginScreen> {
           email: emailController.text, password: passwordController.text);
 
       Navigator.pop(context);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
-      if (e.code == 'user-not-found') {
-        wrongEmailMessage();
-      } else if (e.code == 'wrong-password') {
-        wrongPassWordMessage();
+      String errorMessage = 'Failed to sign in';
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case 'user-not-found':
+            errorMessage = 'No user found for that email.';
+            break;
+          case 'wrong-password':
+            errorMessage = 'Wrong password provided for that user.';
+            break;
+          default:
+            errorMessage = e.message ?? 'An error occurred while signing in.';
+        }
       }
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(errorMessage)));
     }
   }
 
-  void wrongEmailMessage() {
+  void wrongMessage(String errorMessage) {
     showDialog(
         context: context,
         builder: (context) {
-          return const AlertDialog(
-            title: Text('Tài khoản Email không tồn tại.'),
-          );
-        });
-  }
-
-  void wrongPassWordMessage() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const AlertDialog(
-            title: Text('Sai mật khẩu, vui lòng nhập lại mật khẩu.'),
+          return AlertDialog(
+            title: Text(errorMessage),
           );
         });
   }
@@ -87,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: ListView(
             padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
             children: [
-              Text(
+              const Text(
                 'Chào mừng!',
                 style: TextStyle(
                   fontSize: 40,
@@ -96,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   letterSpacing: 2,
                 ),
               ),
-              Text(
+              const Text(
                 'Đăng nhập để tiếp tục',
                 style: TextStyle(
                   fontSize: 18,
@@ -111,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: double.infinity,
                   child: Column(
                     children: [
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       //Email, password
                       MyTextField(
                           controller: emailController,
@@ -124,37 +128,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           hint: "Nhập mật khẩu",
                           obscureText: true),
 
-                      SizedBox(
-                        height: 5,
+                      const SizedBox(
+                        height: 15,
                       ),
 
                       //remember - forgot pass
                       Container(
                         child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Container(
-                                child: Row(
-                                  children: [
-                                    Checkbox(
-                                      value: false,
-                                      onChanged: (newValue) {
-                                        print('New value: $newValue');
-                                      },
-                                      activeColor: Colors.blue,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(45)),
-                                      // visualDensity: VisualDensity.compact,
-                                    ),
-                                    Text(
-                                      'Nhớ mật khẩu?',
-                                      style: TextStyle(
-                                          color: Colors.black87, fontSize: 13),
-                                    ),
-                                  ],
-                                ),
-                              ),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -163,52 +145,36 @@ class _LoginScreenState extends State<LoginScreen> {
                                           builder: (context) =>
                                               ForgotPassScreen()));
                                 },
-                                child: Text(
+                                child: const Text(
                                   'Quên mật khẩu?',
                                   style: TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 13,
+                                    color: Colors.blue,
+                                    fontSize: 16,
                                   ),
                                 ),
                               )
                             ]),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 15),
 
                       // login button
-                      GestureDetector(
+                      MyButton(
                         onTap: signUserIn,
-                        child: Container(
-                          height: 55,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'ĐĂNG NHẬP',
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  letterSpacing: 2),
-                            ),
-                          ),
-                        ),
+                        text: "ĐĂNG NHẬP",
                       ),
-                      SizedBox(height: 40),
+                      const SizedBox(height: 40),
 
                       // login gg/fb
-                      Text(
+                      const Text(
                         'Hoặc đăng nhập với',
                         style: TextStyle(
                           fontSize: 15,
-                          color: const Color.fromARGB(190, 0, 0, 0),
+                          color: Color.fromARGB(190, 0, 0, 0),
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Container(
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -229,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ],
                                 ),
-                                child: Image(
+                                child: const Image(
                                     image: AssetImage('assets/images/gg.png')),
                               ),
                               Container(
@@ -248,22 +214,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ],
                                 ),
-                                child: Image(
+                                child: const Image(
                                     image: AssetImage('assets/images/fb.png')),
                               ),
                             ]),
                       ),
 
                       // sign up
-                      SizedBox(height: 40),
+                      const SizedBox(height: 40),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             'Chưa có tài khoản? ',
                             style: TextStyle(
                               fontSize: 15,
-                              color: const Color.fromARGB(190, 0, 0, 0),
+                              color: Color.fromARGB(190, 0, 0, 0),
                               fontWeight: FontWeight.w500,
                               letterSpacing: 0,
                             ),
@@ -275,7 +241,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   MaterialPageRoute(
                                       builder: (context) => SignUpScreen()));
                             },
-                            child: Text(
+                            child: const Text(
                               'Đăng ký',
                               style: TextStyle(
                                 fontSize: 15,
