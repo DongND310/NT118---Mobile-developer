@@ -37,28 +37,10 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
               style: TextStyle(fontSize: 15),
             ),
             actions: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
-                },
-                child: Container(
-                  height: 55,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "XÁC NHẬN",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: 2),
-                    ),
-                  ),
-                ),
+              TextButton(
+                child: const Text('OK', style: TextStyle(color: Colors.blue)),
+                onPressed: () => Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginScreen())),
               ),
             ],
           );
@@ -66,18 +48,45 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
       );
     } on FirebaseAuthException catch (e) {
       // Navigator.pop(context);
-      wrongMessage(e.code);
+      String errorMessage;
+      switch (e.code) {
+        case 'invalid-email':
+          errorMessage = 'Email không hợp lệ.';
+          break;
+        case 'invalid-credential':
+          errorMessage = 'Email không tồn tại.';
+          break;
+        case 'channel-error':
+          errorMessage = 'Lỗi xảy ra trong quá trình cập nhật mật khẩu.';
+          break;
+        default:
+          errorMessage = e.message ?? 'Lỗi xảy ra.';
+      }
+      ErrorMessageg(errorMessage);
+      return;
     }
   }
 
-  void wrongMessage(String errorMessage) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text(errorMessage),
-          );
-        });
+  Future<void> ErrorMessageg(String errorMessage) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Lỗi:'),
+          content: Text('$errorMessage Hãy kiểm tra và nhập lại.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.blue),
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
