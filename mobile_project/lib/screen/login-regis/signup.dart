@@ -49,7 +49,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       // Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
+      String errorMessage = 'Failed to sign up';
       wrongMessage(e.code);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(errorMessage)));
     }
   }
 
@@ -58,7 +61,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text(errorMessage),
+            content: Text(errorMessage),
           );
         });
   }
