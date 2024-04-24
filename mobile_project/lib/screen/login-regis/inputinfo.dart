@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobile_project/components/inputtext.dart';
 import 'package:mobile_project/components/button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_project/screen/homepage/homepage.dart';
 import 'package:mobile_project/screen/login-regis/successnoti.dart';
 import 'package:http/http.dart' as http;
 
@@ -82,17 +82,18 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   final accountnameController = TextEditingController();
   final usernameController = TextEditingController();
   final phoneController = TextEditingController();
-  String selectedDay = '';
-  String selectedMonth = '';
-  String selectedYear = '';
+  late String selectedDay;
+  late String selectedMonth;
+  late String selectedYear;
   final genderController = TextEditingController();
-  String selectedNation = '';
+  late String selectedNation;
   @override
   void initState() {
     super.initState();
     fetchData();
   }
 
+  // API nation list
   Future<void> fetchData() async {
     final response =
         await http.get(Uri.parse('https://restcountries.com/v3.1/all'));
@@ -112,20 +113,16 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   final List<String> gender = ["Nam", "Nữ"];
 
   Future inputPersonalInfo() async {
-    // String day = selectedDay.toString();
-    // String month = selectedMonth.toString();
-    // String year = selectedYear.toString();
-
     String day = selectedDay;
     String month = selectedMonth;
     String year = selectedYear;
     String dob = '$month $day, $year';
 
     String genderText = genderController.text.trim().toLowerCase();
-    bool gender = (genderText == 'true');
+    bool gender = (genderText == 'nam');
     String nation = selectedNation.toString();
 
-    addPersonalDetail(
+    await addPersonalDetail(
       accountnameController.text.trim(),
       usernameController.text.trim(),
       phoneController.text.trim(),
@@ -148,7 +145,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       'Nation': nation,
     });
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => SuccessNotiScreen()));
+        context, MaterialPageRoute(builder: (context) => HomePageScreen()));
   }
 
   @override
@@ -369,11 +366,10 @@ class _InputDropDownState extends State<InputDropDown> {
             onChanged: (String? newValue) {
               setState(() {
                 selectedOption = newValue;
-                print('Selected value: $newValue');
               });
-              // if (widget.onChanged != null) {
-              //   widget.onChanged!(newValue!);
-              // }
+              if (widget.onChanged != null) {
+                widget.onChanged!(newValue!);
+              }
             },
             items: widget.options.map((option) {
               return DropdownMenuItem(
