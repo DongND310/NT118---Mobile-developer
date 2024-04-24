@@ -44,50 +44,49 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
     // "12"
   ];
   final List<String> dayList = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20",
-    "21",
-    "22",
-    "23",
-    "24",
-    "25",
-    "26",
-    "27",
-    "28",
-    "29",
-    "30",
-    "31"
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
+    '20',
+    '21',
+    '22',
+    '23',
+    '24',
+    '25',
+    '26',
+    '27',
+    '28',
+    '29',
+    '30',
+    '31'
   ];
   final List<String> yearList =
       List.generate(2015 - 1970, (index) => (2015 - index).toString());
   List<String> nationList = [];
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final accountnameController = TextEditingController();
   final usernameController = TextEditingController();
   final phoneController = TextEditingController();
-  String? selectedDay;
-  String? selectedMonth;
-  String? selectedYear;
+  String selectedDay = '';
+  String selectedMonth = '';
+  String selectedYear = '';
   final genderController = TextEditingController();
-  String? selectedNation;
+  String selectedNation = '';
   @override
   void initState() {
     super.initState();
@@ -111,30 +110,21 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   }
 
   final List<String> gender = ["Nam", "Nữ"];
-  // void dispose() {
-  //   accountnameController.dispose();
-  //   usernameController.dispose();
-  //   phoneController.dispose();
-  //   dayController.dispose();
-  //   monthController.dispose();
-  //   yearController.dispose();
-  //   genderController.dispose();
-  //   nationController.dispose();
-  //   super.dispose();
-  // }
+
   Future inputPersonalInfo() async {
-    String day = selectedDay.toString();
-    String month = selectedMonth.toString();
-    String year = selectedYear.toString();
+    // String day = selectedDay.toString();
+    // String month = selectedMonth.toString();
+    // String year = selectedYear.toString();
+
+    String day = selectedDay;
+    String month = selectedMonth;
+    String year = selectedYear;
     String dob = '$month $day, $year';
+
     String genderText = genderController.text.trim().toLowerCase();
-    bool gender;
-    if (genderText == 'true') {
-      gender = true;
-    } else
-      gender = false;
+    bool gender = (genderText == 'true');
     String nation = selectedNation.toString();
-    // DateTime dob = DateTime(yearInt, monthInt, dayInt);
+
     addPersonalDetail(
       accountnameController.text.trim(),
       usernameController.text.trim(),
@@ -184,7 +174,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
         child: ListView(
             padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
             children: [
-              Text(
+              const Text(
                 'Thông tin người dùng',
                 style: TextStyle(
                   fontSize: 40,
@@ -193,10 +183,10 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                   letterSpacing: 2,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
-              Text(
+              const Text(
                 'Nhập các thông tin dưới đây để hoàn thiện hồ sơ người dùng',
                 style: TextStyle(
                   fontSize: 18,
@@ -208,7 +198,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   // user name, name, phone,...
                   MyTextField(
                       controller: accountnameController,
@@ -226,15 +216,15 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                       hint: "Nhập số điện thoại người dùng",
                       obscureText: false),
                   //dob
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'Ngày sinh',
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.black,
                         fontWeight: FontWeight.w500),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -242,26 +232,47 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                         options: dayList,
                         hintText: "Ngày",
                         width: 95,
+                        onChanged: (String value) {
+                          setState(() {
+                            selectedDay = value;
+                          });
+                        },
                       ),
                       InputDropDown(
-                          options: monthList, hintText: "Tháng", width: 95),
+                        options: monthList,
+                        hintText: "Tháng",
+                        width: 95,
+                        onChanged: (String value) {
+                          setState(() {
+                            selectedMonth = value;
+                          });
+                        },
+                      ),
                       InputDropDown(
-                          options: yearList, hintText: "Năm", width: 95),
+                        options: yearList,
+                        hintText: "Năm",
+                        width: 95,
+                        onChanged: (String value) {
+                          setState(() {
+                            selectedYear = value;
+                          });
+                        },
+                      ),
                     ],
                   ),
                   //gender
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Giới tính',
                         style: TextStyle(
                             fontSize: 18,
                             color: Colors.black,
                             fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 50,
                       ),
                       RadioButtonList(
@@ -271,21 +282,27 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                     ],
                   ),
                   //nation
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'Quốc gia',
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.black,
                         fontWeight: FontWeight.w500),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   InputDropDown(
-                      options: nationList, hintText: "Quốc gia", width: 400),
-                  SizedBox(
-                    height: 25,
+                    options: nationList,
+                    hintText: "Quốc gia",
+                    width: 400,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        selectedNation = newValue;
+                      });
+                    },
                   ),
-                  SizedBox(
+
+                  const SizedBox(
                     height: 25,
                   ),
                   // button
@@ -293,7 +310,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                     onTap: inputPersonalInfo,
                     text: "TIẾP TỤC",
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   )
                 ],
@@ -321,7 +338,8 @@ class InputDropDown extends StatefulWidget {
 }
 
 class _InputDropDownState extends State<InputDropDown> {
-  String? _selectedOption;
+  String? selectedOption;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -338,23 +356,24 @@ class _InputDropDownState extends State<InputDropDown> {
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
-            value: _selectedOption,
+            value: selectedOption,
             hint: widget.hintText != null
                 ? Text(
                     widget.hintText!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       color: Colors.black45,
                     ),
                   )
                 : null,
-            onChanged: (newValue) {
+            onChanged: (String? newValue) {
               setState(() {
-                _selectedOption = newValue;
+                selectedOption = newValue;
+                print('Selected value: $newValue');
               });
-              if (widget.onChanged != null) {
-                widget.onChanged!(newValue!);
-              }
+              // if (widget.onChanged != null) {
+              //   widget.onChanged!(newValue!);
+              // }
             },
             items: widget.options.map((option) {
               return DropdownMenuItem(
@@ -418,7 +437,7 @@ class _RadioButtonListState extends State<RadioButtonList> {
               activeColor: Colors.blue,
             ),
             Text(option,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   color: Colors.black,
                 )),

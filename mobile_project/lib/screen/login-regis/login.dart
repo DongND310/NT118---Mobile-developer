@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: ListView(
             padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
             children: [
-              Text(
+              const Text(
                 'Chào mừng!',
                 style: TextStyle(
                   fontSize: 40,
@@ -100,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   letterSpacing: 2,
                 ),
               ),
-              Text(
+              const Text(
                 'Đăng nhập để tiếp tục',
                 style: TextStyle(
                   fontSize: 18,
@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: double.infinity,
                   child: Column(
                     children: [
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       //Email, password
                       MyTextField(
                           controller: emailController,
@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           hint: "Nhập mật khẩu",
                           obscureText: true),
 
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
 
@@ -145,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           builder: (context) =>
                                               ForgotPassScreen()));
                                 },
-                                child: Text(
+                                child: const Text(
                                   'Quên mật khẩu?',
                                   style: TextStyle(
                                     color: Colors.blue,
@@ -155,26 +155,26 @@ class _LoginScreenState extends State<LoginScreen> {
                               )
                             ]),
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
 
                       // login button
                       MyButton(
                         onTap: signUserIn,
                         text: "ĐĂNG NHẬP",
                       ),
-                      SizedBox(height: 40),
+                      const SizedBox(height: 40),
 
                       // login gg/fb
-                      Text(
+                      const Text(
                         'Hoặc đăng nhập với',
                         style: TextStyle(
                           fontSize: 15,
-                          color: const Color.fromARGB(190, 0, 0, 0),
+                          color: Color.fromARGB(190, 0, 0, 0),
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Container(
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -195,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ],
                                 ),
-                                child: Image(
+                                child: const Image(
                                     image: AssetImage('assets/images/gg.png')),
                               ),
                               Container(
@@ -214,22 +214,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ],
                                 ),
-                                child: Image(
+                                child: const Image(
                                     image: AssetImage('assets/images/fb.png')),
                               ),
                             ]),
                       ),
 
                       // sign up
-                      SizedBox(height: 40),
+                      const SizedBox(height: 40),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             'Chưa có tài khoản? ',
                             style: TextStyle(
                               fontSize: 15,
-                              color: const Color.fromARGB(190, 0, 0, 0),
+                              color: Color.fromARGB(190, 0, 0, 0),
                               fontWeight: FontWeight.w500,
                               letterSpacing: 0,
                             ),
@@ -241,7 +241,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   MaterialPageRoute(
                                       builder: (context) => SignUpScreen()));
                             },
-                            child: Text(
+                            child: const Text(
                               'Đăng ký',
                               style: TextStyle(
                                 fontSize: 15,
