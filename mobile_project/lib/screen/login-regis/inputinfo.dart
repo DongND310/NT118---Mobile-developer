@@ -6,8 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/screen/homepage/homepage.dart';
-import 'package:mobile_project/screen/login-regis/successnoti.dart';
 import 'package:http/http.dart' as http;
+
+import 'regisnoti.dart';
 
 class InputInfoScreen extends StatefulWidget {
   InputInfoScreen({key, required this.email}) : super(key: key);
@@ -30,18 +31,6 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
     "Oct",
     "Nov",
     "Dec"
-    // "1",
-    // "2",
-    // "3",
-    // "4",
-    // "5",
-    // "6",
-    // "7",
-    // "8",
-    // "9",
-    // "10",
-    // "11",
-    // "12"
   ];
   final List<String> dayList = [
     '1',
@@ -79,14 +68,16 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   final List<String> yearList =
       List.generate(2015 - 1970, (index) => (2015 - index).toString());
   List<String> nationList = [];
+
+  final List<String> gender = ["Nam", "Nữ"];
   final accountnameController = TextEditingController();
   final usernameController = TextEditingController();
   final phoneController = TextEditingController();
-  late String selectedDay;
-  late String selectedMonth;
-  late String selectedYear;
-  final genderController = TextEditingController();
-  late String selectedNation;
+  String? selectedDay;
+  String? selectedMonth;
+  String? selectedYear;
+  String? selectedGender;
+  String? selectedNation;
   @override
   void initState() {
     super.initState();
@@ -110,17 +101,46 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
     }
   }
 
-  final List<String> gender = ["Nam", "Nữ"];
-
   Future inputPersonalInfo() async {
-    String day = selectedDay;
-    String month = selectedMonth;
-    String year = selectedYear;
+    String day = selectedDay.toString();
+    String month = selectedMonth.toString();
+    String year = selectedYear.toString();
     String dob = '$month $day, $year';
-
-    String genderText = genderController.text.trim().toLowerCase();
-    bool gender = (genderText == 'nam');
+    String gender = selectedGender.toString();
     String nation = selectedNation.toString();
+
+    Future<void> MissingInfoDialog() async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Chưa hoàn thành'),
+            content: const Text(
+                'Vui lòng nhập đầy đủ các thông tin để hoàn thành hồ sơ tài khoản.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK', style: TextStyle(color: Colors.blue)),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    if (accountnameController.text.trim().isEmpty ||
+        usernameController.text.trim().isEmpty ||
+        phoneController.text.trim().isEmpty ||
+        dob.isEmpty ||
+        day == "null" ||
+        month == "null" ||
+        year == "null" ||
+        gender == "null" ||
+        nation == "null") {
+      MissingInfoDialog();
+      return;
+    }
 
     await addPersonalDetail(
       accountnameController.text.trim(),
@@ -134,7 +154,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   }
 
   Future addPersonalDetail(String ID, String name, String phone, String dob,
-      String email, bool gender, String nation) async {
+      String email, String gender, String nation) async {
     await FirebaseFirestore.instance.collection('users').add({
       'ID': ID,
       'Name': name,
@@ -144,8 +164,8 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       'Gender': gender,
       'Nation': nation,
     });
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => HomePageScreen()));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => RegisterSuccessScreen()));
   }
 
   @override
@@ -274,10 +294,15 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                       ),
                       RadioButtonList(
                         options: gender,
-                        selectedOption: "Nam",
+                        onChanged: (String newValue) {
+                          setState(() {
+                            selectedGender = newValue;
+                          });
+                        },
                       )
                     ],
                   ),
+
                   //nation
                   const SizedBox(height: 20),
                   const Text(
@@ -363,7 +388,7 @@ class _InputDropDownState extends State<InputDropDown> {
                     ),
                   )
                 : null,
-            onChanged: (String? newValue) {
+            onChanged: (newValue) {
               setState(() {
                 selectedOption = newValue;
               });
