@@ -38,32 +38,42 @@ class _LoginScreenState extends State<LoginScreen> {
           context, MaterialPageRoute(builder: (context) => HomePageScreen()));
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
-      String errorMessage = 'Failed to sign in';
-      if (e is FirebaseAuthException) {
-        switch (e.code) {
-          case 'user-not-found':
-            errorMessage = 'No user found for that email.';
-            break;
-          case 'wrong-password':
-            errorMessage = 'Wrong password provided for that user.';
-            break;
-          default:
-            errorMessage = e.message ?? 'An error occurred while signing in.';
-        }
+      String errorMessage;
+      switch (e.code) {
+        case 'invalid-email':
+          errorMessage = 'Email không hợp lệ.';
+          break;
+        case 'invalid-credential':
+          errorMessage = 'Thông tin đăng nhập tài khoản không đúng.';
+          break;
+        case 'channel-error':
+          errorMessage = 'Lỗi xảy ra trong quá trình đăng nhập.';
+          break;
+        default:
+          errorMessage = e.message ?? 'Lỗi xảy ra trong quá trình đăng nhập.';
       }
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(errorMessage)));
+      ErrorMessageg(errorMessage);
+      return;
     }
   }
 
-  void wrongMessage(String errorMessage) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text(errorMessage),
-          );
-        });
+  Future<void> ErrorMessageg(String errorMessage) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Lỗi đăng nhập'),
+          content: Text('$errorMessage Hãy kiểm tra và đăng nhập lại.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK', style: TextStyle(color: Colors.blue)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
