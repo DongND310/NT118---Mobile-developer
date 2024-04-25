@@ -14,9 +14,9 @@ class Hashtag extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SvgPicture.asset(
-          'assets/icons/hashtag.svg',
-          width: 25,
-          height: 25,),
+              'assets/icons/hashtag.svg',
+              width: 25,
+              height: 25,),
             Padding(
                 padding: const EdgeInsets.only(left: 15.0),
                 child: Column(

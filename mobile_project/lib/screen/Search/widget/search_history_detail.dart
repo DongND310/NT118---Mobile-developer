@@ -22,98 +22,98 @@ class _SearchHistoryState extends State<SearchHistoryDetail>{
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: ListView.builder(
-            physics: AlwaysScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemExtent: 35,
-            itemCount: _show ? widget.searchhistory.length : 3,
-            itemBuilder: (BuildContext context, int index) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/history.svg',
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: ListView.builder(
+              physics: PageScrollPhysics(),
+              shrinkWrap: true,
+              itemExtent: 35,
+              itemCount: _show ? widget.searchhistory.length : 3,
+              itemBuilder: (BuildContext context, int index) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/history.svg',
+                          width: 25,
+                          height: 25,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            widget.searchhistory[index],
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: SvgPicture.asset(
+                        'assets/icons/cancel.svg',
                         width: 25,
                         height: 25,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          widget.searchhistory[index],
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: SvgPicture.asset(
-                      'assets/icons/cancel.svg',
-                      width: 25,
-                      height: 25,
+                      onPressed: () {
+                        setState(() {
+                          widget.searchhistory.removeAt(index);
+                        });
+                      },
                     ),
-                    onPressed: () {
-                      setState(() {
-                        widget.searchhistory.removeAt(index);
-                      });
-                    },
-                  ),
-                ],
-              );
-            },
+                  ],
+                );
+              },
+            ),
           ),
-        ),
-        Visibility(
-          visible: !_show,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _show = true;
-                  });
-                },
-                child: const Text(
-                  "Xem thêm",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFF107BFD),
-                    fontSize: 18,
+          Visibility(
+            visible: !_show,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _show = true;
+                    });
+                  },
+                  child: const Text(
+                    "Xem thêm",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF107BFD),
+                      fontSize: 18,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        Visibility(
-          visible: _show,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () {},
-                child: const Text(
-                  "Xóa tất cả",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFF107BFD),
-                    fontSize: 18,
+          Visibility(
+            visible: _show,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    "Xóa tất cả",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF107BFD),
+                      fontSize: 18,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        )
+              ],
+            ),
+          )
         ]
     );
   }
