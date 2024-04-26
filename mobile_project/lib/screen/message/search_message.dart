@@ -13,7 +13,7 @@ class SearchMessageScreen extends StatefulWidget{
 class _SearchMessageState extends State<SearchMessageScreen>{
   TextEditingController _textEditingController = TextEditingController();
   List<String> _search =[];
-  FocusNode _focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

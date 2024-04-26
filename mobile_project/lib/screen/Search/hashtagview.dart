@@ -38,7 +38,7 @@ class _HashTagState extends State<HashTagScreen>{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Image.asset(
-                      'assets/icons/hashtag1.png',
+                      'assets/images/hashtag1.png',
                       width: 100,
                       height: 100,
                     ),
