@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/components/inputtext.dart';
 import 'package:mobile_project/components/button.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_project/screen/homepage/homepage.dart';
+import 'package:mobile_project/components/navigation_container.dart';
 import 'package:mobile_project/services/auth_service.dart';
 import 'forgotpass.dart';
 import 'signup.dart';
@@ -36,7 +36,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
       Navigator.pop(context);
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomePageScreen()));
+          context,
+          MaterialPageRoute(
+            builder: (context) => NavigationContainer(),
+          ));
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       String errorMessage;

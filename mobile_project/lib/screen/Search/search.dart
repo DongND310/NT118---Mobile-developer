@@ -8,6 +8,8 @@ import 'package:mobile_project/screen/Search/widget/search_history_detail.dart';
 import 'package:mobile_project/screen/Search/widget/suggest_detail.dart';
 import 'package:mobile_project/screen/Search/widget/video_search.dart';
 
+import 'hashtagview.dart';
+
 class SearchScreen extends StatefulWidget {
   final List<String> searchhistory = ["1","2","3","4","5","6","7","8","9","1","2","3","4","5","6","7","8","9","1","2","3","4","5","6","7","8","9"];
   final bool showmore = false;
@@ -164,7 +166,15 @@ class _SearchScreenState extends State<SearchScreen> {
                           itemExtent: 50,
                           itemCount:  widget.hashtag.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Hashtag(widget.hashtag[index]);
+                            return GestureDetector(
+                                onTap: (){
+                                  Navigator.push(context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HashTagScreen(widget.hashtag[index]))
+                                  );
+                                },
+                                child: Hashtag(widget.hashtag[index])
+                            );
                           }
                       ),
                     )
