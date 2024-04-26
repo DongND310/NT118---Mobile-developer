@@ -1,4 +1,5 @@
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile_project/components/button.dart';
 
 import 'package:flutter/material.dart';
 import 'package:mobile_project/screen/login-regis/login.dart';
@@ -64,33 +65,15 @@ class SuccessNotiScreen extends StatelessWidget {
               height: 40,
             ),
             // button
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()));
-              },
-              child: Container(
-                height: 50,
-                width: 340,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Center(
-                  child: Text(
-                    'ĐĂNG NHẬP',
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 2),
-                  ),
-                ),
-              ),
+            MyButton(
+              onTap: resetPassSuccess,
+              text: "ĐĂNG NHẬP",
             ),
           ]),
         ),
       ),
     );
   }
+
+  resetPassSuccess() {}
 }

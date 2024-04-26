@@ -1,16 +1,17 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobile_project/components/inputtext.dart';
-
+import 'package:mobile_project/components/button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
-import 'regisnoti.dart';
+import 'package:mobile_project/screen/login-regis/successnoti.dart';
 import 'package:http/http.dart' as http;
 
 class InputInfoScreen extends StatefulWidget {
-  InputInfoScreen({key, required this.title}) : super(key: key);
-
-  final String title;
-
+  InputInfoScreen({key, required this.email}) : super(key: key);
+  final String email;
   @override
   State<InputInfoScreen> createState() => _InputInfoScreenState();
 }
@@ -29,49 +30,63 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
     "Oct",
     "Nov",
     "Dec"
+    // "1",
+    // "2",
+    // "3",
+    // "4",
+    // "5",
+    // "6",
+    // "7",
+    // "8",
+    // "9",
+    // "10",
+    // "11",
+    // "12"
   ];
   final List<String> dayList = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20",
-    "21",
-    "22",
-    "23",
-    "24",
-    "25",
-    "26",
-    "27",
-    "28",
-    "29",
-    "30",
-    "31"
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
+    '20',
+    '21',
+    '22',
+    '23',
+    '24',
+    '25',
+    '26',
+    '27',
+    '28',
+    '29',
+    '30',
+    '31'
   ];
   final List<String> yearList =
       List.generate(2015 - 1970, (index) => (2015 - index).toString());
-
   List<String> nationList = [];
-
   final accountnameController = TextEditingController();
   final usernameController = TextEditingController();
   final phoneController = TextEditingController();
-
+  String selectedDay = '';
+  String selectedMonth = '';
+  String selectedYear = '';
+  final genderController = TextEditingController();
+  String selectedNation = '';
   @override
   void initState() {
     super.initState();
@@ -96,6 +111,46 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
 
   final List<String> gender = ["Nam", "Nữ"];
 
+  Future inputPersonalInfo() async {
+    // String day = selectedDay.toString();
+    // String month = selectedMonth.toString();
+    // String year = selectedYear.toString();
+
+    String day = selectedDay;
+    String month = selectedMonth;
+    String year = selectedYear;
+    String dob = '$month $day, $year';
+
+    String genderText = genderController.text.trim().toLowerCase();
+    bool gender = (genderText == 'true');
+    String nation = selectedNation.toString();
+
+    addPersonalDetail(
+      accountnameController.text.trim(),
+      usernameController.text.trim(),
+      phoneController.text.trim(),
+      dob,
+      widget.email,
+      gender,
+      nation,
+    );
+  }
+
+  Future addPersonalDetail(String ID, String name, String phone, String dob,
+      String email, bool gender, String nation) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'ID': ID,
+      'Name': name,
+      'Phone': phone,
+      'DOB': dob,
+      'Email': email,
+      'Gender': gender,
+      'Nation': nation,
+    });
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => SuccessNotiScreen()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +174,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
         child: ListView(
             padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
             children: [
-              Text(
+              const Text(
                 'Thông tin người dùng',
                 style: TextStyle(
                   fontSize: 40,
@@ -128,10 +183,10 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                   letterSpacing: 2,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
-              Text(
+              const Text(
                 'Nhập các thông tin dưới đây để hoàn thiện hồ sơ người dùng',
                 style: TextStyle(
                   fontSize: 18,
@@ -143,8 +198,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10),
-
+                  const SizedBox(height: 10),
                   // user name, name, phone,...
                   MyTextField(
                       controller: accountnameController,
@@ -161,17 +215,16 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                       label: "Số điện thoại",
                       hint: "Nhập số điện thoại người dùng",
                       obscureText: false),
-
                   //dob
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'Ngày sinh',
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.black,
                         fontWeight: FontWeight.w500),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -179,27 +232,47 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                         options: dayList,
                         hintText: "Ngày",
                         width: 95,
+                        onChanged: (String value) {
+                          setState(() {
+                            selectedDay = value;
+                          });
+                        },
                       ),
                       InputDropDown(
-                          options: monthList, hintText: "Tháng", width: 95),
+                        options: monthList,
+                        hintText: "Tháng",
+                        width: 95,
+                        onChanged: (String value) {
+                          setState(() {
+                            selectedMonth = value;
+                          });
+                        },
+                      ),
                       InputDropDown(
-                          options: yearList, hintText: "Năm", width: 95),
+                        options: yearList,
+                        hintText: "Năm",
+                        width: 95,
+                        onChanged: (String value) {
+                          setState(() {
+                            selectedYear = value;
+                          });
+                        },
+                      ),
                     ],
                   ),
-
                   //gender
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Giới tính',
                         style: TextStyle(
                             fontSize: 18,
                             color: Colors.black,
                             fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 50,
                       ),
                       RadioButtonList(
@@ -208,54 +281,36 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                       )
                     ],
                   ),
-
                   //nation
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'Quốc gia',
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.black,
                         fontWeight: FontWeight.w500),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   InputDropDown(
-                      options: nationList, hintText: "Quốc gia", width: 400),
-
-                  SizedBox(
-                    height: 25,
+                    options: nationList,
+                    hintText: "Quốc gia",
+                    width: 400,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        selectedNation = newValue;
+                      });
+                    },
                   ),
 
-                  SizedBox(
+                  const SizedBox(
                     height: 25,
                   ),
                   // button
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegisterSuccessScreen()));
-                    },
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'TIẾP TỤC',
-                          style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              letterSpacing: 2),
-                        ),
-                      ),
-                    ),
+                  MyButton(
+                    onTap: inputPersonalInfo,
+                    text: "TIẾP TỤC",
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   )
                 ],
@@ -271,7 +326,6 @@ class InputDropDown extends StatefulWidget {
   final String? hintText;
   final ValueChanged<String>? onChanged;
   final double? width;
-
   const InputDropDown({
     Key? key,
     required this.options,
@@ -279,13 +333,12 @@ class InputDropDown extends StatefulWidget {
     this.onChanged,
     this.width,
   }) : super(key: key);
-
   @override
   _InputDropDownState createState() => _InputDropDownState();
 }
 
 class _InputDropDownState extends State<InputDropDown> {
-  String? _selectedOption;
+  String? selectedOption;
 
   @override
   Widget build(BuildContext context) {
@@ -303,28 +356,28 @@ class _InputDropDownState extends State<InputDropDown> {
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
-            value: _selectedOption,
+            value: selectedOption,
             hint: widget.hintText != null
                 ? Text(
                     widget.hintText!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       color: Colors.black45,
                     ),
                   )
                 : null,
-            onChanged: (newValue) {
+            onChanged: (String? newValue) {
               setState(() {
-                _selectedOption = newValue;
+                selectedOption = newValue;
+                print('Selected value: $newValue');
               });
-              if (widget.onChanged != null) {
-                widget.onChanged!(newValue!);
-              }
+              // if (widget.onChanged != null) {
+              //   widget.onChanged!(newValue!);
+              // }
             },
             items: widget.options.map((option) {
               return DropdownMenuItem(
                 value: option,
-                //child: Text(option),
                 child: SizedBox(
                     width: widget.width! * 0.5,
                     child: Text(
@@ -345,21 +398,18 @@ class RadioButtonList extends StatefulWidget {
   final List<String> options;
   final String? selectedOption;
   final ValueChanged<String>? onChanged;
-
   const RadioButtonList({
     Key? key,
     required this.options,
     this.selectedOption,
     this.onChanged,
   }) : super(key: key);
-
   @override
   _RadioButtonListState createState() => _RadioButtonListState();
 }
 
 class _RadioButtonListState extends State<RadioButtonList> {
   String? _selectedOption;
-
   @override
   void initState() {
     super.initState();
@@ -387,7 +437,7 @@ class _RadioButtonListState extends State<RadioButtonList> {
               activeColor: Colors.blue,
             ),
             Text(option,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   color: Colors.black,
                 )),
