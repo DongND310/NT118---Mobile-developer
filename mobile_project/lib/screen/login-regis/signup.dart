@@ -22,7 +22,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final confirmpasswordController = TextEditingController();
 
   void signUserUp() async {
-    // var errorMessage;
     showDialog(
         context: context,
         builder: (context) {
@@ -43,24 +42,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       email: emailController.text,
                     )));
       } else {
-        wrongMessage("Mật khẩu không trùng khớp.");
+        Navigator.pop(context);
+        ErrorMessageg("Mật khẩu không trùng khớp.");
       }
-
-      // Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
-      wrongMessage(e.code);
+      String errorMessage;
+      switch (e.code) {
+        case 'invalid-email':
+          errorMessage = 'Email không hợp lệ.';
+          break;
+        case 'invalid-credential':
+          errorMessage = 'Thông tin tài khoản không đúng.';
+          break;
+        case 'channel-error':
+          errorMessage = 'Lỗi xảy ra trong quá trình đăng ký.';
+          break;
+        default:
+          errorMessage = e.message ?? 'Lỗi xảy ra trong quá trình đăng ký.';
+      }
+      ErrorMessageg(errorMessage);
+      return;
     }
   }
 
-  void wrongMessage(String errorMessage) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(errorMessage),
-          );
-        });
+  Future<void> ErrorMessageg(String errorMessage) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Lỗi đăng ký'),
+          content: Text('$errorMessage Hãy kiểm tra và nhập lại.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK', style: TextStyle(color: Colors.blue)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -88,7 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: ListView(
             padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
             children: [
-              Text(
+              const Text(
                 'Xin chào!',
                 style: TextStyle(
                   fontSize: 40,
@@ -97,7 +119,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   letterSpacing: 2,
                 ),
               ),
-              Text(
+              const Text(
                 'Tạo tài khoản mới',
                 style: TextStyle(
                   fontSize: 18,
@@ -112,7 +134,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   width: double.infinity,
                   child: Column(
                     children: [
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       MyTextField(
                           controller: emailController,
@@ -132,7 +154,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hint: "Nhập lại mật khẩu để xác nhận",
                           obscureText: true),
 
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
 
@@ -140,10 +162,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         onTap: signUserUp,
                         text: "ĐĂNG KÝ",
                       ),
-                      SizedBox(height: 40),
+                      const SizedBox(height: 40),
 
                       // signup gg/fb
-                      Text(
+                      const Text(
                         'Hoặc đăng ký với',
                         style: TextStyle(
                           fontSize: 15,
@@ -152,7 +174,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           letterSpacing: 0,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Container(
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -173,7 +195,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     ),
                                   ],
                                 ),
-                                child: Image(
+                                child: const Image(
                                     image: AssetImage('assets/images/gg.png')),
                               ),
                               Container(
@@ -192,7 +214,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     ),
                                   ],
                                 ),
-                                child: Image(
+                                child: const Image(
                                     image: AssetImage('assets/images/fb.png')),
                               ),
                             ]),
@@ -203,7 +225,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             'Đã có tài khoản? ',
                             style: TextStyle(
                               fontSize: 15,
@@ -219,7 +241,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   MaterialPageRoute(
                                       builder: (context) => LoginScreen()));
                             },
-                            child: Text(
+                            child: const Text(
                               'Đăng nhập',
                               style: TextStyle(
                                 fontSize: 15,

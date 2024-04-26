@@ -2,7 +2,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/components/button.dart';
 
 import 'package:flutter/material.dart';
-import 'resetpass.dart';
 
 class VerifyEmailScreen extends StatelessWidget {
   const VerifyEmailScreen({super.key});
@@ -32,7 +31,7 @@ class VerifyEmailScreen extends StatelessWidget {
         child: ListView(
             padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
             children: [
-              Text(
+              const Text(
                 'Mã xác thực',
                 style: TextStyle(
                   fontSize: 40,
@@ -41,11 +40,11 @@ class VerifyEmailScreen extends StatelessWidget {
                   letterSpacing: 2,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
-              Text(
-                'Một mã xác thực vừa được gửi đến',
+              const Text(
+                'Một mã xác thực vừa được gửi đến email',
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black,
@@ -53,7 +52,7 @@ class VerifyEmailScreen extends StatelessWidget {
                   letterSpacing: 0,
                 ),
               ),
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
@@ -76,10 +75,10 @@ class VerifyEmailScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
-              Text(
+              const Text(
                 'Nhập mã xác thực để tiếp tục',
                 style: TextStyle(
                   fontSize: 18,
@@ -113,7 +112,7 @@ class VerifyEmailScreen extends StatelessWidget {
                         ],
                       ),
 
-                      SizedBox(
+                      const SizedBox(
                         height: 25,
                       ),
 
@@ -122,8 +121,8 @@ class VerifyEmailScreen extends StatelessWidget {
                         onTap: verifyEmail,
                         text: "XÁC NHẬN",
                       ),
-                      SizedBox(height: 30),
-                      Row(
+                      const SizedBox(height: 30),
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
