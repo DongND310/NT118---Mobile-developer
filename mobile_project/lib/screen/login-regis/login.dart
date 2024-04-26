@@ -4,6 +4,7 @@ import 'package:mobile_project/components/inputtext.dart';
 import 'package:mobile_project/components/button.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/screen/homepage/homepage.dart';
+import 'package:mobile_project/services/auth_service.dart';
 import 'forgotpass.dart';
 import 'signup.dart';
 import 'welcome.dart';
@@ -120,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 0.0),
+                padding: const EdgeInsets.symmetric(horizontal: 0.0),
                 child: Container(
                   width: double.infinity,
                   child: Column(
@@ -172,11 +173,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         onTap: signUserIn,
                         text: "ĐĂNG NHẬP",
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 30),
 
-                      // login gg/fb
+                      // login gg
                       const Text(
-                        'Hoặc đăng nhập với',
+                        'Hoặc',
                         style: TextStyle(
                           fontSize: 15,
                           color: Color.fromARGB(190, 0, 0, 0),
@@ -184,50 +185,47 @@ class _LoginScreenState extends State<LoginScreen> {
                           letterSpacing: 0,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Container(
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                width: 110,
-                                height: 65,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  // border: Border.all(color: Colors.black38),
-                                  borderRadius: BorderRadius.circular(5),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 0.5,
-                                      blurRadius: 8,
-                                      offset: Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
-                                child: const Image(
+                      const SizedBox(height: 15),
+                      GestureDetector(
+                        onTap: () {
+                          AuthService().signInWithGoogle();
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePageScreen()));
+                        },
+                        child: Container(
+                          height: 65,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 0.5,
+                                blurRadius: 8,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image(
                                     image: AssetImage('assets/images/gg.png')),
-                              ),
-                              Container(
-                                width: 110,
-                                height: 65,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  // border: Border.all(color: Colors.blue),
-                                  borderRadius: BorderRadius.circular(5),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 0.5,
-                                      blurRadius: 8,
-                                      offset: Offset(0, 3),
-                                    ),
-                                  ],
+                                SizedBox(
+                                  width: 20,
                                 ),
-                                child: const Image(
-                                    image: AssetImage('assets/images/fb.png')),
-                              ),
-                            ]),
+                                Text(
+                                  "Đăng nhập với Google",
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      color: Color.fromARGB(190, 0, 0, 0),
+                                      fontWeight: FontWeight.w400,
+                                      letterSpacing: 0),
+                                ),
+                              ]),
+                        ),
                       ),
 
                       // sign up
