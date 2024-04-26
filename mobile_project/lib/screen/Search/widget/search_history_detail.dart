@@ -72,47 +72,41 @@ class _SearchHistoryState extends State<SearchHistoryDetail>{
               },
             ),
           ),
-          Visibility(
-            visible: !_show,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _show = true;
-                    });
-                  },
-                  child: const Text(
-                    "Xem thêm",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color(0xFF107BFD),
-                      fontSize: 18,
-                    ),
+          _show? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () {},
+                child: const Text(
+                  "Xóa tất cả",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF107BFD),
+                    fontSize: 18,
                   ),
                 ),
-              ],
-            ),
-          ),
-          Visibility(
-            visible: _show,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    "Xóa tất cả",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color(0xFF107BFD),
-                      fontSize: 18,
-                    ),
+              ),
+            ],
+          )
+              :Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _show = true;
+                  });
+                },
+                child: const Text(
+                  "Xem thêm",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF107BFD),
+                    fontSize: 18,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           )
         ]
     );
