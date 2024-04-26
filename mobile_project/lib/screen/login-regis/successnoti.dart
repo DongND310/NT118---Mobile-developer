@@ -1,8 +1,6 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/components/button.dart';
-
 import 'package:flutter/material.dart';
-import 'package:mobile_project/screen/login-regis/login.dart';
 
 class SuccessNotiScreen extends StatelessWidget {
   const SuccessNotiScreen({super.key});
@@ -32,15 +30,15 @@ class SuccessNotiScreen extends StatelessWidget {
           padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            SizedBox(
+            const SizedBox(
               height: 120,
             ),
             SvgPicture.asset(
                 'assets/icons/Check-Circle--Streamline-Core.svg.svg'),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
-            Text(
+            const Text(
               'Thành công',
               style: TextStyle(
                 fontSize: 40,
@@ -49,10 +47,10 @@ class SuccessNotiScreen extends StatelessWidget {
                 letterSpacing: 2,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Text(
+            const Text(
               'Mật khẩu của bạn đã được thay đổi thành công',
               style: TextStyle(
                 fontSize: 18,
@@ -61,7 +59,7 @@ class SuccessNotiScreen extends StatelessWidget {
                 letterSpacing: 0,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 40,
             ),
             // button

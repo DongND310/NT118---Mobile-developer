@@ -1,12 +1,6 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:mobile_project/constants.dart';
 import 'signup.dart';
 import 'login.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -21,14 +15,14 @@ class WelcomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image(
+            const Image(
               image: AssetImage('assets/images/ReelReplay1.png'),
               width: 300,
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            Text(
+            const Text(
               'Hello!',
               style: TextStyle(
                   fontSize: 40,
@@ -36,7 +30,7 @@ class WelcomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   letterSpacing: 5),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             GestureDetector(
@@ -51,7 +45,7 @@ class WelcomeScreen extends StatelessWidget {
                   color: Colors.blue,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Center(
+                child: const Center(
                   child: Text(
                     'LOGIN',
                     style: TextStyle(
@@ -63,7 +57,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             GestureDetector(
@@ -78,7 +72,7 @@ class WelcomeScreen extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: Colors.blue)),
-                child: Center(
+                child: const Center(
                   child: Text(
                     'SIGNUP',
                     style: TextStyle(

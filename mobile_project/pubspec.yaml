@@ -9,7 +9,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
+  expandable_text: ^2.3.0
+  marquee: ^2.2.3
+  google_fonts: ^6.2.1
+  video_player: ^2.8.6
+  lottie: ^1.1.0
   cupertino_icons: ^1.0.2  
   flutter_svg: ^2.0.10+1
   http: ^1.0.0
@@ -17,6 +21,7 @@ dependencies:
   firebase_core: ^2.30.0
   firebase_auth: ^4.19.2
   cloud_firestore: ^4.17.0
+  google_sign_in: ^6.2.1
 
 dev_dependencies:
   flutter_test:

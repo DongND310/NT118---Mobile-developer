@@ -34,7 +34,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
               'Link reset mật khẩu đã được gửi đến email ' +
                   emailController.text.trim() +
                   '. Hãy kiểm tra email và thay đổi mật khẩu.',
-              style: TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 15),
             ),
             actions: <Widget>[
               TextButton(
@@ -73,7 +73,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Lỗi:'),
+          title: const Text('Lỗi:'),
           content: Text('$errorMessage Hãy kiểm tra và nhập lại.'),
           actions: <Widget>[
             TextButton(
@@ -132,7 +132,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 0.0),
+                padding: const EdgeInsets.symmetric(horizontal: 0.0),
                 child: Container(
                   width: double.infinity,
                   child: Column(
