@@ -237,10 +237,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 onChanged: (value)
                 {
                   setState(() {
-                    _search = widget.account
-                        .where(
-                            (element) => element.contains(value.toLowerCase()))
-                        .toList();
+                    _search = widget.account.
+                    where((element) => element.toLowerCase().contains(_textEditingController.text.toLowerCase())).toList();
                   });
                 },
                 style: TextStyle(fontSize: 18),
