@@ -8,6 +8,8 @@ import 'package:mobile_project/services/auth_service.dart';
 import 'forgotpass.dart';
 import 'signup.dart';
 import 'welcome.dart';
+import 'package:mobile_project/screen/homepage/homepage.dart';
+import 'package:mobile_project/screen/homepage/home_page.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
@@ -195,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePageScreen()));
+                                  builder: (context) => HomePage()));
                         },
                         child: Container(
                           height: 65,
