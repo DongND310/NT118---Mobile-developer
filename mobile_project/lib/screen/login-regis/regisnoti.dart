@@ -1,5 +1,6 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_project/screen/homepage/home_page.dart';
 import 'package:mobile_project/screen/homepage/homepage.dart';
 
 class RegisterSuccessScreen extends StatelessWidget {
@@ -65,8 +66,8 @@ class RegisterSuccessScreen extends StatelessWidget {
             ),
             // button
             GestureDetector(
-              onTap: () => Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => HomePageScreen())),
+              onTap: () => Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => HomePage())),
               child: Container(
                 height: 55,
                 decoration: BoxDecoration(
