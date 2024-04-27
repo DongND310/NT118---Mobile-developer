@@ -1,12 +1,5 @@
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
-<svg width="800px" height="800px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#107BFD" class="bi bi-person-fill">
-
-<g id="SVGRepo_bgCarrier" stroke-width="0"/>
-
-<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#107BFD" stroke-width="0.768"> <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/> </g>
-
-<g id="SVGRepo_iconCarrier"> <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/> </g>
-
+<svg width="20" height="23" viewBox="0 0 20 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1 21.5714V20.2856C1 15.3151 5.02944 11.2856 10 11.2856C14.9706 11.2856 19 15.3151 19 20.2856V21.5714" fill="#107BFD"/>
+<path d="M1 21.5714V20.2856C1 15.3151 5.02944 11.2856 10 11.2856C14.9706 11.2856 19 15.3151 19 20.2856V21.5714" stroke="#F1FCFD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M9.99997 11.2857C12.8402 11.2857 15.1428 8.98313 15.1428 6.14286C15.1428 3.30253 12.8402 1 9.99997 1C7.15965 1 4.85712 3.30253 4.85712 6.14286C4.85712 8.98313 7.15965 11.2857 9.99997 11.2857Z" fill="#107BFD" stroke="#F1FCFD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
