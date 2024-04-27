@@ -32,39 +32,8 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
     "Nov",
     "Dec"
   ];
-  final List<String> dayList = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-    '11',
-    '12',
-    '13',
-    '14',
-    '15',
-    '16',
-    '17',
-    '18',
-    '19',
-    '20',
-    '21',
-    '22',
-    '23',
-    '24',
-    '25',
-    '26',
-    '27',
-    '28',
-    '29',
-    '30',
-    '31'
-  ];
+  List<String> dayList = [];
+
   final List<String> yearList =
       List.generate(2015 - 1970, (index) => (2015 - index).toString());
   List<String> nationList = [];
@@ -73,8 +42,9 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   final accountnameController = TextEditingController();
   final usernameController = TextEditingController();
   final phoneController = TextEditingController();
-  String? selectedDay;
   String? selectedMonth;
+  String? preMonth;
+  String? selectedDay;
   String? selectedYear;
   String? selectedGender;
   String? selectedNation;
@@ -102,8 +72,8 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   }
 
   Future inputPersonalInfo() async {
-    String day = selectedDay.toString();
     String month = selectedMonth.toString();
+    String day = selectedDay.toString();
     String year = selectedYear.toString();
     String dob = '$month $day, $year';
     String gender = selectedGender.toString();
@@ -246,22 +216,36 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InputDropDown(
-                        options: dayList,
-                        hintText: "Ngày",
-                        width: 95,
-                        onChanged: (String value) {
-                          setState(() {
-                            selectedDay = value;
-                          });
-                        },
-                      ),
-                      InputDropDown(
                         options: monthList,
                         hintText: "Tháng",
                         width: 95,
                         onChanged: (String value) {
                           setState(() {
                             selectedMonth = value;
+                            if (value == "Feb") {
+                              dayList = List.generate(
+                                  29, (index) => (index + 1).toString());
+                            } else if (value == "Apr" ||
+                                value == "Jun" ||
+                                value == "Sep" ||
+                                value == "Nov") {
+                              dayList = List.generate(
+                                  30, (index) => (index + 1).toString());
+                            } else {
+                              dayList = List.generate(
+                                  31, (index) => (index + 1).toString());
+                            }
+                          });
+                        },
+                      ),
+                      InputDropDown(
+                        options: dayList,
+                        hintText: "Ngày",
+                        width: 95,
+                        onChanged: (String value) {
+                          setState(() {
+                            selectedDay = value;
+                            print('selectD: $value');
                           });
                         },
                       ),
