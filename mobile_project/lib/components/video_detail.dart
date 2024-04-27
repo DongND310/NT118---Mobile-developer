@@ -24,7 +24,7 @@ class VideoDetail extends StatelessWidget {
             style: const TextStyle(
                 color: Color(0xffF1FCFD),
                 fontWeight: FontWeight.w500,
-                fontSize: 10),
+                fontSize: 16),
           ),
           leading: CircleAvatar(
             radius: 14,
@@ -36,7 +36,7 @@ class VideoDetail extends StatelessWidget {
           child: ExpandableText(
             video.caption,
             style: const TextStyle(
-                fontSize: 9, color: Colors.white, fontWeight: FontWeight.w100),
+                fontSize: 15, color: Colors.white, fontWeight: FontWeight.w100),
             expandText: 'more',
             collapseText: 'less',
             expandOnTextTap: true,
@@ -54,7 +54,7 @@ class VideoDetail extends StatelessWidget {
             style: const TextStyle(
                 color: Color(0xffF1FCFD),
                 fontWeight: FontWeight.w500,
-                fontSize: 8),
+                fontSize: 12),
           ),
           leading: const Icon(
             CupertinoIcons.music_note_2,

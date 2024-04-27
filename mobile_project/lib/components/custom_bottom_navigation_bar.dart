@@ -14,7 +14,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     final style = Theme.of(context)
         .textTheme
         .bodyLarge!
-        .copyWith(fontSize: 7, fontWeight: FontWeight.w600);
+        .copyWith(fontSize: 10, fontWeight: FontWeight.w600);
     return BottomAppBar(
       color: selectedPageIndex == 0
           ? const Color(0xFF000141)
@@ -23,7 +23,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         height: barHeight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _bottomBarNavItem(0, 'Trang chủ', style, 'home'),
             _bottomBarNavItem(1, 'Hộp thư', style, 'message'),
@@ -48,10 +48,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return GestureDetector(
       onTap: () => {onIconTap(index)},
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           SvgPicture.asset(
-            'assets/${isSelected ? '${iconName}_filled' : iconName}.svg',
+            'assets/icons/${isSelected ? '${iconName}_filled' : iconName}.svg',
           ),
           const SizedBox(
             height: 1,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/components/home_side_bar.dart';
 import 'package:mobile_project/components/video_detail.dart';
@@ -24,13 +25,13 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.search),
-          color: const Color(0xffF1FCFD), // Icon tìm kiếm
+          color: const Color(0xffF1FCFD),
           onPressed: () {
             // Xử lý sự kiện khi nhấn vào nút tìm kiếm
           },
         ),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             GestureDetector(
               onTap: () => {
@@ -41,13 +42,18 @@ class _HomePageState extends State<HomePage> {
               child: Text(
                 "Đang theo dõi",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    fontSize: 10,
+                    fontSize: 15,
+                    fontWeight: _isFollowingSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                     color: _isFollowingSelected
                         ? const Color(0xffF1FCFD)
                         : Colors.grey),
               ),
             ),
-            const Text(" "),
+            const SizedBox(
+              width: 10,
+            ),
             GestureDetector(
               onTap: () => {
                 setState(() {
@@ -57,13 +63,16 @@ class _HomePageState extends State<HomePage> {
               child: Text(
                 "Dành cho bạn",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    fontSize: 10,
+                    fontSize: 15,
+                    fontWeight: _isFollowingSelected
+                        ? FontWeight.normal
+                        : FontWeight.bold,
                     color: !_isFollowingSelected
                         ? const Color(0xffF1FCFD)
                         : Colors.grey),
               ),
             ),
-            const Text("     "),
+            const SizedBox(width: 50),
           ],
         ),
       ),

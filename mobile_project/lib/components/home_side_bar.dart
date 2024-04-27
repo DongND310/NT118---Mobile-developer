@@ -35,7 +35,7 @@ class _HomeSideBarState extends State<HomeSideBar>
     TextStyle style = Theme.of(context)
         .textTheme
         .bodyLarge!
-        .copyWith(fontSize: 8, color: const Color(0xffF1FCFD));
+        .copyWith(fontSize: 12, color: const Color(0xffF1FCFD));
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,7 +55,7 @@ class _HomeSideBarState extends State<HomeSideBar>
                   SizedBox(
                     height: 35,
                     width: 35,
-                    child: Image.asset('assets/disc.png'),
+                    child: Image.asset('assets/images/disc.png'),
                   ),
                   CircleAvatar(
                     radius: 10,
@@ -78,7 +78,7 @@ class _HomeSideBarState extends State<HomeSideBar>
     return Column(
       children: [
         SvgPicture.asset(
-          'assets/$iconName.svg',
+          'assets/icons/$iconName.svg',
         ),
         const SizedBox(
           height: 5,
@@ -86,6 +86,9 @@ class _HomeSideBarState extends State<HomeSideBar>
         Text(
           label,
           style: style,
+        ),
+        const SizedBox(
+          height: 5,
         )
       ],
     );
