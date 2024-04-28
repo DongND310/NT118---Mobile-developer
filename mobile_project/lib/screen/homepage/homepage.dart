@@ -33,15 +33,15 @@ class HomePageScreen extends StatelessWidget {
           padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            SizedBox(
+            const SizedBox(
               height: 120,
             ),
             SvgPicture.asset(
                 'assets/icons/Check-Circle--Streamline-Core.svg.svg'),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
-            Text(
+            const Text(
               'Thành công',
               style: TextStyle(
                 fontSize: 40,
@@ -50,20 +50,20 @@ class HomePageScreen extends StatelessWidget {
                 letterSpacing: 2,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Text(
               'Đăng nhập thành công, chào mừng ' + user.email!,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
                 fontWeight: FontWeight.normal,
                 letterSpacing: 0,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 40,
             ),
             // button

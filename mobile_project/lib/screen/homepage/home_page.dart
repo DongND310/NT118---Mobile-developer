@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _isFollowingSelected = true;
+  bool _isFollowingSelected = false;
   int _snappedPageIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     fontSize: 15,
                     fontWeight: _isFollowingSelected
-                        ? FontWeight.bold
+                        ? FontWeight.w600
                         : FontWeight.normal,
                     color: _isFollowingSelected
                         ? const Color(0xffF1FCFD)
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                     fontSize: 15,
                     fontWeight: _isFollowingSelected
                         ? FontWeight.normal
-                        : FontWeight.bold,
+                        : FontWeight.w600,
                     color: !_isFollowingSelected
                         ? const Color(0xffF1FCFD)
                         : Colors.grey),
