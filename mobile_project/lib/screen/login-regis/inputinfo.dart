@@ -5,7 +5,6 @@ import 'package:mobile_project/components/button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_project/screen/homepage/homepage.dart';
 import 'package:http/http.dart' as http;
 
 import 'regisnoti.dart';

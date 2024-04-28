@@ -8,7 +8,6 @@ import 'package:mobile_project/services/auth_service.dart';
 import 'forgotpass.dart';
 import 'signup.dart';
 import 'welcome.dart';
-import 'package:mobile_project/screen/homepage/homepage.dart';
 import 'package:mobile_project/screen/homepage/home_page.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -197,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePage()));
+                                  builder: (context) => NavigationContainer()));
                         },
                         child: Container(
                           height: 65,
@@ -213,15 +212,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ],
                           ),
-                          child: const Row(
+                          child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image(
-                                    image: AssetImage('assets/images/gg.png')),
-                                SizedBox(
+                                SvgPicture.asset(
+                                  "assets/icons/google_logo.svg",
+                                  width: 35,
+                                ),
+                                const SizedBox(
                                   width: 20,
                                 ),
-                                Text(
+                                const Text(
                                   "Đăng nhập với Google",
                                   style: TextStyle(
                                       fontSize: 17,
