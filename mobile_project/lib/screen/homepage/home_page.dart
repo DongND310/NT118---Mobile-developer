@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/components/home_side_bar.dart';
 import 'package:mobile_project/components/video_detail.dart';
 import 'package:mobile_project/components/video_tile.dart';
+import 'package:mobile_project/screen/Search/search.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,7 +27,8 @@ class _HomePageState extends State<HomePage> {
           icon: const Icon(Icons.search),
           color: const Color(0xffF1FCFD),
           onPressed: () {
-            // Xử lý sự kiện khi nhấn vào nút tìm kiếm
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SearchScreen()));
           },
         ),
         title: Row(
