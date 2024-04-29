@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -13,7 +14,7 @@ class SearchMessageScreen extends StatefulWidget{
 class _SearchMessageState extends State<SearchMessageScreen>{
   TextEditingController _textEditingController = TextEditingController();
   List<String> _search =[];
-  final FocusNode _focusNode = FocusNode();
+  FocusNode _focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

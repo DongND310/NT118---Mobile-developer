@@ -41,6 +41,7 @@ class VideoSearch extends StatelessWidget{
                 children: [
                   SvgPicture.asset(
                     "assets/icons/heart.svg",
+                    color: Colors.black,
                     width: 20,
                     height: 20,
                   ),
