@@ -38,7 +38,7 @@ class ProfilePage extends StatelessWidget {
         title: Text(
           '@username',
           style: const TextStyle(
-              fontSize: 18, color: Colors.blue, fontWeight: FontWeight.w600),
+              fontSize: 18, color: Colors.blue, fontWeight: FontWeight.bold),
         ),
       ),
       body: Container(
