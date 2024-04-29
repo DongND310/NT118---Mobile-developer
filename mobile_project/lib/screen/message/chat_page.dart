@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'chat_bottom_sheet.dart';
 import 'chat_sample.dart';
+import 'more_chat.dart';
 class ChatPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
@@ -40,11 +41,15 @@ class ChatPage extends StatelessWidget{
               ),
               actions: [
                 Padding(padding: EdgeInsets.only(right: 25),
-                child: Icon(
-                  Icons.info_outline_rounded,
-                  color: Color(0xFF107BFD),
-                  size: 30,
-                ),)
+                  child: IconButton(onPressed: () { Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => MoreScreen()));},
+                    icon: Icon(
+                      Icons.info_outline_rounded,
+                      color: Color(0xFF107BFD),
+                      size: 30,
+                    ),
+                  ),
+                )
             ],
           ),
         ),
