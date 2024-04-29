@@ -138,8 +138,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                   child: Column(
                     children: [
                       const SizedBox(height: 20),
-                      //Email, password
-
+                      //Email input
                       MyTextField(
                           controller: emailController,
                           label: "Email",

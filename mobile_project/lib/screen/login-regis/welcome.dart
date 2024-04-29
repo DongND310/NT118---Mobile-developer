@@ -45,6 +45,8 @@ class WelcomeScreen extends StatelessWidget {
                   color: Colors.blue,
                   borderRadius: BorderRadius.circular(10),
                 ),
+
+                // login
                 child: const Center(
                   child: Text(
                     'LOGIN',
@@ -60,6 +62,8 @@ class WelcomeScreen extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
+
+            // sign up
             GestureDetector(
               onTap: () {
                 Navigator.push(context,

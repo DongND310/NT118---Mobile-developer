@@ -1,8 +1,9 @@
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobile_project/screen/homepage/homepage.dart';
 import 'package:mobile_project/services/auth_service.dart';
 import 'login.dart';
+import 'verifyemail.dart';
 import 'welcome.dart';
 import 'inputinfo.dart';
 import 'package:mobile_project/components/inputtext.dart';
@@ -21,6 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmpasswordController = TextEditingController();
+  EmailOTP myauth = EmailOTP();
 
   void signUserUp() async {
     showDialog(
@@ -36,12 +38,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text, password: passwordController.text);
         Navigator.pop(context);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => InputInfoScreen(
-                      email: emailController.text,
-                    )));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => VerifyEmailScreen()));
       } else {
         Navigator.pop(context);
         ErrorMessageg("Mật khẩu không trùng khớp.");
@@ -49,7 +47,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       String errorMessage;
+      print(e.code);
       switch (e.code) {
+        case 'email-already-in-use':
+          errorMessage = 'Email đã được đăng ký.';
+          break;
         case 'invalid-email':
           errorMessage = 'Email không hợp lệ.';
           break;
@@ -203,15 +205,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ),
                             ],
                           ),
-                          child: const Row(
+                          child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image(
-                                    image: AssetImage('assets/images/gg.png')),
-                                SizedBox(
+                                SvgPicture.asset(
+                                  "assets/icons/google_logo.svg",
+                                  width: 35,
+                                ),
+                                const SizedBox(
                                   width: 20,
                                 ),
-                                Text(
+                                const Text(
                                   "Đăng ký với Google",
                                   style: TextStyle(
                                       fontSize: 17,

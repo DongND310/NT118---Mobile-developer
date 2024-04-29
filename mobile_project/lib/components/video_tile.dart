@@ -75,7 +75,7 @@ class _VideoTileState extends State<VideoTile> {
           } else {
             return Container(
               alignment: Alignment.center,
-              child: Lottie.asset('assets/loading.json',
+              child: Lottie.asset('assets/videos/loading.json',
                   width: 100, height: 100, fit: BoxFit.cover),
             );
           }

@@ -4,7 +4,7 @@ import 'package:mobile_project/screen/homepage/add_video_page.dart';
 import 'package:mobile_project/screen/homepage/home_page.dart';
 import 'package:mobile_project/screen/homepage/inbox_page.dart';
 import 'package:mobile_project/screen/homepage/notification_page.dart';
-import 'package:mobile_project/screen/homepage/profile_page.dart';
+import 'package:mobile_project/screen/users/profile_page.dart';
 
 class NavigationContainer extends StatefulWidget {
   const NavigationContainer({super.key});
