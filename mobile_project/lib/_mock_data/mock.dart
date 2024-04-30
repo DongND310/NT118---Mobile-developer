@@ -14,12 +14,12 @@ final List<User> users = [
 ];
 
 final List<Video> videos = [
-  Video('v1.mp4', demoUser1, 'caption', 'audioName',
+  Video('videos/v1.mp4', demoUser1, 'caption', 'audioName',
       'https://picsum.photos/id/1/200/200', '154', '22', '5'),
-  Video('v2.mp4', demoUser2, 'caption', 'audioName',
+  Video('videos/v2.mp4', demoUser2, 'caption', 'audioName',
       'https://picsum.photos/id/85/200/200', '15M', '4852', '25'),
-  Video('v3.mp4', demoUser3, 'caption', 'audioName',
+  Video('videos/v3.mp4', demoUser3, 'caption', 'audioName',
       'https://picsum.photos/id/75/200/200', '2.5K', '100', '1'),
-  Video('v4.mp4', currentUser, 'caption', 'audioName',
+  Video('videos/v4.mp4', currentUser, 'caption', 'audioName',
       'https://picsum.photos/id/82/200/200', '15M', '1.5M', '0'),
 ];

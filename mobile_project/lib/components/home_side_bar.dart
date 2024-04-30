@@ -35,7 +35,7 @@ class _HomeSideBarState extends State<HomeSideBar>
     TextStyle style = Theme.of(context)
         .textTheme
         .bodyLarge!
-        .copyWith(fontSize: 8, color: const Color(0xffF1FCFD));
+        .copyWith(fontSize: 12, color: const Color(0xffF1FCFD));
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -86,6 +86,9 @@ class _HomeSideBarState extends State<HomeSideBar>
         Text(
           label,
           style: style,
+        ),
+        const SizedBox(
+          height: 5,
         )
       ],
     );

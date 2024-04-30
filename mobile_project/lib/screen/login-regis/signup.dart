@@ -1,7 +1,9 @@
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobile_project/screen/homepage/homepage.dart';
+import 'package:mobile_project/services/auth_service.dart';
 import 'login.dart';
+import 'verifyemail.dart';
 import 'welcome.dart';
 import 'inputinfo.dart';
 import 'package:mobile_project/components/inputtext.dart';
@@ -20,6 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmpasswordController = TextEditingController();
+  EmailOTP myauth = EmailOTP();
 
   void signUserUp() async {
     showDialog(
@@ -35,12 +38,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text, password: passwordController.text);
         Navigator.pop(context);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => InputInfoScreen(
-                      email: emailController.text,
-                    )));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => VerifyEmailScreen()));
       } else {
         Navigator.pop(context);
         ErrorMessageg("Mật khẩu không trùng khớp.");
@@ -48,7 +47,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       String errorMessage;
+      print(e.code);
       switch (e.code) {
+        case 'email-already-in-use':
+          errorMessage = 'Email đã được đăng ký.';
+          break;
         case 'invalid-email':
           errorMessage = 'Email không hợp lệ.';
           break;
@@ -129,7 +132,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 0.0),
+                padding: const EdgeInsets.symmetric(horizontal: 0.0),
                 child: Container(
                   width: double.infinity,
                   child: Column(
@@ -162,66 +165,70 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         onTap: signUserUp,
                         text: "ĐĂNG KÝ",
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 30),
 
                       // signup gg/fb
                       const Text(
-                        'Hoặc đăng ký với',
+                        'Hoặc',
                         style: TextStyle(
                           fontSize: 15,
-                          color: const Color.fromARGB(190, 0, 0, 0),
+                          color: Color.fromARGB(190, 0, 0, 0),
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Container(
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                width: 110,
-                                height: 65,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  // border: Border.all(color: Colors.black38),
-                                  borderRadius: BorderRadius.circular(5),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 0.5,
-                                      blurRadius: 8,
-                                      offset: Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
-                                child: const Image(
-                                    image: AssetImage('assets/images/gg.png')),
+                      const SizedBox(height: 15),
+                      GestureDetector(
+                        onTap: () async {
+                          // AuthService().signInWithGoogle();
+                          var userCredential =
+                              await AuthService().signInWithGoogle();
+                          var email = userCredential.user!.email;
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => InputInfoScreen(
+                                        email: email!,
+                                      )));
+                        },
+                        child: Container(
+                          height: 65,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 0.5,
+                                blurRadius: 8,
+                                offset: const Offset(0, 3),
                               ),
-                              Container(
-                                width: 110,
-                                height: 65,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  // border: Border.all(color: Colors.blue),
-                                  borderRadius: BorderRadius.circular(5),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 0.5,
-                                      blurRadius: 8,
-                                      offset: Offset(0, 3),
-                                    ),
-                                  ],
+                            ],
+                          ),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/icons/google_logo.svg",
+                                  width: 35,
                                 ),
-                                child: const Image(
-                                    image: AssetImage('assets/images/fb.png')),
-                              ),
-                            ]),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                const Text(
+                                  "Đăng ký với Google",
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      color: Color.fromARGB(190, 0, 0, 0),
+                                      fontWeight: FontWeight.w400,
+                                      letterSpacing: 0),
+                                ),
+                              ]),
+                        ),
                       ),
 
                       // login
-                      SizedBox(height: 40),
+                      const SizedBox(height: 40),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -229,7 +236,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             'Đã có tài khoản? ',
                             style: TextStyle(
                               fontSize: 15,
-                              color: const Color.fromARGB(190, 0, 0, 0),
+                              color: Color.fromARGB(190, 0, 0, 0),
                               fontWeight: FontWeight.w500,
                               letterSpacing: 0,
                             ),

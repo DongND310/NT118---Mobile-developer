@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mobile_project/components/custom_bottom_navigation_bar.dart';
 import 'package:mobile_project/screen/homepage/add_video_page.dart';
 import 'package:mobile_project/screen/homepage/home_page.dart';
-import 'package:mobile_project/screen/homepage/inbox_page.dart';
 import 'package:mobile_project/screen/homepage/notification_page.dart';
-import 'package:mobile_project/screen/homepage/profile_page.dart';
+import 'package:mobile_project/screen/message/message_page.dart';
+import 'package:mobile_project/screen/users/profile_page.dart';
 
 class NavigationContainer extends StatefulWidget {
   const NavigationContainer({super.key});
@@ -19,7 +19,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
 
   static List<Widget> _pages = [
     HomePage(),
-    InboxPage(),
+    MessagePage(),
     AddVideoPage(),
     NotificationPage(),
     ProfilePage(),

@@ -1,10 +1,95 @@
+import 'dart:convert';
+
+import 'package:email_otp/email_otp.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/components/button.dart';
-
 import 'package:flutter/material.dart';
+import 'inputinfo.dart';
 
-class VerifyEmailScreen extends StatelessWidget {
-  const VerifyEmailScreen({super.key});
+class VerifyEmailScreen extends StatefulWidget {
+  VerifyEmailScreen({key, User? data}) : super(key: key);
+
+  @override
+  State<VerifyEmailScreen> createState() => _VerifyEmailScreenState();
+}
+
+class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
+  final user = FirebaseAuth.instance.currentUser!;
+  EmailOTP myauth = EmailOTP();
+
+  final OTP1Controller = TextEditingController();
+  final OTP2Controller = TextEditingController();
+  final OTP3Controller = TextEditingController();
+  final OTP4Controller = TextEditingController();
+  final OTP5Controller = TextEditingController();
+  final OTP6Controller = TextEditingController();
+
+  void sendemailOTP() async {
+    myauth.setConfig(
+        appEmail: "21521956@gm.uit.edu.vn",
+        appName: "Email OTP",
+        userEmail: user.email,
+        otpLength: 6,
+        otpType: OTPType.digitsOnly);
+    if (await myauth.sendOTP() == true) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("OTP has been sent"),
+      ));
+    }
+  }
+
+  void verifyEmail() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+              child: CircularProgressIndicator(
+            color: Colors.blue,
+          ));
+        });
+    try {
+      if (await myauth.verifyOTP(
+              otp: OTP1Controller.text +
+                  OTP2Controller.text +
+                  OTP3Controller.text +
+                  OTP4Controller.text +
+                  OTP5Controller.text +
+                  OTP6Controller.text) ==
+          true) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => InputInfoScreen(email: user.email!)));
+      } else {
+        Navigator.pop(context);
+        ErrorMessageg();
+      }
+    } on FirebaseAuthException catch (e) {
+      return;
+    }
+  }
+
+  Future<void> ErrorMessageg() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Lỗi xác thực'),
+          content:
+              const Text('Mã OTP không chính xác. Hãy kiểm tra và nhập lại.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK', style: TextStyle(color: Colors.blue)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,34 +128,34 @@ class VerifyEmailScreen extends StatelessWidget {
               const SizedBox(
                 height: 15,
               ),
-              const Text(
-                'Một mã xác thực vừa được gửi đến email',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
-                  letterSpacing: 0,
-                ),
-              ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    'email ',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 0,
-                    ),
-                  ),
-                  Text(
-                    '@gmail.com',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0,
+                  Flexible(
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          const TextSpan(
+                            text: 'Một mã xác thực vừa được gửi đến email ',
+                            style: TextStyle(
+                              height: 1.5,
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                              letterSpacing: 0,
+                            ),
+                          ),
+                          TextSpan(
+                            text: user.email!,
+                            style: const TextStyle(
+                                fontSize: 18,
+                                height: 1.5,
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -95,20 +180,41 @@ class VerifyEmailScreen extends StatelessWidget {
                     children: [
                       SizedBox(height: 30),
 
-                      //Email
+                      // OTP input
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InputCode(first: true, last: false, context: context),
                           InputCode(
-                              first: false, last: false, context: context),
+                              controller: OTP1Controller,
+                              first: true,
+                              last: false,
+                              context: context),
                           InputCode(
-                              first: false, last: false, context: context),
+                              controller: OTP2Controller,
+                              first: false,
+                              last: false,
+                              context: context),
                           InputCode(
-                              first: false, last: false, context: context),
+                              controller: OTP3Controller,
+                              first: false,
+                              last: false,
+                              context: context),
                           InputCode(
-                              first: false, last: false, context: context),
-                          InputCode(first: false, last: true, context: context),
+                              controller: OTP4Controller,
+                              first: false,
+                              last: false,
+                              context: context),
+                          InputCode(
+                              controller: OTP5Controller,
+                              first: false,
+                              last: false,
+                              context: context),
+                          InputCode(
+                              controller: OTP6Controller,
+                              first: false,
+                              last: true,
+                              context: context),
                         ],
                       ),
 
@@ -122,10 +228,10 @@ class VerifyEmailScreen extends StatelessWidget {
                         text: "XÁC NHẬN",
                       ),
                       const SizedBox(height: 30),
-                      const Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             'Chưa nhận được mã? ',
                             style: TextStyle(
                               fontSize: 18,
@@ -134,13 +240,16 @@ class VerifyEmailScreen extends StatelessWidget {
                               letterSpacing: 0,
                             ),
                           ),
-                          Text(
-                            'Gửi lại mã',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0,
+                          GestureDetector(
+                            onTap: sendemailOTP,
+                            child: const Text(
+                              'Gửi lại mã',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0,
+                              ),
                             ),
                           ),
                           //
@@ -154,17 +263,17 @@ class VerifyEmailScreen extends StatelessWidget {
       ),
     );
   }
-
-  verifyEmail() {}
 }
 
 class InputCode extends StatelessWidget {
+  final controller;
   final bool first;
   final bool last;
   final BuildContext context;
 
   const InputCode(
       {Key? key,
+      required this.controller,
       required this.first,
       required this.last,
       required this.context})
@@ -177,6 +286,7 @@ class InputCode extends StatelessWidget {
       child: AspectRatio(
         aspectRatio: 3.5 / 4.0,
         child: TextField(
+          textAlignVertical: TextAlignVertical.top,
           autofocus: true,
           onChanged: (value) {
             if (value.length == 1 && last == false) {
@@ -185,13 +295,15 @@ class InputCode extends StatelessWidget {
             if (value.length == 0 && first == false) {
               FocusScope.of(context).previousFocus();
             }
+            print('$value');
           },
           showCursor: true,
           readOnly: false,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
           keyboardType: TextInputType.number,
           maxLength: 1,
+          controller: controller,
           decoration: InputDecoration(
             counter: Offstage(),
             enabledBorder: OutlineInputBorder(
