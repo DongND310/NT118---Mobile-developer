@@ -1,13 +1,40 @@
 import 'dart:ui';
-
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_project/components/navigation_container.dart';
-
+import 'package:mobile_project/screen/Follow/follower_listview.dart';
 import 'proflie_setting.dart';
+import 'tab_like.dart';
+import 'tab_post.dart';
+import 'tab_save.dart';
+import 'tab_video.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({Key? key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+    _tabController.addListener(_handleTabSelection);
+  }
+
+  void _handleTabSelection() {
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +52,11 @@ class ProfilePage extends StatelessWidget {
             alignment: Alignment.topRight,
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ProfileSettingPage()));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileSettingPage(),
+                ),
+              );
             },
             icon: SvgPicture.asset(
               'assets/icons/setting_list.svg',
@@ -38,153 +67,241 @@ class ProfilePage extends StatelessWidget {
         title: Text(
           '@username',
           style: const TextStyle(
-              fontSize: 18, color: Colors.blue, fontWeight: FontWeight.bold),
+            fontSize: 18,
+            color: Colors.blue,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      body: Container(
-        color: Colors.white,
-        height: MediaQuery.of(context).size.height,
-        width: double.infinity,
-        child: ListView(
-          padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
-          children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              const SizedBox(
-                height: 20,
-              ),
-              // avatar + userID
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: const SizedBox(
-                  width: 100,
-                  height: 100,
-                  // child: Image.asset(''),
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              const Text(
-                '@userid',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          // avatar + userID
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: const SizedBox(
+              width: 100,
+              height: 100,
+              // child: Image.asset(''),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          const Text(
+            '@userid',
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0,
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
 
-              // follow
-              Row(
-                children: [
-                  Expanded(
+          // follow
+          Padding(
+            padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
+            child: Row(
+              children: [
+                // following
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ListFollowerScreen(), // update following
+                        ),
+                      );
+                    },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          '@Following',
+                          '500K',
                           style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
+                            color: Colors.blue,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        Text('Đang theo dõi',
-                            style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal)),
+                        const Text(
+                          'Đang theo dõi',
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  Expanded(
+                ),
+
+                // follower
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ListFollowerScreen(),
+                        ),
+                      );
+                    },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          '@Follower',
+                          '1.5M',
                           style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
+                            color: Colors.blue,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        Text('Người theo dõi',
-                            style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal)),
+                        Text(
+                          'Người theo dõi',
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
                       ],
                     ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 25,
+          ),
+
+          // btn edit profile
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileSettingPage(),
+                ),
+              );
+            },
+            child: Container(
+              height: 55,
+              width: 260,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.blue),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 0.5,
+                    blurRadius: 8,
+                    offset: Offset(0, 3),
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 30,
-              ),
-
-              // btn edit profile
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProfileSettingPage()));
-                },
-                child: Container(
-                  height: 55,
-                  width: 260,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.blue),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 0.5,
-                        blurRadius: 8,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Chỉnh sửa hồ sơ',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.blue,
-                      ),
-                    ),
+              child: const Center(
+                child: Text(
+                  'Chỉnh sửa hồ sơ',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.blue,
                   ),
                 ),
               ),
+            ),
+          ),
 
-              // bio
-              const SizedBox(
-                height: 30,
+          // bio
+          const SizedBox(
+            height: 25,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
+            child: const Text(
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eleifend orci et enim imperdiet, vestibulum hendrerit mi condimentum.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
               ),
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          // post
 
-              const Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eleifend orci et enim imperdiet, vestibulum hendrerit mi condimentum.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
+          TabBar(
+            controller: _tabController,
+            tabs: [
+              Tab(
+                icon: SvgPicture.asset(
+                  _tabController.index == 0
+                      ? 'assets/icons/list_video_selected.svg'
+                      : 'assets/icons/list_video.svg',
+                  width: 25,
                 ),
               ),
-              const SizedBox(
-                height: 40,
+              Tab(
+                icon: SvgPicture.asset(
+                  _tabController.index == 1
+                      ? 'assets/icons/list_post_selected.svg'
+                      : 'assets/icons/list_post.svg',
+                  width: 25,
+                ),
               ),
-              // post
-            ]),
-          ],
-        ),
+              Tab(
+                icon: SvgPicture.asset(
+                  _tabController.index == 2
+                      ? 'assets/icons/list_save_selected.svg'
+                      : 'assets/icons/list_save.svg',
+                  width: 17,
+                ),
+              ),
+              Tab(
+                icon: SvgPicture.asset(
+                  _tabController.index == 3
+                      ? 'assets/icons/list_like_selected.svg'
+                      : 'assets/icons/list_like.svg',
+                  width: 23,
+                ),
+              ),
+            ],
+            indicatorColor: Colors.blue,
+            onTap: (index) {
+              _tabController.animateTo(index);
+            },
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                VideoTab(),
+                PostTab(),
+                SaveTab(),
+                LikeTab(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
