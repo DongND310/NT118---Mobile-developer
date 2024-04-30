@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mobile_project/models/video.dart';
-
 import 'package:video_player/video_player.dart';
 
 class VideoTile extends StatefulWidget {
@@ -75,7 +74,7 @@ class _VideoTileState extends State<VideoTile> {
           } else {
             return Container(
               alignment: Alignment.center,
-              child: Lottie.asset('assets/loading.json',
+              child: Lottie.asset('assets/videos/loading.json',
                   width: 100, height: 100, fit: BoxFit.cover),
             );
           }

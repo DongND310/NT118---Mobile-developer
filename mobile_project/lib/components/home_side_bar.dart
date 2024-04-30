@@ -55,7 +55,7 @@ class _HomeSideBarState extends State<HomeSideBar>
                   SizedBox(
                     height: 35,
                     width: 35,
-                    child: Image.asset('assets/disc.png'),
+                    child: Image.asset('assets/images/disc.png'),
                   ),
                   CircleAvatar(
                     radius: 10,
@@ -78,7 +78,7 @@ class _HomeSideBarState extends State<HomeSideBar>
     return Column(
       children: [
         SvgPicture.asset(
-          'assets/$iconName.svg',
+          'assets/icons/$iconName.svg',
         ),
         const SizedBox(
           height: 5,

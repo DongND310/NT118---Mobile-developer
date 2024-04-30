@@ -17,11 +17,11 @@ class NavigationContainer extends StatefulWidget {
 class _NavigationContainerState extends State<NavigationContainer> {
   int _selectedPageIndex = 0;
 
-  static const List<Widget> _pages = [
+  static List<Widget> _pages = [
     HomePage(),
-    NotificationPage(),
-    AddVideoPage(),
     InboxPage(),
+    AddVideoPage(),
+    NotificationPage(),
     ProfilePage(),
   ];
 
