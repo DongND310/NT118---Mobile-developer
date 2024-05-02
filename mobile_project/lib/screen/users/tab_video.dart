@@ -6,7 +6,8 @@ class VideoTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      itemCount: 14,
+      padding: EdgeInsets.all(0),
+      itemCount: 22,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3, childAspectRatio: 3 / 4),
       itemBuilder: (context, index) {

@@ -53,8 +53,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
         children: [
           SvgPicture.asset(
             'assets/icons/${isSelected ? '${iconName}_filled' : iconName}.svg',
-            height: 30,
-            width: 30,
+            width: 25,
+            height: 25,
           ),
           const SizedBox(
             height: 1,

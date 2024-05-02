@@ -5,18 +5,21 @@ class LikeTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      itemCount: 8,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, childAspectRatio: 3 / 4),
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.all(0.5),
-          child: Container(
-            color: const Color.fromARGB(255, 243, 121, 162),
-          ),
-        );
-      },
+    return Container(
+      child: GridView.builder(
+        padding: EdgeInsets.all(0),
+        itemCount: 28,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, childAspectRatio: 3 / 4),
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(0.5),
+            child: Container(
+              color: const Color.fromARGB(255, 243, 121, 162),
+            ),
+          );
+        },
+      ),
     );
   }
 }
