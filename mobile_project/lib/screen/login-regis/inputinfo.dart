@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobile_project/components/inputtext.dart';
 import 'package:mobile_project/components/button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,8 +11,8 @@ import 'package:http/http.dart' as http;
 import 'regisnoti.dart';
 
 class InputInfoScreen extends StatefulWidget {
-  InputInfoScreen({key, required this.email}) : super(key: key);
-  final String email;
+  InputInfoScreen({key, User? data}) : super(key: key);
+  // final String email;
   @override
   State<InputInfoScreen> createState() => _InputInfoScreenState();
 }
@@ -36,6 +37,8 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   final List<String> yearList =
       List.generate(2015 - 1970, (index) => (2015 - index).toString());
   List<String> nationList = [];
+
+  final user = FirebaseAuth.instance.currentUser!;
 
   final List<String> gender = ["Nam", "Nữ"];
   final accountnameController = TextEditingController();
@@ -112,20 +115,22 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
     }
 
     await addPersonalDetail(
+      user.uid,
       accountnameController.text.trim(),
       usernameController.text.trim(),
       phoneController.text.trim(),
       dob,
-      widget.email,
+      user.email!,
       gender,
       nation,
     );
   }
 
-  Future addPersonalDetail(String ID, String name, String phone, String dob,
-      String email, String gender, String nation) async {
+  Future addPersonalDetail(String uid, String id, String name, String phone,
+      String dob, String email, String gender, String nation) async {
     await FirebaseFirestore.instance.collection('users').add({
-      'ID': ID,
+      'UID': uid,
+      'ID': id,
       'Name': name,
       'Phone': phone,
       'DOB': dob,

@@ -38,8 +38,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text, password: passwordController.text);
         Navigator.pop(context);
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => VerifyEmailScreen()));
+        Navigator.pushReplacement(
+            context,
+            // MaterialPageRoute(builder: (context) => VerifyEmailScreen()));
+            MaterialPageRoute(builder: (context) => InputInfoScreen()));
       } else {
         Navigator.pop(context);
         ErrorMessageg("Mật khẩu không trùng khớp.");
@@ -60,6 +62,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           break;
         case 'channel-error':
           errorMessage = 'Lỗi xảy ra trong quá trình đăng ký.';
+          break;
+        case 'network-request-failed':
+          errorMessage = 'Lỗi kết nối mạng.';
           break;
         default:
           errorMessage = e.message ?? 'Lỗi xảy ra trong quá trình đăng ký.';
@@ -187,9 +192,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => InputInfoScreen(
-                                        email: email!,
-                                      )));
+                                  builder: (context) => InputInfoScreen()));
                         },
                         child: Container(
                           height: 65,

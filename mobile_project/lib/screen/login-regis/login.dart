@@ -44,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       String errorMessage;
+      print(e.code);
       switch (e.code) {
         case 'invalid-email':
           errorMessage = 'Email không hợp lệ.';
@@ -53,6 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
           break;
         case 'channel-error':
           errorMessage = 'Lỗi xảy ra trong quá trình đăng nhập.';
+          break;
+        case 'network-request-failed':
+          errorMessage = 'Lỗi kết nối mạng.';
           break;
         default:
           errorMessage = e.message ?? 'Lỗi xảy ra trong quá trình đăng nhập.';

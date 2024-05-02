@@ -61,7 +61,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => InputInfoScreen(email: user.email!)));
+                builder: (context) => InputInfoScreen()));
       } else {
         Navigator.pop(context);
         ErrorMessageg();
