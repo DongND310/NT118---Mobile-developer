@@ -39,6 +39,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   List<String> nationList = [];
 
   final user = FirebaseAuth.instance.currentUser!;
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   final List<String> gender = ["Nam", "Nữ"];
   final accountnameController = TextEditingController();
@@ -128,7 +129,8 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
 
   Future addPersonalDetail(String uid, String id, String name, String phone,
       String dob, String email, String gender, String nation) async {
-    await FirebaseFirestore.instance.collection('users').add({
+    DocumentReference userRef =
+        await FirebaseFirestore.instance.collection('users').add({
       'UID': uid,
       'ID': id,
       'Name': name,
@@ -137,7 +139,10 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       'Email': email,
       'Gender': gender,
       'Nation': nation,
+      // 'DocumentID': did,
     });
+    String did = userRef.id;
+    await userRef.update({'DocumentID': did});
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (context) => RegisterSuccessScreen()));
   }

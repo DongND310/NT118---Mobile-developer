@@ -24,6 +24,7 @@ dependencies:
   google_sign_in: ^6.2.1
   email_otp: ^2.1.2
   custom_clippers: ^2.0.0
+  uuid: ^4.4.0
 
 dev_dependencies:
   flutter_test:
