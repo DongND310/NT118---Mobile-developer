@@ -27,6 +27,7 @@ class ChatService extends ChangeNotifier {
     // Create message
     Message newMessage = Message(
       senderId: _auth.currentUser!.uid,
+      senderName: _auth.currentUser!.displayName.toString(),
       receiverId: receiverId,
       receiverName: receiverName,
       message: message,
@@ -37,13 +38,11 @@ class ChatService extends ChangeNotifier {
     ids.sort();
     String chatRoomId = ids.join('_');
 
-    // Check if chatroom exists, if not, create one
     DocumentSnapshot chatRoomSnapshot = await _firestore.collection("chatrooms").doc(chatRoomId).get();
     if (!chatRoomSnapshot.exists) {
       // Create a new chatroom document
       await _firestore.collection("chatrooms").doc(chatRoomId).set({
-        "chatroomId": chatRoomId, // Add chatroomId field
-        // You can add more fields here if needed
+        "chatroomId": chatRoomId,
       });
     }
 
@@ -64,8 +63,12 @@ class ChatService extends ChangeNotifier {
         .orderBy("timestamp", descending: false)
         .snapshots();
   }
-  Stream<QuerySnapshot> getChatRooms(){
-    return _firestore.collection("chatrooms").where("chatRoomId", arrayContains: _auth.currentUser!.uid).snapshots();
+  Stream<QuerySnapshot> getMessage(String chatRoomId) {
+    return _firestore
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .collection("messages")
+        .orderBy("timestamp", descending: false)
+        .snapshots();
   }
-
 }

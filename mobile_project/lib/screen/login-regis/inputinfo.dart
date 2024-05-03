@@ -138,6 +138,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       'Gender': gender,
       'Nation': nation,
     });
+        user.updateDisplayName(name);
     // String did = userRef.id;
     // await userRef.update({'DocumentID': did});
     Navigator.pushReplacement(context,

@@ -22,16 +22,6 @@ class _SearchMessageState extends State<SearchMessageScreen>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: SvgPicture.asset(
-            'assets/icons/ep_back.svg',
-            width: 30,
-            height: 30,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         title: SizedBox(
           height: 30,
           child: TextField(
