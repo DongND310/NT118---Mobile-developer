@@ -90,7 +90,7 @@ class ChatPage extends StatelessWidget{
             );
 
           } else {
-            return Text("error");//Container();
+            return Container();
           }
         },
       ),
