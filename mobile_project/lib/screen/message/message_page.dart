@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -26,17 +26,10 @@ class MessagePage extends StatelessWidget {
                   Navigator.push(context, MaterialPageRoute(
                       builder: (context) => SearchMessageScreen()));
                 },
-                icon: SvgPicture.asset('assets/icons/search.svg')),
+                icon: SvgPicture.asset('assets/icons/search.svg', width: 30, height: 30,)),
           )
         ],
       ),
-      // body: ListView(
-      //   children: [
-      //     Padding(
-      //         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      //         child: RecentChats())
-      //   ],
-      // ),
       body: RecentChats(),
     );
   }
