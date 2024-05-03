@@ -15,40 +15,64 @@ class _CustomFollowNotificationState extends State<CustomFollowNotification> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const CircleAvatar(
-          radius: 25,
-          backgroundImage: AssetImage("assets/images/avatar.png"),
+        Padding(
+          padding: EdgeInsets.only(left: 15),
+          child: const CircleAvatar(
+            radius: 25,
+            backgroundImage: AssetImage("assets/images/avatar.png"),
+          ),
         ),
         const SizedBox(
-          width: 5,
+          width: 25,
         ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "Account Tester 1",
-              style: Theme.of(context)
-                  .textTheme
-                  .displaySmall!
-                  .copyWith(color: Colors.black, fontSize: 15),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Text(
-              "đã bắt đầu theo dõi bạn.",
-              style: Theme.of(context)
-                  .textTheme
-                  .titleSmall!
-                  .copyWith(color: Colors.grey, fontSize: 10),
-            ),
-          ],
+        Container(
+          width: 160,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          const TextSpan(
+                            text: "Account Tester1",
+                            style: TextStyle(
+                              height: 1,
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextSpan(
+                            text: " đã bắt đầu theo dõi bạn.",
+                            style: const TextStyle(
+                              height: 1.2,
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        Expanded(
+        Container(
+          width: 100,
+          height: 80,
           child: Padding(
-            padding: EdgeInsets.only(left: follow == false ? 50 : 30),
+            // padding: EdgeInsets.only(left: follow == false ? 50 : 30),
+            padding: EdgeInsets.only(left: 5),
             child: CustomButton(
-              height: 40,
+              height: 45,
               color: follow == false ? Colors.blue : const Color(0xffF1FCFD),
               textColor: follow == false ? Colors.white : Colors.black,
               onTap: () => {

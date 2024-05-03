@@ -22,7 +22,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Inter'),
-       home:  WelcomeScreen(),
+      home: WelcomeScreen(),
       //home: NavigationContainer(),
     );
   }
