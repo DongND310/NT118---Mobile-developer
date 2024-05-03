@@ -21,23 +21,25 @@ class NotificationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Center(
           child: Text(
-            "Thông báo",
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: "Inter",
-                ),
+            'Thông báo',
+            style: TextStyle(
+                fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
         titleTextStyle: null,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: <Color>[Color(0xff0000D7), Color(0xff0BA9FF)]),
+            color: Colors.blue,
+            // gradient: LinearGradient(
+            //     begin: Alignment.topLeft,
+            //     end: Alignment.bottomRight,
+            // colors: <Color>[
+            //   Color.fromARGB(255, 19, 19, 243),
+            //   Color(0xff0BA9FF)
+            // ]),
           ),
         ),
       ),

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class AccountDetail extends StatelessWidget{
+class AccountDetail extends StatelessWidget {
   @override
   final String account;
   final String descript;
@@ -15,7 +15,7 @@ class AccountDetail extends StatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-            padding: EdgeInsets.only(top:5, bottom:5 ),
+            padding: EdgeInsets.only(top: 5, bottom: 5),
             child: Container(
               width: 80,
               height: 80,
@@ -31,15 +31,19 @@ class AccountDetail extends StatelessWidget{
                   fit: BoxFit.cover,
                 ),
               ),
-            )
-        ),
-        SizedBox(width: 40),
+            )),
+        SizedBox(width: 30),
         Expanded(
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center, // Canh chỉnh văn bản theo chiều dọc giữa dòng
+            mainAxisAlignment: MainAxisAlignment
+                .start, // Canh chỉnh văn bản theo chiều dọc giữa dòng
             children: [
-              Text(account, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(account,
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue)),
               Text(descript, style: TextStyle(fontSize: 18)),
             ],
           ),

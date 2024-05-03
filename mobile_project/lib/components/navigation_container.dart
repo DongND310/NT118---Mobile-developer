@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/components/custom_bottom_navigation_bar.dart';
 import 'package:mobile_project/screen/homepage/add_video_page.dart';
 import 'package:mobile_project/screen/homepage/home_page.dart';
@@ -16,6 +18,7 @@ class NavigationContainer extends StatefulWidget {
 
 class _NavigationContainerState extends State<NavigationContainer> {
   int _selectedPageIndex = 0;
+  final user = FirebaseAuth.instance.currentUser;
 
   static List<Widget> _pages = [
     HomePage(),

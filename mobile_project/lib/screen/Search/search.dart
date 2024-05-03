@@ -142,9 +142,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Text(
                         "Xem thêm",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Colors.black,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                          color: const Color.fromARGB(195, 0, 0, 0),
                         ),
                       ),
                     ),
@@ -307,7 +307,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             title: SizedBox(
-              height: 30,
+              height: 35,
               child: TextField(
                 controller: _textEditingController,
                 onChanged: (value) {
@@ -321,7 +321,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 style: TextStyle(fontSize: 18),
                 decoration: InputDecoration(
                   prefixIcon: Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
+                    padding: const EdgeInsets.only(
+                      left: 10.0,
+                    ),
                     child: Transform.scale(
                       scale: 0.6,
                       child: SvgPicture.asset(
@@ -367,6 +369,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ),
               ),
+              SizedBox(
+                width: 10,
+              )
             ],
             bottom: _showresult
                 ? TabBar(
@@ -376,6 +381,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       Tab(text: "Video"),
                       Tab(text: "Hashtag"),
                     ],
+                    unselectedLabelColor: Colors.black54,
+                    indicatorColor: Colors.blue,
+                    labelColor: Colors.blue,
                   )
                 : PreferredSize(
                     child: Container(), // Container

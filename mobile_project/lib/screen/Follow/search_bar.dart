@@ -11,7 +11,7 @@ class SearchFollowerBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchFollowerBar> {
-   late ValueChanged<String> _onChanged;
+  late ValueChanged<String> _onChanged;
   TextEditingController _textEditingController = TextEditingController();
   @override
   void initState() {
@@ -19,19 +19,23 @@ class _SearchBarState extends State<SearchFollowerBar> {
     _textEditingController = widget.controller;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(padding: EdgeInsets.symmetric(vertical: 15),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 15),
       child: SizedBox(
-        height: 30,
+        height: 40,
         width: 350,
         child: TextField(
           controller: _textEditingController,
           onChanged: _onChanged,
-          style: TextStyle(fontSize: 18,),
+          style: TextStyle(
+            fontSize: 18,
+          ),
           decoration: InputDecoration(
             prefixIcon: Padding(
-              padding: const EdgeInsets.only(left: 10.0),
+              padding: const EdgeInsets.only(left: 10.0, top: 8, bottom: 8),
               child: SvgPicture.asset(
                 'assets/icons/search.svg',
               ),
@@ -62,6 +66,7 @@ class _SearchBarState extends State<SearchFollowerBar> {
             fillColor: Colors.grey[200],
           ),
         ),
-      ),);
+      ),
+    );
   }
 }

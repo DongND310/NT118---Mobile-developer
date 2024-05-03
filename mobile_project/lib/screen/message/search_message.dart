@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,27 +7,36 @@ import 'package:mobile_project/screen/message/chat_page.dart';
 
 import '../Search/widget/account_detail.dart';
 
-class SearchMessageScreen extends StatefulWidget{
+class SearchMessageScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() =>_SearchMessageState();
+  State<StatefulWidget> createState() => _SearchMessageState();
 }
 
-class _SearchMessageState extends State<SearchMessageScreen>{
+class _SearchMessageState extends State<SearchMessageScreen> {
   TextEditingController _textEditingController = TextEditingController();
-  var searchName ="";
+  var searchName = "";
   FirebaseAuth _auth = FirebaseAuth.instance;
   FocusNode _focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: SvgPicture.asset(
+            'assets/icons/ep_back.svg',
+            width: 30,
+            height: 30,
+          ),
+        ),
         title: SizedBox(
-          height: 30,
+          height: 35,
           child: TextField(
             controller: _textEditingController,
             focusNode: _focusNode,
-            onChanged: (value)
-            {
+            onChanged: (value) {
               setState(() {
                 searchName = value;
               });
@@ -36,7 +44,7 @@ class _SearchMessageState extends State<SearchMessageScreen>{
             style: TextStyle(fontSize: 18),
             decoration: InputDecoration(
               prefixIcon: Padding(
-                padding: const EdgeInsets.only(left: 10.0),
+                padding: const EdgeInsets.only(left: 10, top: 8, bottom: 8),
                 child: SvgPicture.asset(
                   'assets/icons/search.svg',
                 ),
@@ -66,7 +74,7 @@ class _SearchMessageState extends State<SearchMessageScreen>{
           ),
         ),
       ),
-      body:StreamBuilder<QuerySnapshot>(
+      body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('users')
               .orderBy('Name')
@@ -88,8 +96,10 @@ class _SearchMessageState extends State<SearchMessageScreen>{
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChatPage(receiverId: data.id, receiverName: data['Name'],
-                          ),
+                        builder: (context) => ChatPage(
+                          receiverId: data.id,
+                          receiverName: data['Name'],
+                        ),
                       ),
                     );
                   },
@@ -100,7 +110,6 @@ class _SearchMessageState extends State<SearchMessageScreen>{
                 );
               },
             );
-
           }),
     );
   }
