@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,13 @@ import 'package:mobile_project/components/navigation_container.dart';
 import 'package:mobile_project/screen/login-regis/welcome.dart';
 
 class ProfileSettingPage extends StatelessWidget {
-  const ProfileSettingPage({super.key});
+  ProfileSettingPage({super.key});
+
+  final user = FirebaseAuth.instance.currentUser!;
+
+  void signUserOut() {
+    FirebaseAuth.instance.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,7 @@ class ProfileSettingPage extends StatelessWidget {
         title: const Text(
           'Cài đặt',
           style: TextStyle(
-              fontSize: 18, color: Colors.blue, fontWeight: FontWeight.bold),
+              fontSize: 20, color: Colors.blue, fontWeight: FontWeight.bold),
         ),
       ),
       body: Container(
@@ -162,6 +169,8 @@ class ProfileSettingPage extends StatelessWidget {
 
                   GestureDetector(
                     onTap: () {
+                      signUserOut;
+
                       Navigator.push(
                           context,
                           MaterialPageRoute(
