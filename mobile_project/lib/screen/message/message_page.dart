@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/screen/message/recent_chats.dart';
+import 'package:mobile_project/screen/message/search_message.dart';
 
 class MessagePage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,18 +22,22 @@ class MessagePage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(right: 15),
             child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => SearchMessageScreen()));
+                },
                 icon: SvgPicture.asset('assets/icons/search.svg')),
           )
         ],
       ),
-      body: ListView(
-        children: [
-          Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: RecentChats())
-        ],
-      ),
+      // body: ListView(
+      //   children: [
+      //     Padding(
+      //         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      //         child: RecentChats())
+      //   ],
+      // ),
+      body: RecentChats(),
     );
   }
 }

@@ -1,19 +1,22 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/screen/message/chat_page.dart';
 
 import '../Search/widget/account_detail.dart';
 
 class SearchMessageScreen extends StatefulWidget{
-  final List<String>account =["Account1","Account2","AT","Ái Thủy","Account1","Account1","Account1","Account1","Account1","Account1"];
-
   @override
   State<StatefulWidget> createState() =>_SearchMessageState();
 }
 
 class _SearchMessageState extends State<SearchMessageScreen>{
   TextEditingController _textEditingController = TextEditingController();
-  List<String> _search =[];
+  var searchName ="";
+  FirebaseAuth _auth = FirebaseAuth.instance;
   FocusNode _focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,9 @@ class _SearchMessageState extends State<SearchMessageScreen>{
             width: 30,
             height: 30,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: SizedBox(
           height: 30,
@@ -34,10 +39,8 @@ class _SearchMessageState extends State<SearchMessageScreen>{
             focusNode: _focusNode,
             onChanged: (value)
             {
-
               setState(() {
-                _search = widget.account.
-                where((element) => element.toLowerCase().contains(_textEditingController.text.toLowerCase())).toList();
+                searchName = value;
               });
             },
             style: TextStyle(fontSize: 18),
@@ -73,30 +76,81 @@ class _SearchMessageState extends State<SearchMessageScreen>{
           ),
         ),
       ),
-      body: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            physics: AlwaysScrollableScrollPhysics(),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemExtent: 100,
-                          itemCount:  _textEditingController.text.isNotEmpty? _search.length:widget.account.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return _textEditingController.text.isNotEmpty?
-                            AccountDetail(_search[index],"")
-                                :AccountDetail(widget.account[index],"");
-                          }
-                      )
+      body:StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .orderBy('Name')
+              .startAt([searchName]).endAt([searchName + "\uf8ff"]).snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Something went wrong');
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Text("Loading");
+            }
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                var data = snapshot.data!.docs[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatPage(receiverId: data.id, receiverName: data['Name'],
+                          ),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: AccountDetail(data['Name'], ""),
                   ),
-            ]
-        ),
-      )
+                );
+              },
+            );
+
+          }),
     );
   }
+  // Widget _buildUserList(){
+  //   return StreamBuilder(stream: FirebaseFirestore.instance.collection('users').snapshots(),
+  //       builder: (context, snapshot){
+  //         if (snapshot.hasError) {
+  //           return Text('Something went wrong');
+  //         }
+  //
+  //         if (snapshot.connectionState == ConnectionState.waiting) {
+  //           return Text("Loading");
+  //         }
+  //         return ListView(
+  //           children: snapshot.data!.docs
+  //           .map<Widget>((doc)=> _buildUserListItem(doc)).toList(),
+  //         );
+  //       }
+  //   );
+  // }
+  // Widget _buildUserListItem(DocumentSnapshot document)
+  // {
+  //   Map<String, dynamic> data = document.data()! as Map<String,dynamic>;
+  //   if(_auth.currentUser!.displayName != data['Name']){
+  //     return  GestureDetector(
+  //       onTap: () {
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => ChatPage(receiverId: data.id, receiverName: data['Name'],
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //       child: Padding(
+  //         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+  //         child: AccountDetail(data['Name'], ""),
+  //       ),
+  //     );
+  //   }
+  //   else return Container();
+  // }
 }

@@ -1,10 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/screen/users/proflie_setting.dart';
 
 class CustomProfileAppBar extends StatelessWidget {
-  const CustomProfileAppBar({super.key});
-
+    CustomProfileAppBar({super.key});
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(

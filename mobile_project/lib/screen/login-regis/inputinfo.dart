@@ -117,7 +117,6 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
 
     await addPersonalDetail(
       user.uid,
-      accountnameController.text.trim(),
       usernameController.text.trim(),
       phoneController.text.trim(),
       dob,
@@ -127,22 +126,20 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
     );
   }
 
-  Future addPersonalDetail(String uid, String id, String name, String phone,
+  Future addPersonalDetail(String uid, String name, String phone,
       String dob, String email, String gender, String nation) async {
-    DocumentReference userRef =
-        await FirebaseFirestore.instance.collection('users').add({
-      'UID': uid,
-      'ID': id,
+    // DocumentReference userRef =
+        await FirebaseFirestore.instance.collection('users').doc(uid).set({
+       'UID': uid,
       'Name': name,
       'Phone': phone,
       'DOB': dob,
       'Email': email,
       'Gender': gender,
       'Nation': nation,
-      // 'DocumentID': did,
     });
-    String did = userRef.id;
-    await userRef.update({'DocumentID': did});
+    // String did = userRef.id;
+    // await userRef.update({'DocumentID': did});
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (context) => RegisterSuccessScreen()));
   }

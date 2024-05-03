@@ -4,11 +4,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class MoreScreen extends StatefulWidget{
+  final String userName;
+  MoreScreen({required this.userName});
   @override
   State<StatefulWidget> createState()=> _MoreState();
 }
 
 class _MoreState extends State<MoreScreen>{
+
   bool _isPressed = false;
   @override
   Widget build(BuildContext context) {
@@ -36,7 +39,7 @@ class _MoreState extends State<MoreScreen>{
               ),
             ),
             SizedBox(height: 15,),
-            Text("Ái Thủy", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Color(0xFF000144)),),
+            Text(widget.userName, style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Color(0xFF000144)),),
             SizedBox(height: 50,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
