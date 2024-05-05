@@ -1,18 +1,61 @@
 import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/components/navigation_container.dart';
 import 'package:mobile_project/screen/login-regis/welcome.dart';
 
-class ProfileSettingPage extends StatelessWidget {
+class ProfileSettingPage extends StatefulWidget {
   ProfileSettingPage({super.key});
 
+  @override
+  State<ProfileSettingPage> createState() => _ProfileSettingPageState();
+}
+
+class _ProfileSettingPageState extends State<ProfileSettingPage> {
   final user = FirebaseAuth.instance.currentUser!;
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
+  }
+
+  Future<void> ConfirmSignOut() {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Cảnh báo!',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Text(
+            'Bạn có chắc chắn muốn đăng xuất không?',
+            style: TextStyle(fontSize: 18),
+          ),
+          actions: <Widget>[
+            TextButton(
+                child: const Text('Đăng xuất',
+                    style: TextStyle(color: Colors.red, fontSize: 17)),
+                onPressed: () {
+                  signUserOut();
+                }),
+            SizedBox(
+              width: 10,
+            ),
+            TextButton(
+              child: const Text('Hủy',
+                  style: TextStyle(color: Colors.blue, fontSize: 17)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -169,12 +212,8 @@ class ProfileSettingPage extends StatelessWidget {
 
                   GestureDetector(
                     onTap: () {
-                      signUserOut;
-
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WelcomeScreen()));
+                      ConfirmSignOut();
+                      print(user.email);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
