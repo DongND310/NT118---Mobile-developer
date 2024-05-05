@@ -78,7 +78,7 @@ class _SearchMessageState extends State<SearchMessageScreen> {
           stream: FirebaseFirestore.instance
               .collection('users')
               .orderBy('Name')
-              .startAt([searchName]).endAt([searchName + "\uf8ff"]).snapshots(),
+              .startAt([searchName]).endAt([searchName + "\uf8ff"]).where('Name',isNotEqualTo: _auth.currentUser!.displayName ).snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Something went wrong');

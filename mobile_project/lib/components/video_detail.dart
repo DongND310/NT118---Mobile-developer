@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/models/user.dart';
 import 'package:mobile_project/models/video.dart';
+import 'package:mobile_project/screen/account/account_page.dart';
 
 class VideoDetail extends StatelessWidget {
   const VideoDetail({super.key, required this.video, required this.user});
@@ -19,12 +20,18 @@ class VideoDetail extends StatelessWidget {
           dense: true,
           minLeadingWidth: 0,
           horizontalTitleGap: 10,
-          title: Text(
-            "${video.postedBy.username} - Follow",
-            style: const TextStyle(
-                color: Color(0xffF1FCFD),
-                fontWeight: FontWeight.w500,
-                fontSize: 16),
+          title: GestureDetector(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => AccountPage()));
+            },
+            child: Text(
+              "${video.postedBy.username} - Follow",
+              style: const TextStyle(
+                  color: Color(0xffF1FCFD),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16),
+            ),
           ),
           leading: CircleAvatar(
             radius: 14,
