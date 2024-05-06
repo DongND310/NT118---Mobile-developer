@@ -121,24 +121,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                         height: 15,
                       ),
                       // avatar + userID
-
-                      // Container(
-                      //   decoration: BoxDecoration(
-                      //     // color: Colors.blue,
-                      //     borderRadius: BorderRadius.circular(50),
-                      //   ),
-                      //   child: SizedBox(
-                      //     width: 100,
-                      //     height: 100,
-                      //     child: Image.network(
-                      //       '$_avt ??'
-                      //       ' ',
-                      //       // 'https://i.pinimg.com/564x/0d/64/98/0d64989794b1a4c9d89bff571d3d5842.jpg',
-                      //       fit: BoxFit.cover,
-                      //     ),
-                      //   ),
-                      // ),
-
                       CircleAvatar(
                         radius: 50,
                         backgroundImage: _avt != null
@@ -294,7 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         padding: const EdgeInsets.only(
                             top: 0.0, left: 40, right: 45),
                         child: Text(
-                          _bio ?? 'Chưa có mô tả',
+                          _bio ?? 'Chưa có mô tả.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15,
