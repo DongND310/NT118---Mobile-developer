@@ -115,7 +115,6 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                   ),
 
                   // sdt
-
                   UserDetailInfo(
                     text: "Số điện thoại",
                     change: maskString(_phone ?? '', 3),
@@ -131,6 +130,12 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                   UserDetailInfo(
                     text: "Ngày sinh",
                     change: _dob ?? '',
+                  ),
+
+                  // gender
+                  UserDetailInfo(
+                    text: "Giới tính",
+                    change: _gender ?? '',
                   ),
 
                   // nation
