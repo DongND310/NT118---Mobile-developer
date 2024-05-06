@@ -57,7 +57,7 @@ class CustomLikedNotification extends StatelessWidget {
                                 text: "Account Tester2",
                                 style: TextStyle(
                                   height: 1,
-                                  color: Colors.black,
+                                  color: Colors.blue,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -73,7 +73,7 @@ class CustomLikedNotification extends StatelessWidget {
                               TextSpan(
                                 text: "Account Tester3",
                                 style: const TextStyle(
-                                  color: Colors.black87,
+                                  color: Colors.blue,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),

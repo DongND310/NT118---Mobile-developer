@@ -16,14 +16,14 @@ class _CustomFollowNotificationState extends State<CustomFollowNotification> {
     return Row(
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 15),
+          padding: EdgeInsets.only(left: 10),
           child: const CircleAvatar(
             radius: 25,
             backgroundImage: AssetImage("assets/images/avatar.png"),
           ),
         ),
         const SizedBox(
-          width: 25,
+          width: 30,
         ),
         Container(
           width: 160,
@@ -42,7 +42,7 @@ class _CustomFollowNotificationState extends State<CustomFollowNotification> {
                             text: "Account Tester1",
                             style: TextStyle(
                               height: 1,
-                              color: Colors.black,
+                              color: Colors.blue,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
