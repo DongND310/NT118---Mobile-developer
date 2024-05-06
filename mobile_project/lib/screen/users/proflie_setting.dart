@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile_project/components/navigation_container.dart';
 import 'package:mobile_project/screen/login-regis/welcome.dart';
 
+import 'profile_detail.dart';
+
 class ProfileSettingPage extends StatefulWidget {
   ProfileSettingPage({super.key});
 
@@ -122,10 +124,10 @@ class _ProfileSettingPageState extends State<ProfileSettingPage> {
                       ),
                       IconButton(
                         onPressed: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => PersonProfileScreen()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailProfileScreen()));
                         },
                         icon: const Icon(
                           Icons.arrow_forward_ios_sharp,

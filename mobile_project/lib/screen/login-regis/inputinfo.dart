@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobile_project/components/inputtext.dart';
 import 'package:mobile_project/components/button.dart';
@@ -7,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:mobile_project/util/imagepicker.dart';
 import 'regisnoti.dart';
 
 class InputInfoScreen extends StatefulWidget {
@@ -45,12 +46,17 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   final accountnameController = TextEditingController();
   final usernameController = TextEditingController();
   final phoneController = TextEditingController();
+  // final bio = TextEditingController();
+  // late File imgFile;
+  // String img;
+
   String? selectedMonth;
   String? preMonth;
   String? selectedDay;
   String? selectedYear;
   String? selectedGender;
   String? selectedNation;
+
   @override
   void initState() {
     super.initState();
@@ -124,11 +130,22 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       user.email!,
       gender,
       nation,
+      null,
+      null,
     );
   }
 
-  Future addPersonalDetail(String uid, String id, String name, String phone,
-      String dob, String email, String gender, String nation) async {
+  Future addPersonalDetail(
+      String uid,
+      String id,
+      String name,
+      String phone,
+      String dob,
+      String email,
+      String gender,
+      String nation,
+      String? bio,
+      String? img) async {
     // DocumentReference userRef =
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
       'UID': uid,
@@ -139,10 +156,10 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       'Email': email,
       'Gender': gender,
       'Nation': nation,
+      'Bio': bio,
+      'Avt': img,
     });
-        user.updateDisplayName(name);
-    // String did = userRef.id;
-    // await userRef.update({'UID': did});
+    user.updateDisplayName(name);
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (context) => RegisterSuccessScreen()));
   }

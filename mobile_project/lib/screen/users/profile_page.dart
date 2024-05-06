@@ -9,14 +9,14 @@ import 'tab_post.dart';
 import 'tab_save.dart';
 import 'tab_video.dart';
 
-class ProfilePage extends StatefulWidget {
-  ProfilePage({super.key});
+class ProfileScreen extends StatefulWidget {
+  ProfileScreen({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfilePageState extends State<ProfilePage>
+class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final user = FirebaseAuth.instance.currentUser!;
@@ -29,6 +29,8 @@ class _ProfilePageState extends State<ProfilePage>
   String? _phone;
   String? _gender;
   String? _nation;
+  String? _bio;
+  String? _avt;
 
   @override
   void initState() {
@@ -53,9 +55,9 @@ class _ProfilePageState extends State<ProfilePage>
     _phone = userDoc.get('Phone');
     _gender = userDoc.get('Gender');
     _nation = userDoc.get('Nation');
-    // _name = userDoc.get('Name');
-    print(_id);
-    print(_name);
+    _bio = userDoc.get('Bio');
+    _avt = userDoc.get('Avt');
+
     setState(() {});
   }
 
@@ -119,17 +121,32 @@ class _ProfilePageState extends State<ProfilePage>
                         height: 15,
                       ),
                       // avatar + userID
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: const SizedBox(
-                          width: 100,
-                          height: 100,
-                          // child: Image.asset(''),
-                        ),
+
+                      // Container(
+                      //   decoration: BoxDecoration(
+                      //     // color: Colors.blue,
+                      //     borderRadius: BorderRadius.circular(50),
+                      //   ),
+                      //   child: SizedBox(
+                      //     width: 100,
+                      //     height: 100,
+                      //     child: Image.network(
+                      //       '$_avt ??'
+                      //       ' ',
+                      //       // 'https://i.pinimg.com/564x/0d/64/98/0d64989794b1a4c9d89bff571d3d5842.jpg',
+                      //       fit: BoxFit.cover,
+                      //     ),
+                      //   ),
+                      // ),
+
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: _avt != null
+                            ? NetworkImage(_avt!)
+                            : Image.asset('assets/images/default_avt.png')
+                                .image,
                       ),
+
                       const SizedBox(
                         height: 20,
                       ),
@@ -276,12 +293,12 @@ class _ProfilePageState extends State<ProfilePage>
                       Padding(
                         padding: const EdgeInsets.only(
                             top: 0.0, left: 40, right: 45),
-                        child: const Text(
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eleifend orci et enim imperdiet, vestibulum hendrerit mi condimentum.',
+                        child: Text(
+                          _bio ?? 'Chưa có mô tả',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15,
-                            color: Colors.black,
+                            color: const Color.fromARGB(193, 0, 0, 0),
                             fontWeight: FontWeight.normal,
                           ),
                         ),

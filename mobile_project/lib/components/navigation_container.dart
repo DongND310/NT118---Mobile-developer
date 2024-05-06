@@ -25,7 +25,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
     MessagePage(),
     AddVideoPage(),
     NotificationPage(),
-    ProfilePage(),
+    ProfileScreen(),
   ];
 
   void _onIconTapped(int index) {
