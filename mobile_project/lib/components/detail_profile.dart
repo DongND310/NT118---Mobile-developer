@@ -22,7 +22,8 @@ class UserDetailInfo extends StatelessWidget {
           children: [
             Text(
               change,
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+              style: TextStyle(
+                  color: const Color.fromARGB(255, 95, 95, 95), fontSize: 16),
             ),
             IconButton(
               onPressed: () {
@@ -33,7 +34,7 @@ class UserDetailInfo extends StatelessWidget {
               },
               icon: const Icon(
                 Icons.arrow_forward_ios_sharp,
-                color: Colors.grey,
+                color: const Color.fromARGB(255, 95, 95, 95),
                 size: 20,
               ),
             ),
