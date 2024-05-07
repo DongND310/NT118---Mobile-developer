@@ -92,7 +92,7 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
         height: MediaQuery.of(context).size.height,
         width: double.infinity,
         child: ListView(
-          padding: const EdgeInsets.only(top: 0.0, left: 30, right: 20),
+          padding: const EdgeInsets.only(top: 0.0, left: 30, right: 10),
           children: [
             Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -106,42 +106,49 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                   UserDetailInfo(
                     text: "ID người dùng",
                     change: _id ?? '',
+                    lead: "_id",
                   ),
 
                   // pass
                   UserDetailInfo(
                     text: "Mật khẩu",
                     change: "********",
+                    lead: "_pass",
                   ),
 
                   // sdt
                   UserDetailInfo(
                     text: "Số điện thoại",
                     change: maskString(_phone ?? '', 3),
+                    lead: "_phone",
                   ),
 
                   //Email
                   UserDetailInfo(
                     text: "Email",
                     change: maskString(_email ?? '', 12),
+                    lead: "_email",
                   ),
 
                   // dob
                   UserDetailInfo(
                     text: "Ngày sinh",
                     change: _dob ?? '',
+                    lead: "_dob",
                   ),
 
                   // gender
                   UserDetailInfo(
                     text: "Giới tính",
                     change: _gender ?? '',
+                    lead: "_gender",
                   ),
 
                   // nation
                   UserDetailInfo(
                     text: "Quốc gia",
                     change: _nation ?? '',
+                    lead: "_nation",
                   ),
                 ]),
           ],

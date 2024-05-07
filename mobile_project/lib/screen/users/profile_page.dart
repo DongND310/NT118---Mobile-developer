@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/screen/Follow/follower_listview.dart';
+import 'profile_change.dart';
 import 'proflie_setting.dart';
 import 'tab_like.dart';
 import 'tab_post.dart';
@@ -235,7 +236,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProfileSettingPage(),
+                              builder: (context) => ChangeProfilePage(),
                             ),
                           );
                         },
@@ -276,7 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         padding: const EdgeInsets.only(
                             top: 0.0, left: 40, right: 45),
                         child: Text(
-                          _bio ?? 'Chưa có mô tả.',
+                          _bio ?? '',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15,
