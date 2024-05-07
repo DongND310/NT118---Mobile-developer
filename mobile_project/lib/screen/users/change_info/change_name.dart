@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/components/detail_change.dart';
 
 class NameChangeScreen extends StatelessWidget {
-  const NameChangeScreen({super.key});
+  final String? text;
+  final TextEditingController _textEditingController = TextEditingController();
+
+  NameChangeScreen({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
+    _textEditingController.text = text ?? '';
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -38,16 +43,14 @@ class NameChangeScreen extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         width: double.infinity,
         child: ListView(
-          padding: const EdgeInsets.only(top: 0.0, left: 30, right: 20),
+          padding: const EdgeInsets.only(top: 0.0, left: 30, right: 30),
           children: [
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ]),
+            ChangeInfoField(label: "Tên", controller: _textEditingController),
+            const SizedBox(height: 10),
+            Text(
+              "Bạn chỉ có thể đổi tên người dùng của tài khoản 1 lần trong vòng 30 ngày.",
+              style: TextStyle(color: Colors.black54),
+            ),
           ],
         ),
       ),

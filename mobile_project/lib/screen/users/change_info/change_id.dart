@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/components/detail_change.dart';
 
 class IdChangeScreen extends StatelessWidget {
-  const IdChangeScreen({super.key});
+  final String? text;
+  final TextEditingController _textEditingController = TextEditingController();
+  IdChangeScreen({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
+    _textEditingController.text = text ?? '';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -28,7 +33,7 @@ class IdChangeScreen extends StatelessWidget {
           ),
         ),
         title: const Text(
-          'ID người dùng',
+          'Id người dùng',
           style: TextStyle(
               fontSize: 20, color: Colors.blue, fontWeight: FontWeight.bold),
         ),
@@ -40,14 +45,7 @@ class IdChangeScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.only(top: 0.0, left: 30, right: 20),
           children: [
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ]),
+            ChangeInfoField(label: "ID", controller: _textEditingController),
           ],
         ),
       ),

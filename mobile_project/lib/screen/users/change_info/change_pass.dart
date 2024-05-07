@@ -4,10 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
 
 class PassChangeScreen extends StatelessWidget {
-  const PassChangeScreen({super.key});
+  final String? text;
+  final TextEditingController _textEditingController = TextEditingController();
+  PassChangeScreen({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
+    _textEditingController.text = text ?? '';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -28,7 +32,7 @@ class PassChangeScreen extends StatelessWidget {
           ),
         ),
         title: const Text(
-          'Password người dùng',
+          'Mật khẩu tài khoản',
           style: TextStyle(
               fontSize: 20, color: Colors.blue, fontWeight: FontWeight.bold),
         ),
@@ -44,9 +48,21 @@ class PassChangeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(
-                    height: 20,
+                  const SizedBox(height: 20),
+                  const Text("Mật khẩu"),
+                  TextField(
+                    controller: _textEditingController,
+                    cursorColor: Colors.blue,
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                    ),
                   ),
+                  const SizedBox(height: 20),
                 ]),
           ],
         ),

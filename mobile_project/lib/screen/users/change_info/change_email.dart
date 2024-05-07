@@ -4,10 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
 
 class EmailChangeScreen extends StatelessWidget {
-  const EmailChangeScreen({super.key});
+  final String? text;
+  final TextEditingController _textEditingController = TextEditingController();
+  EmailChangeScreen({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
+    _textEditingController.text = text ?? '';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -44,9 +48,21 @@ class EmailChangeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(
-                    height: 20,
+                  const SizedBox(height: 20),
+                  const Text("Tên"),
+                  TextField(
+                    controller: _textEditingController,
+                    cursorColor: Colors.blue,
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                    ),
                   ),
+                  const SizedBox(height: 20),
                 ]),
           ],
         ),

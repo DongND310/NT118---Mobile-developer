@@ -4,10 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
 
 class GenderChangeScreen extends StatelessWidget {
-  const GenderChangeScreen({super.key});
+  final String? text;
+  final TextEditingController _textEditingController = TextEditingController();
+  GenderChangeScreen({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
+    _textEditingController.text = text ?? '';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -28,7 +32,7 @@ class GenderChangeScreen extends StatelessWidget {
           ),
         ),
         title: const Text(
-          'Giới tính',
+          'Giới tính người dùng',
           style: TextStyle(
               fontSize: 20, color: Colors.blue, fontWeight: FontWeight.bold),
         ),
@@ -41,12 +45,27 @@ class GenderChangeScreen extends StatelessWidget {
           padding: const EdgeInsets.only(top: 0.0, left: 30, right: 20),
           children: [
             Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(
-                    height: 20,
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Giới tính",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
+                  TextField(
+                    controller: _textEditingController,
+                    cursorColor: Colors.blue,
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                 ]),
           ],
         ),

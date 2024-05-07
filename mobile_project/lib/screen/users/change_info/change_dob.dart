@@ -4,10 +4,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
 
 class DobChangeScreen extends StatelessWidget {
-  const DobChangeScreen({super.key});
+  final String? text;
+  final TextEditingController _textEditingController = TextEditingController();
+
+  DobChangeScreen({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
+    _textEditingController.text = text ?? '';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -41,12 +46,27 @@ class DobChangeScreen extends StatelessWidget {
           padding: const EdgeInsets.only(top: 0.0, left: 30, right: 20),
           children: [
             Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(
-                    height: 20,
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Ngày sinh",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
+                  TextField(
+                    controller: _textEditingController,
+                    cursorColor: Colors.blue,
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                 ]),
           ],
         ),

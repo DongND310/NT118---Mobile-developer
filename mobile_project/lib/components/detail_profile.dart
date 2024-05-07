@@ -6,6 +6,7 @@ import 'package:mobile_project/screen/users/change_info/change_email.dart';
 import 'package:mobile_project/screen/users/change_info/change_gender.dart';
 import 'package:mobile_project/screen/users/change_info/change_id.dart';
 import 'package:mobile_project/screen/users/change_info/change_name.dart';
+import 'package:mobile_project/screen/users/change_info/change_nation.dart';
 import 'package:mobile_project/screen/users/change_info/change_phone.dart';
 import 'package:mobile_project/screen/users/change_info/change_pass.dart';
 
@@ -20,15 +21,16 @@ class UserDetailInfo extends StatelessWidget {
     required this.lead,
   });
 
-  final Map<String, Widget> screenMap = {
-    '_bio': BioChangeScreen(),
-    '_dob': DobChangeScreen(),
-    '_email': EmailChangeScreen(),
-    '_gender': GenderChangeScreen(),
-    '_id': IdChangeScreen(),
-    '_name': NameChangeScreen(),
-    '_phone': PhoneChangeScreen(),
-    '_pass': PassChangeScreen(),
+  final Map<String, Widget Function(String)> screenMap = {
+    '_bio': (change) => BioChangeScreen(text: change),
+    '_dob': (change) => DobChangeScreen(text: change),
+    '_email': (change) => EmailChangeScreen(text: change),
+    '_gender': (change) => GenderChangeScreen(text: change),
+    '_id': (change) => IdChangeScreen(text: change),
+    '_name': (change) => NameChangeScreen(text: change),
+    '_phone': (change) => PhoneChangeScreen(text: change),
+    '_nation': (change) => NationChangeScreen(text: change),
+    '_pass': (change) => PassChangeScreen(text: change),
   };
 
   @override
@@ -44,7 +46,7 @@ class UserDetailInfo extends StatelessWidget {
         Row(
           children: [
             Container(
-              width: 150,
+              width: 160,
               child: Text(
                 change,
                 style: TextStyle(
@@ -59,7 +61,9 @@ class UserDetailInfo extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => screenMap[lead] ?? Container(),
+                      builder: (context) => screenMap[lead] != null
+                          ? screenMap[lead]!(change)
+                          : Container(),
                     ));
               },
               icon: const Icon(

@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/components/detail_change.dart';
 
 class BioChangeScreen extends StatelessWidget {
-  const BioChangeScreen({super.key});
+  final String? text;
+  final TextEditingController _textEditingController = TextEditingController();
+
+  BioChangeScreen({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
+    _textEditingController.text = text ?? '';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -38,16 +44,10 @@ class BioChangeScreen extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         width: double.infinity,
         child: ListView(
-          padding: const EdgeInsets.only(top: 0.0, left: 30, right: 20),
+          padding: const EdgeInsets.only(top: 0.0, left: 30, right: 30),
           children: [
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ]),
+            ChangeInfoField(
+                label: "Tiểu sử", controller: _textEditingController),
           ],
         ),
       ),

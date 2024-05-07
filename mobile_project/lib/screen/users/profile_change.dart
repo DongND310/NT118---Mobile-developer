@@ -82,7 +82,7 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
         height: MediaQuery.of(context).size.height,
         width: double.infinity,
         child: ListView(
-          padding: const EdgeInsets.only(top: 0.0, left: 30, right: 10),
+          padding: const EdgeInsets.only(top: 0.0, left: 20, right: 10),
           children: [
             Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
