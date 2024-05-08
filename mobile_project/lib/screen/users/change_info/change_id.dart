@@ -4,14 +4,35 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/components/detail_change.dart';
 
-class IdChangeScreen extends StatelessWidget {
+class IdChangeScreen extends StatefulWidget {
   final String? text;
-  final TextEditingController _textEditingController = TextEditingController();
+
   IdChangeScreen({super.key, required this.text});
 
   @override
+  State<IdChangeScreen> createState() => _IdChangeScreenState();
+}
+
+class _IdChangeScreenState extends State<IdChangeScreen> {
+  final TextEditingController _textEditingController = TextEditingController();
+  final usersCollection = FirebaseFirestore.instance.collection('users');
+
+  Future<void> updateUserData(String data) async {
+    try {
+      if (data.trim().isNotEmpty) {
+        User? currentUser = FirebaseAuth.instance.currentUser;
+        if (currentUser != null) {
+          await usersCollection.doc(currentUser.uid).update({'ID': data});
+        }
+      } else {}
+    } catch (e) {
+      print('Error updating user bio: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _textEditingController.text = text ?? '';
+    _textEditingController.text = widget.text ?? '';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -37,6 +58,23 @@ class IdChangeScreen extends StatelessWidget {
           style: TextStyle(
               fontSize: 20, color: Colors.blue, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 30),
+            child: GestureDetector(
+              onTap: () {
+                String data = _textEditingController.text.trim();
+                print(data);
+                updateUserData(data);
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Lưu',
+                style: TextStyle(color: Colors.blue, fontSize: 15),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Container(
         color: Colors.white,

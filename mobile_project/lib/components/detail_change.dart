@@ -46,6 +46,9 @@ class ChangeInfoField extends StatelessWidget {
                 },
               ),
             ),
+            onChanged: (value) {
+              controller.text = value;
+            },
           ),
           const SizedBox(height: 20),
         ]);

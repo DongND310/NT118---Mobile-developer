@@ -2,18 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/components/detail_change.dart';
 
-class BioChangeScreen extends StatelessWidget {
+class BioChangeScreen extends StatefulWidget {
   final String? text;
-  final TextEditingController _textEditingController = TextEditingController();
 
   BioChangeScreen({super.key, required this.text});
 
   @override
-  Widget build(BuildContext context) {
-    _textEditingController.text = text ?? '';
+  State<BioChangeScreen> createState() => _BioChangeScreenState();
+}
 
+class _BioChangeScreenState extends State<BioChangeScreen> {
+  final TextEditingController _textEditingController = TextEditingController();
+
+  final usersCollection = FirebaseFirestore.instance.collection('users');
+
+  Future<void> updateUserData(String data) async {
+    try {
+      if (data.trim().isNotEmpty) {
+        User? currentUser = FirebaseAuth.instance.currentUser;
+        if (currentUser != null) {
+          await usersCollection.doc(currentUser.uid).update({'Bio': data});
+        }
+      } else {
+      }
+    } catch (e) {
+      print('Error updating user bio: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _textEditingController.text = widget.text ?? '';
+    print(_textEditingController);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -38,6 +61,23 @@ class BioChangeScreen extends StatelessWidget {
           style: TextStyle(
               fontSize: 20, color: Colors.blue, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 30),
+            child: GestureDetector(
+              onTap: () {
+                String data = _textEditingController.text.trim();
+                print(data);
+                updateUserData(data);
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Lưu',
+                style: TextStyle(color: Colors.blue, fontSize: 15),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Container(
         color: Colors.white,
