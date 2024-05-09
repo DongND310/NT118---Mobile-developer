@@ -27,7 +27,7 @@ class _NameChangeScreenState extends State<NameChangeScreen> {
         }
       } else {}
     } catch (e) {
-      print('Error updating user bio: $e');
+      print('Error updating user name: $e');
     }
   }
 

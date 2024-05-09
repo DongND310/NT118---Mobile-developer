@@ -2,15 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/components/detail_change.dart';
 
-class EmailChangeScreen extends StatelessWidget {
+class EmailChangeScreen extends StatefulWidget {
   final String? text;
-  final TextEditingController _textEditingController = TextEditingController();
+
   EmailChangeScreen({super.key, required this.text});
 
   @override
+  State<EmailChangeScreen> createState() => _EmailChangeScreenState();
+}
+
+class _EmailChangeScreenState extends State<EmailChangeScreen> {
+  final TextEditingController _textEditingController = TextEditingController();
+  final usersCollection = FirebaseFirestore.instance.collection('users');
+  Future<void> updateUserData(String data) async {
+    try {
+      if (data.trim().isNotEmpty) {
+        User? currentUser = FirebaseAuth.instance.currentUser;
+        if (currentUser != null) {
+          await usersCollection.doc(currentUser.uid).update({'Name': data});
+        }
+      } else {}
+    } catch (e) {
+      print('Error updating user data: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _textEditingController.text = text ?? '';
+    _textEditingController.text = widget.text ?? '';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -36,6 +57,23 @@ class EmailChangeScreen extends StatelessWidget {
           style: TextStyle(
               fontSize: 20, color: Colors.blue, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 30),
+            child: GestureDetector(
+              onTap: () {
+                String data = _textEditingController.text.trim();
+                print(data);
+                updateUserData(data);
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Lưu',
+                style: TextStyle(color: Colors.blue, fontSize: 15),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Container(
         color: Colors.white,
@@ -44,26 +82,7 @@ class EmailChangeScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.only(top: 0.0, left: 30, right: 20),
           children: [
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(height: 20),
-                  const Text("Tên"),
-                  TextField(
-                    controller: _textEditingController,
-                    cursorColor: Colors.blue,
-                    decoration: InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ]),
+            ChangeInfoField(label: "Tên", controller: _textEditingController),
           ],
         ),
       ),
