@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class VideoSearch extends StatelessWidget{
+class VideoSearch extends StatelessWidget {
   final String title;
   final String numLike;
   final String account;
@@ -12,7 +12,6 @@ class VideoSearch extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width / 2 - 16,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -22,20 +21,27 @@ class VideoSearch extends StatelessWidget{
             height: 160,
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              border: Border.all(style: BorderStyle.none,width: 2),
+              border: Border.all(style: BorderStyle.none, width: 2),
             ),
             child: ClipRect(
               child: Image.network(
                 'https://i.pinimg.com/736x/fd/7f/48/fd7f480aa83946195f004f34a0da9ad8.jpg',
-                width: MediaQuery.of(context).size.width / 2 - 16,
-                height: 160,
-                fit: BoxFit.cover,),),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-          Text(title, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18)),
+          Text(title,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Colors.blue)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(account,style: TextStyle(fontSize: 18),),
+              Text(
+                account,
+                style: TextStyle(fontSize: 16),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -45,14 +51,18 @@ class VideoSearch extends StatelessWidget{
                     width: 20,
                     height: 20,
                   ),
-                  Text(numLike,style: TextStyle(fontSize: 18),)
+                  SizedBox(width: 8),
+                  Text(
+                    numLike,
+                    style: TextStyle(fontSize: 16),
+                  )
                 ],
               )
             ],
-          )
+          ),
+          SizedBox(height: 9),
         ],
       ),
     );
   }
-
 }

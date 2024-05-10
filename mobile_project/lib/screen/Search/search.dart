@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -7,10 +8,13 @@ import 'package:mobile_project/screen/Search/widget/hashtag.dart';
 import 'package:mobile_project/screen/Search/widget/search_history_detail.dart';
 import 'package:mobile_project/screen/Search/widget/suggest_detail.dart';
 import 'package:mobile_project/screen/Search/widget/video_search.dart';
+import 'package:mobile_project/services/database_services.dart';
 
 import 'hashtagview.dart';
 
 class SearchScreen extends StatefulWidget {
+  late final String currentUserId;
+
   final List<String> searchhistory = [
     "1",
     "2",
@@ -56,41 +60,41 @@ class SearchScreen extends StatefulWidget {
   ];
   final String descript = "description";
   final List<String> hashtag = [
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2",
-    "#hastag1",
+    "#hashtag1",
     "#hashtag2"
   ];
   final String title = "Title";
@@ -101,9 +105,12 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  late Future<QuerySnapshot> _users;
+
   late bool _showresult;
   List<String> _search = [];
   TextEditingController _textEditingController = TextEditingController();
+
   @override
   void initState() {
     _showresult = widget.showresult;
@@ -158,6 +165,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
             AccountDetail(widget.account[1], widget.descript),
+            SizedBox(height: 15),
             Text(
               "Video",
               style: TextStyle(
@@ -171,9 +179,9 @@ class _SearchScreenState extends State<SearchScreen> {
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
-                mainAxisExtent: 218,
+                mainAxisExtent: 220,
               ),
-              itemCount: 15,
+              itemCount: 3,
               itemBuilder: (BuildContext context, int index) {
                 return VideoSearch(
                   widget.title,
@@ -181,7 +189,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   widget.account[1],
                 );
               },
-            )
+            ),
           ],
         ),
       )),
@@ -227,8 +235,8 @@ class _SearchScreenState extends State<SearchScreen> {
       )),
       SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -237,7 +245,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemExtent: 50,
+                      itemExtent: 70,
                       itemCount: widget.hashtag.length,
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
@@ -310,6 +318,7 @@ class _SearchScreenState extends State<SearchScreen> {
               height: 35,
               child: TextField(
                 controller: _textEditingController,
+                cursorColor: Colors.blue,
                 onChanged: (value) {
                   setState(() {
                     _search = widget.account
@@ -320,6 +329,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 },
                 style: TextStyle(fontSize: 18),
                 decoration: InputDecoration(
+                  hintText: 'Tìm kiếm',
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 15),
                   prefixIcon: Padding(
                     padding: const EdgeInsets.only(
                       left: 10.0,

@@ -13,7 +13,6 @@ class NavigationContainer extends StatefulWidget {
 
   final String currentUserID;
   @override
-  // ignore: library_private_types_in_public_api
   _NavigationContainerState createState() => _NavigationContainerState();
 }
 
@@ -32,7 +31,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
     return Scaffold(
       body: Center(
           child: [
-        HomePage(),
+        HomePage(currentUserId: widget.currentUserID),
         MessagePage(),
         AddVideoPage(),
         NotificationPage(),

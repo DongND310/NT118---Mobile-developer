@@ -8,47 +8,48 @@ class Hashtag extends StatelessWidget {
   Hashtag(this.hashtag);
   @override
   Widget build(BuildContext context) {
-    return  Row(
+    return Row(
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SvgPicture.asset(
               'assets/icons/hashtag.svg',
-              width: 25,
-              height: 25,),
+              width: 40,
+              height: 40,
+            ),
             Padding(
                 padding: const EdgeInsets.only(left: 15.0),
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         hashtag,
                         style: const TextStyle(
-                          fontSize: 15,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          color: Colors.blue,
                         ),
                       ),
-                      Text("description",style: TextStyle(fontSize: 15))
-                    ]
-                )
-            )
+                      Text("description", style: TextStyle(fontSize: 15))
+                    ]))
           ],
         ),
-        Expanded(child: Column(
+        Expanded(
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [IconButton(
-              icon: SvgPicture.asset(
-                'assets/icons/video.svg',
-                width: 25,
-                height: 25,
-              ),
-              onPressed: () {
-
-              })],
-        ))
+          children: [
+            IconButton(
+                icon: SvgPicture.asset(
+                  'assets/icons/video.svg',
+                  width: 40,
+                  height: 40,
+                ),
+                onPressed: () {})
+          ],
+        )),
       ],
     );
   }

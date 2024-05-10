@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/components/home_side_bar.dart';
@@ -6,7 +7,8 @@ import 'package:mobile_project/components/video_tile.dart';
 import 'package:mobile_project/screen/Search/search.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({super.key, required this.currentUserId});
+  final String currentUserId;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -15,6 +17,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _isFollowingSelected = false;
   int _snappedPageIndex = 0;
+  final user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

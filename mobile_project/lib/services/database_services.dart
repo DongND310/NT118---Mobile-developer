@@ -14,4 +14,13 @@ class DatabaseServices {
         await followingRef.doc(userID).collection('userFollowing').get();
     return followingSnapshot.docs.length;
   }
+
+  static Future<QuerySnapshot> searchUsers(String name) async {
+    Future<QuerySnapshot> users = usersRef
+        .where('name', isGreaterThanOrEqualTo: name)
+        .where('name', isLessThan: name + 'z')
+        .get();
+
+    return users;
+  }
 }
