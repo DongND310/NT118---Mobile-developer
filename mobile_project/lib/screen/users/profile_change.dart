@@ -6,6 +6,8 @@ import 'package:mobile_project/components/inputtext.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'profile_page.dart';
+
 class ChangeProfilePage extends StatefulWidget {
   ChangeProfilePage({super.key});
 
@@ -64,6 +66,12 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => ProfileScreen(),
+            //   ),
+            // );
           },
           icon: SvgPicture.asset(
             'assets/icons/ep_back.svg',

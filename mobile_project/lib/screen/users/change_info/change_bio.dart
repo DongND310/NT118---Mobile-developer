@@ -5,8 +5,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/components/detail_change.dart';
 
+import '../profile_change.dart';
+
 class BioChangeScreen extends StatefulWidget {
-  final String? text;
+  String? text;
 
   BioChangeScreen({super.key, required this.text});
 
@@ -16,8 +18,13 @@ class BioChangeScreen extends StatefulWidget {
 
 class _BioChangeScreenState extends State<BioChangeScreen> {
   final TextEditingController _textEditingController = TextEditingController();
-
   final usersCollection = FirebaseFirestore.instance.collection('users');
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController.text = widget.text ?? '';
+  }
 
   Future<void> updateUserData(String data) async {
     try {
@@ -25,9 +32,12 @@ class _BioChangeScreenState extends State<BioChangeScreen> {
         User? currentUser = FirebaseAuth.instance.currentUser;
         if (currentUser != null) {
           await usersCollection.doc(currentUser.uid).update({'Bio': data});
+          setState(() {
+            widget.text = data;
+            _textEditingController.text = data;
+          });
         }
-      } else {
-      }
+      } else {}
     } catch (e) {
       print('Error updating user bio: $e');
     }
@@ -35,8 +45,7 @@ class _BioChangeScreenState extends State<BioChangeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _textEditingController.text = widget.text ?? '';
-    print(_textEditingController);
+    // _textEditingController.text = widget.text ?? '';
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -65,10 +74,16 @@ class _BioChangeScreenState extends State<BioChangeScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 30),
             child: GestureDetector(
-              onTap: () {
+              onTap: () async {
                 String data = _textEditingController.text.trim();
-                print(data);
-                updateUserData(data);
+                // updateUserData(data);
+                await updateUserData(data);
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => ChangeProfilePage(),
+                //   ),
+                // );
                 Navigator.pop(context);
               },
               child: Text(
