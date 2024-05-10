@@ -23,7 +23,6 @@ class _PostTabState extends State<PostTab> {
   void initState() {
     super.initState();
     getUserData();
-    print(user.email);
   }
 
   void getUserData() async {

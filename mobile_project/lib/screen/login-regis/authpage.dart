@@ -15,7 +15,7 @@ class AuthPage extends StatelessWidget {
         builder: (context, snapshot) {
           // is logged
           if (snapshot.hasData) {
-            return NavigationContainer();
+            return NavigationContainer(currentUserID: snapshot.data!.uid);
           }
 
           // not logged

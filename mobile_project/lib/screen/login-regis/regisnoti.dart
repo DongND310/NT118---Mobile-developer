@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/components/navigation_container.dart';
+
+import 'welcome.dart';
 
 class RegisterSuccessScreen extends StatelessWidget {
   const RegisterSuccessScreen({super.key});
@@ -65,10 +68,21 @@ class RegisterSuccessScreen extends StatelessWidget {
             ),
             // button
             GestureDetector(
-              onTap: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => NavigationContainer())),
+              onTap: () => StreamBuilder(
+                  stream: FirebaseAuth.instance.authStateChanges(),
+                  builder: (BuildContext context, snapshot) {
+                    if (snapshot.hasData) {
+                      return NavigationContainer(
+                          currentUserID: snapshot.data!.uid);
+                    } else {
+                      return WelcomeScreen();
+                    }
+                  }),
+
+              // Navigator.pushReplacement(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => NavigationContainer())),
               child: Container(
                 height: 55,
                 decoration: BoxDecoration(

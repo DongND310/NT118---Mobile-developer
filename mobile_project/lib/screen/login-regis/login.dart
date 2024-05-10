@@ -36,11 +36,25 @@ class _LoginScreenState extends State<LoginScreen> {
           email: emailController.text, password: passwordController.text);
 
       Navigator.pop(context);
-      Navigator.pushReplacement(
+
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => NavigationContainer(),
-          ));
+            builder: (context) =>
+                NavigationContainer(currentUserID: currentUser.uid),
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WelcomeScreen(),
+          ),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       String errorMessage;
@@ -197,10 +211,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       GestureDetector(
                         onTap: () {
                           AuthService().signInWithGoogle();
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => NavigationContainer()));
+                          StreamBuilder(
+                              stream: FirebaseAuth.instance.authStateChanges(),
+                              builder: (BuildContext context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return NavigationContainer(
+                                      currentUserID: snapshot.data!.uid);
+                                } else {
+                                  return WelcomeScreen();
+                                }
+                              });
+                          // Navigator.pushReplacement(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => NavigationContainer(
+                          //             currentUserID: snapshot.data!.uid)));
                         },
                         child: Container(
                           height: 65,

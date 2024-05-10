@@ -9,8 +9,9 @@ import 'package:mobile_project/screen/message/message_page.dart';
 import 'package:mobile_project/screen/users/profile_page.dart';
 
 class NavigationContainer extends StatefulWidget {
-  const NavigationContainer({super.key});
+  NavigationContainer({super.key, required this.currentUserID});
 
+  final String currentUserID;
   @override
   // ignore: library_private_types_in_public_api
   _NavigationContainerState createState() => _NavigationContainerState();
@@ -19,14 +20,6 @@ class NavigationContainer extends StatefulWidget {
 class _NavigationContainerState extends State<NavigationContainer> {
   int _selectedPageIndex = 0;
   final user = FirebaseAuth.instance.currentUser;
-
-  static List<Widget> _pages = [
-    HomePage(),
-    MessagePage(),
-    AddVideoPage(),
-    NotificationPage(),
-    ProfileScreen(),
-  ];
 
   void _onIconTapped(int index) {
     setState(() {
@@ -38,8 +31,18 @@ class _NavigationContainerState extends State<NavigationContainer> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: _pages[_selectedPageIndex],
-      ),
+          child: [
+        HomePage(),
+        MessagePage(),
+        AddVideoPage(),
+        NotificationPage(),
+        ProfileScreen(
+          currentUserId: widget.currentUserID,
+          visitedUserID: widget.currentUserID,
+        ),
+      ][_selectedPageIndex]
+          // child: _pages[_selectedPageIndex],
+          ),
       bottomNavigationBar: CustomBottomNavigationBar(
           selectedPageIndex: _selectedPageIndex, onIconTap: _onIconTapped),
     );
