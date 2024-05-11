@@ -29,7 +29,7 @@ class _RecentChatState extends State<RecentChats> {
         stream: _firestore.collection("chatrooms").snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text('Something went wrong');
+            return Text('Có lỗi xảy ra.');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -57,7 +57,7 @@ class _RecentChatState extends State<RecentChats> {
           stream: _chatService.getMessage(chatRoomId),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Text('Something went wrong');
+              return Text('Có lỗi xảy ra.');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -80,10 +80,12 @@ class _RecentChatState extends State<RecentChats> {
                           ? ChatPage(
                               receiverId: datamessage['receiverId'],
                               receiverName: datamessage['receiverName'],
+                              receiverImg: datamessage['receiverImg'],
                             )
                           : ChatPage(
                               receiverId: datamessage['senderId'],
                               receiverName: datamessage['senderName'],
+                              receiverImg: datamessage['senderImg'],
                             ),
                     ),
                   );
@@ -100,6 +102,17 @@ class _RecentChatState extends State<RecentChats> {
                           width: 65,
                         ),
                       ),
+                      // CircleAvatar(
+                      //   radius: 25,
+                      //   backgroundImage: documentSnapshot
+                      //               .data()
+                      //               .containsKey('receiverImg') &&
+                      //           documentSnapshot.data()['receiverImg'] != null
+                      //       ? NetworkImage(
+                      //           documentSnapshot.data()['receiverImg'])
+                      //       : AssetImage('assets/images/default_avt.png'),
+                      // ),
+
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: Column(

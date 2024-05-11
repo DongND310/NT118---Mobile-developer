@@ -9,12 +9,25 @@ import 'chat_bottom_sheet.dart';
 import 'chat_sample.dart';
 import 'more_chat.dart';
 
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatefulWidget {
   final String receiverId;
   final String receiverName;
+  final String receiverImg;
+
+  ChatPage(
+      {required this.receiverId,
+      required this.receiverName,
+      required this.receiverImg});
+
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
   final ScrollController _controller = ScrollController();
+  final user = FirebaseAuth.instance.currentUser!;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  ChatPage({required this.receiverId, required this.receiverName});
+
   final ChatService _chatService = ChatService();
 
   @override
@@ -39,20 +52,28 @@ class ChatPage extends StatelessWidget {
           ),
           title: Row(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Image.network(
-                  'https://i.pinimg.com/736x/fd/7f/48/fd7f480aa83946195f004f34a0da9ad8.jpg',
-                  height: 45,
-                  width: 45,
-                ),
+              // ClipRRect(
+              //   borderRadius: BorderRadius.circular(30),
+              //   child: Image.network(
+              //     'https://i.pinimg.com/736x/fd/7f/48/fd7f480aa83946195f004f34a0da9ad8.jpg',
+              //     height: 45,
+              //     width: 45,
+              //   ),
+              // ),
+
+              CircleAvatar(
+                radius: 20,
+                backgroundImage: widget.receiverImg != null
+                    ? NetworkImage(widget.receiverImg!)
+                    : Image.asset('assets/images/default_avt.png').image,
               ),
+
               Padding(
                 padding: EdgeInsets.only(left: 20),
                 child: SizedBox(
                   width: 170,
                   child: Text(
-                    receiverName,
+                    widget.receiverName,
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -72,7 +93,7 @@ class ChatPage extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) => MoreScreen(
-                                  userName: receiverName,
+                                  userName: widget.receiverName,
                                 )));
                   },
                   icon: Icon(
@@ -85,7 +106,8 @@ class ChatPage extends StatelessWidget {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: _chatService.getMessages(_auth.currentUser!.uid, receiverId),
+        stream:
+            _chatService.getMessages(_auth.currentUser!.uid, widget.receiverId),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.data != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -110,9 +132,9 @@ class ChatPage extends StatelessWidget {
         },
       ),
       bottomSheet: ChatBottomSheet(
-        receiverId: receiverId,
-        receiverName: receiverName,
-      ),
+          receiverId: widget.receiverId,
+          receiverName: widget.receiverName,
+          receiverImg: widget.receiverImg),
     );
   }
 }

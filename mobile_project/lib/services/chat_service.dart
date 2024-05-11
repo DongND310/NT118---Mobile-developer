@@ -22,7 +22,8 @@ class ChatService extends ChangeNotifier {
   //   return id;
   // }
   // Send message
-  Future<void> sendMessage(String receiverId, String receiverName, String message) async {
+  Future<void> sendMessage(String receiverId, String receiverName,
+      String receiverImg, String message) async {
     final Timestamp timestamp = Timestamp.now();
     // Create message
     Message newMessage = Message(
@@ -32,13 +33,15 @@ class ChatService extends ChangeNotifier {
       receiverName: receiverName,
       message: message,
       timestamp: timestamp,
+      receiverImg: receiverImg,
     );
     // Chatroom ID
     List<String> ids = [_auth.currentUser!.uid, receiverId];
     ids.sort();
     String chatRoomId = ids.join('_');
 
-    DocumentSnapshot chatRoomSnapshot = await _firestore.collection("chatrooms").doc(chatRoomId).get();
+    DocumentSnapshot chatRoomSnapshot =
+        await _firestore.collection("chatrooms").doc(chatRoomId).get();
     if (!chatRoomSnapshot.exists) {
       // Create a new chatroom document
       await _firestore.collection("chatrooms").doc(chatRoomId).set({
@@ -47,9 +50,12 @@ class ChatService extends ChangeNotifier {
     }
 
     // Add message to database
-    await _firestore.collection("chatrooms").doc(chatRoomId).collection("messages").add(newMessage.toMap());
+    await _firestore
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .collection("messages")
+        .add(newMessage.toMap());
   }
-
 
   // Get messages
   Stream<QuerySnapshot> getMessages(String userID, String anotherUserID) {
@@ -63,6 +69,7 @@ class ChatService extends ChangeNotifier {
         .orderBy("timestamp", descending: false)
         .snapshots();
   }
+
   Stream<QuerySnapshot> getMessage(String chatRoomId) {
     return _firestore
         .collection("chatrooms")

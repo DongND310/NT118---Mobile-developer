@@ -34,8 +34,6 @@ class _PostTabState extends State<PostTab> {
     _name = userDoc.get('Name');
     _avt = userDoc.get('Avt');
     setState(() {});
-    print(_id);
-    print(_name);
   }
 
   @override
