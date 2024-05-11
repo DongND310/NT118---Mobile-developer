@@ -12,12 +12,12 @@ import 'more_chat.dart';
 class ChatPage extends StatefulWidget {
   final String receiverId;
   final String receiverName;
-  final String receiverImg;
+  final String chatterImg;
 
   ChatPage(
       {required this.receiverId,
       required this.receiverName,
-      required this.receiverImg});
+      required this.chatterImg});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -63,8 +63,8 @@ class _ChatPageState extends State<ChatPage> {
 
               CircleAvatar(
                 radius: 20,
-                backgroundImage: widget.receiverImg != null
-                    ? NetworkImage(widget.receiverImg!)
+                backgroundImage: widget.chatterImg != null
+                    ? NetworkImage(widget.chatterImg!)
                     : Image.asset('assets/images/default_avt.png').image,
               ),
 
@@ -134,7 +134,7 @@ class _ChatPageState extends State<ChatPage> {
       bottomSheet: ChatBottomSheet(
           receiverId: widget.receiverId,
           receiverName: widget.receiverName,
-          receiverImg: widget.receiverImg),
+          chatterImg: widget.chatterImg),
     );
   }
 }

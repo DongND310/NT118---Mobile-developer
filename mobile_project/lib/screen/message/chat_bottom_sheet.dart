@@ -8,18 +8,18 @@ import '../../services/chat_service.dart';
 class ChatBottomSheet extends StatelessWidget {
   final String receiverId;
   final String receiverName;
-  final String receiverImg;
+  final String chatterImg;
   final TextEditingController _controller = TextEditingController();
   final ChatService _chatService = ChatService();
   ChatBottomSheet(
       {required this.receiverId,
       required this.receiverName,
-      required this.receiverImg});
+      required this.chatterImg});
 
   void onSendMessage() async {
     if (_controller.text.isNotEmpty) {
       await _chatService.sendMessage(
-          receiverId, receiverName, receiverImg, _controller.text);
+          receiverId, receiverName, chatterImg, _controller.text);
       _controller.clear();
     }
   }

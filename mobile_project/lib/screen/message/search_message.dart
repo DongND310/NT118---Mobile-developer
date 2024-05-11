@@ -102,7 +102,7 @@ class _SearchMessageState extends State<SearchMessageScreen> {
                         builder: (context) => ChatPage(
                           receiverId: data.id,
                           receiverName: data['Name'],
-                          receiverImg: data['Avt'],
+                          chatterImg: data['Avt'],
                         ),
                       ),
                     );

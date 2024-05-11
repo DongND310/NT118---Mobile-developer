@@ -80,12 +80,12 @@ class _RecentChatState extends State<RecentChats> {
                           ? ChatPage(
                               receiverId: datamessage['receiverId'],
                               receiverName: datamessage['receiverName'],
-                              receiverImg: datamessage['receiverImg'],
+                              chatterImg: datamessage['chatterImg'],
                             )
                           : ChatPage(
                               receiverId: datamessage['senderId'],
                               receiverName: datamessage['senderName'],
-                              receiverImg: datamessage['senderImg'],
+                              chatterImg: datamessage['chatterImg'],
                             ),
                     ),
                   );
@@ -104,15 +104,18 @@ class _RecentChatState extends State<RecentChats> {
                       ),
                       // CircleAvatar(
                       //   radius: 25,
-                      //   backgroundImage: documentSnapshot
-                      //               .data()
-                      //               .containsKey('receiverImg') &&
-                      //           documentSnapshot.data()['receiverImg'] != null
-                      //       ? NetworkImage(
-                      //           documentSnapshot.data()['receiverImg'])
-                      //       : AssetImage('assets/images/default_avt.png'),
+                      //   backgroundImage: isSender
+                      //       ? datamessage['chatterImg'] != null
+                      //           ? NetworkImage(
+                      //                   datamessage['chatterImg'].toString())
+                      //               as ImageProvider
+                      //           : AssetImage('assets/images/default_avt.png')
+                      //       : datamessage['chatterImg'] != null
+                      //           ? NetworkImage(
+                      //                   datamessage['chatterImg'].toString())
+                      //               as ImageProvider
+                      //           : AssetImage('assets/images/default_avt.png'),
                       // ),
-
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: Column(

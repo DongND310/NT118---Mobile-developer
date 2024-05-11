@@ -23,7 +23,7 @@ class ChatService extends ChangeNotifier {
   // }
   // Send message
   Future<void> sendMessage(String receiverId, String receiverName,
-      String receiverImg, String message) async {
+      String chatterImg, String message) async {
     final Timestamp timestamp = Timestamp.now();
     // Create message
     Message newMessage = Message(
@@ -33,7 +33,7 @@ class ChatService extends ChangeNotifier {
       receiverName: receiverName,
       message: message,
       timestamp: timestamp,
-      receiverImg: receiverImg,
+      chatterImg: chatterImg,
     );
     // Chatroom ID
     List<String> ids = [_auth.currentUser!.uid, receiverId];
