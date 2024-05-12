@@ -9,14 +9,12 @@ class ChatService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? _uid;
   String? _name;
-  String? _id;
   String? _avt;
   Future<void> getUserData() async {
     User currentUser = _auth.currentUser!;
     _uid = currentUser.uid;
     final DocumentSnapshot userDoc =
     await FirebaseFirestore.instance.collection('users').doc(_uid).get();
-    _id = userDoc.get('ID');
     _name = userDoc.get('Name');
     _avt = userDoc.get('Avt');
   }
@@ -70,7 +68,7 @@ class ChatService extends ChangeNotifier {
         .snapshots();
   }
 
-  Stream<QuerySnapshot> getMessage(String chatRoomId) {
+  Stream<QuerySnapshot> getLastMessage(String chatRoomId) {
     return _firestore
         .collection("chatrooms")
         .doc(chatRoomId)

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/screen/message/chat_page.dart';
@@ -15,30 +14,9 @@ class SearchMessageScreen extends StatefulWidget {
 class _SearchMessageState extends State<SearchMessageScreen> {
   TextEditingController _textEditingController = TextEditingController();
   var searchName = "";
-
-  String? _avt;
-  String? _uid;
   final user = FirebaseAuth.instance.currentUser!;
-
   FirebaseAuth _auth = FirebaseAuth.instance;
-  FocusNode _focusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    getUserData();
-  }
-
-  void getUserData() async {
-    User currentUser = _auth.currentUser!;
-    _uid = currentUser.uid;
-    final DocumentSnapshot userDoc =
-        await FirebaseFirestore.instance.collection('users').doc(_uid).get();
-
-    _avt = userDoc.get('Avt');
-    setState(() {});
-  }
-
+  final FocusNode _focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +41,7 @@ class _SearchMessageState extends State<SearchMessageScreen> {
                 searchName = value;
               });
             },
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
             decoration: InputDecoration(
               prefixIcon: Padding(
                 padding: const EdgeInsets.only(left: 10, top: 8, bottom: 8),
@@ -106,11 +84,11 @@ class _SearchMessageState extends State<SearchMessageScreen> {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Text('Có lỗi xảy ra.');
+              return const Text('Có lỗi xảy ra.');
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text("Loading");
+              return const Text("Loading");
             }
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
@@ -124,8 +102,7 @@ class _SearchMessageState extends State<SearchMessageScreen> {
                         builder: (context) => ChatPage(
                           receiverId: data.id,
                           receiverName: data['Name'],
-                            chatterImg: data['Avt']
-                          // chatterImg: data['Avt'] ?? 'assets/images/default_avt.png' ,
+                          chatterImg: data['Avt'] ?? 'assets/images/default_avt.png' ,
                         ),
                       ),
                     );

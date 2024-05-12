@@ -31,9 +31,7 @@ class _AccountDetailState extends State<AccountDetail> {
               ),
               child: CircleAvatar(
                 radius: 20,
-                backgroundImage: widget.img != null
-                    ? NetworkImage(widget.img!)
-                    : Image.asset('assets/images/default_avt.png').image,
+                backgroundImage: NetworkImage(widget.img)
               ),
             )),
         SizedBox(width: 20),

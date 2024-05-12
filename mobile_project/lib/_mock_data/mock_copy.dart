@@ -1,4 +1,4 @@
-import 'package:mobile_project/_mock_data/mock.dart';
+
 import 'package:mobile_project/models/user.dart';
 import 'package:mobile_project/models/video.dart';
 
