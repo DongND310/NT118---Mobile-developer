@@ -131,7 +131,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       gender,
       nation,
       null,
-      null,
+      'https://i.pinimg.com/564x/47/09/80/470980b112a44064cd88290ac0edf6a6.jpg',
     );
   }
 

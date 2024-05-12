@@ -119,19 +119,13 @@ class _RecentChatState extends State<RecentChats> {
                       //     width: 65,
                       //   ),
                       // ),
+
                       CircleAvatar(
                         radius: 30,
-                        backgroundImage: isSender
-                            ? datamessage['chatterImg'] != null
-                                ? NetworkImage(
-                                        datamessage['chatterImg'].toString())
-                                    as ImageProvider
-                                : AssetImage('assets/images/default_avt.png')
-                            : datamessage['chatterImg'] != null
-                                ? NetworkImage(
-                                        datamessage['chatterImg'].toString())
-                                    as ImageProvider
-                                : AssetImage('assets/images/default_avt.png'),
+                        backgroundImage: datamessage['chatterImg'] != null
+                            ? NetworkImage(datamessage['chatterImg']!)
+                            : Image.asset('assets/images/default_avt.png')
+                                .image,
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),

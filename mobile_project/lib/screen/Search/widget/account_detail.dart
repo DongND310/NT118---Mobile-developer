@@ -2,13 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class AccountDetail extends StatelessWidget {
+class AccountDetail extends StatefulWidget {
   @override
   final String account;
   final String descript;
+  final String img;
 
-  AccountDetail(this.account, this.descript);
+  AccountDetail(this.account, this.descript, this.img);
 
+  @override
+  State<AccountDetail> createState() => _AccountDetailState();
+}
+
+class _AccountDetailState extends State<AccountDetail> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -23,13 +29,11 @@ class AccountDetail extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(style: BorderStyle.none, width: 2),
               ),
-              child: ClipOval(
-                child: Image.network(
-                  'https://i.pinimg.com/736x/fd/7f/48/fd7f480aa83946195f004f34a0da9ad8.jpg',
-                  width: 70,
-                  height: 70,
-                  fit: BoxFit.cover,
-                ),
+              child: CircleAvatar(
+                radius: 20,
+                backgroundImage: widget.img != null
+                    ? NetworkImage(widget.img!)
+                    : Image.asset('assets/images/default_avt.png').image,
               ),
             )),
         SizedBox(width: 20),
@@ -38,13 +42,13 @@ class AccountDetail extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(account,
+              Text(widget.account,
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.blue)),
               SizedBox(height: 5),
-              Text(descript,
+              Text(widget.descript,
                   style: TextStyle(fontSize: 16, color: Colors.black54)),
             ],
           ),

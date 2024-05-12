@@ -71,6 +71,7 @@ class _ChatPageState extends State<ChatPage> {
               )
             ],
           ),
+          
         ),
         actions: [
           IconButton(
@@ -79,7 +80,9 @@ class _ChatPageState extends State<ChatPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => MoreScreen(
-                            userName: widget.receiverName,
+                            receiverName: widget.receiverName,
+                            receiverId: widget.receiverId,
+                            chatterImg: widget.chatterImg,
                           )));
             },
             icon: const Icon(
