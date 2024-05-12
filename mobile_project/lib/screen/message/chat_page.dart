@@ -52,14 +52,12 @@ class _ChatPageState extends State<ChatPage> {
           ),
           title: Row(
             children: [
-
               CircleAvatar(
                 radius: 20,
                 backgroundImage: widget.chatterImg != null
                     ? NetworkImage(widget.chatterImg)
                     : Image.asset('assets/images/default_avt.png').image,
               ),
-
               Padding(
                 padding: EdgeInsets.only(left: 20),
                 child: SizedBox(
@@ -85,7 +83,9 @@ class _ChatPageState extends State<ChatPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => MoreScreen(
-                                  userName: widget.receiverName,
+                                  receiverName: widget.receiverName,
+                                  receiverId: widget.receiverId,
+                                  chatterImg: widget.chatterImg,
                                 )));
                   },
                   icon: Icon(

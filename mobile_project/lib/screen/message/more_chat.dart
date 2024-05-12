@@ -10,8 +10,8 @@ class MoreScreen extends StatefulWidget {
 
   MoreScreen(
       {required this.receiverId,
-        required this.receiverName,
-        required this.chatterImg});
+      required this.receiverName,
+      required this.chatterImg});
   @override
   State<StatefulWidget> createState() => _MoreState();
 }

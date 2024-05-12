@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -111,16 +112,33 @@ class _SearchScreenState extends State<SearchScreen> {
   List<String> _search = [];
   TextEditingController _textEditingController = TextEditingController();
 
+  String? _avt;
+  String? _uid;
+  final user = FirebaseAuth.instance.currentUser!;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     _showresult = widget.showresult;
     super.initState();
+
+    getUserData();
   }
 
   void _searchButtonPressed() {
     setState(() {
       _showresult = true;
     });
+  }
+
+  void getUserData() async {
+    User currentUser = _auth.currentUser!;
+    _uid = currentUser.uid;
+    final DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(_uid).get();
+
+    _avt = userDoc.get('Avt');
+    setState(() {});
   }
 
   Widget _buildResultSection() {
@@ -164,7 +182,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ],
             ),
-            AccountDetail(widget.account[1], widget.descript),
+            AccountDetail(widget.account[1], widget.descript, _avt ?? ''),
             SizedBox(height: 15),
             Text(
               "Video",
@@ -209,7 +227,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       itemCount: widget.account.length,
                       itemBuilder: (BuildContext context, int index) {
                         return AccountDetail(
-                            widget.account[index], widget.descript);
+                            widget.account[index], widget.descript, _avt ?? '');
                       })),
             ]),
       ),

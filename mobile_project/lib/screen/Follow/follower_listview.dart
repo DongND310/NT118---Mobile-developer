@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -26,6 +28,28 @@ class _ListFollowerState extends State<ListFollowerScreen> {
   bool _isPressed = false;
   List<String> _search = [];
   TextEditingController _textEditingController = TextEditingController();
+
+  String? _avt;
+  String? _uid;
+  final user = FirebaseAuth.instance.currentUser!;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+  void getUserData() async {
+    User currentUser = _auth.currentUser!;
+    _uid = currentUser.uid;
+    final DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(_uid).get();
+
+    _avt = userDoc.get('Avt');
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -94,7 +118,8 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                     _textEditingController.text.isNotEmpty
                                         ? _search[index]
                                         : widget.account[index],
-                                    ""),
+                                    "",
+                                    _avt ?? ''),
                               ),
                               ElevatedButton(
                                 onPressed: () {
@@ -161,7 +186,8 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                     _textEditingController.text.isNotEmpty
                                         ? _search[index]
                                         : widget.account[index],
-                                    ""),
+                                    "",
+                                    _avt ?? ''),
                               ),
                               ElevatedButton(
                                 onPressed: () {
@@ -228,7 +254,8 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                     _textEditingController.text.isNotEmpty
                                         ? _search[index]
                                         : widget.account[index],
-                                    ""),
+                                    "",
+                                    _avt ?? ''),
                               ),
                               ElevatedButton(
                                 onPressed: () {

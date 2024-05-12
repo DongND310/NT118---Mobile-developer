@@ -15,8 +15,30 @@ class SearchMessageScreen extends StatefulWidget {
 class _SearchMessageState extends State<SearchMessageScreen> {
   TextEditingController _textEditingController = TextEditingController();
   var searchName = "";
+
+  String? _avt;
+  String? _uid;
+  final user = FirebaseAuth.instance.currentUser!;
+
   FirebaseAuth _auth = FirebaseAuth.instance;
   FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+  void getUserData() async {
+    User currentUser = _auth.currentUser!;
+    _uid = currentUser.uid;
+    final DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(_uid).get();
+
+    _avt = userDoc.get('Avt');
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +106,7 @@ class _SearchMessageState extends State<SearchMessageScreen> {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Text('Something went wrong');
+              return Text('Có lỗi xảy ra.');
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -109,7 +131,8 @@ class _SearchMessageState extends State<SearchMessageScreen> {
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    child: AccountDetail(data['Name'], ""),
+                    child: AccountDetail(data['Name'], "",
+                        data['Avt'] ?? 'assets/images/default_avt.png'),
                   ),
                 );
               },
