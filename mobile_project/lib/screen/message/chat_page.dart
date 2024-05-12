@@ -32,25 +32,25 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   _controller.jumpTo(_controller.position.maxScrollExtent);});
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(65),
-        child: AppBar(
-          backgroundColor: Colors.blue,
-          leading: IconButton(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        leading: Expanded(
+          child: IconButton(
             icon: SvgPicture.asset(
               'assets/icons/ep_back.svg',
               color: Colors.white,
-              width: 30,
-              height: 30,
+              // width: 30,
+              // height: 30,
             ),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
-          title: Row(
+        ),
+        title: Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CircleAvatar(
                 radius: 20,
@@ -58,44 +58,40 @@ class _ChatPageState extends State<ChatPage> {
                     ? NetworkImage(widget.chatterImg)
                     : Image.asset('assets/images/default_avt.png').image,
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: SizedBox(
-                  width: 170,
-                  child: Text(
-                    widget.receiverName,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  widget.receiverName,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                  overflow: TextOverflow.ellipsis,
                 ),
               )
             ],
           ),
-          actions: [
-            Padding(
-                padding: EdgeInsets.only(right: 20),
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MoreScreen(
-                                  receiverName: widget.receiverName,
-                                  receiverId: widget.receiverId,
-                                  chatterImg: widget.chatterImg,
-                                )));
-                  },
-                  icon: Icon(
-                    Icons.info_outline_rounded,
-                    color: Colors.white,
-                    size: 30,
-                  ),
-                ))
-          ],
+          
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MoreScreen(
+                            receiverName: widget.receiverName,
+                            receiverId: widget.receiverId,
+                            chatterImg: widget.chatterImg,
+                          )));
+            },
+            icon: const Icon(
+              Icons.info_outline_rounded,
+              color: Colors.white,
+              size: 20,
+            ),
+          )
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream:
@@ -106,7 +102,6 @@ class _ChatPageState extends State<ChatPage> {
               _controller.jumpTo(_controller.position.maxScrollExtent);
             });
             return ListView.builder(
-              physics: AlwaysScrollableScrollPhysics(),
               controller: _controller,
               //shrinkWrap: true,
               padding:

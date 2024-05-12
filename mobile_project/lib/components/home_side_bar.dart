@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/components/comment_page.dart';
 import 'package:mobile_project/components/share_page.dart';
@@ -51,7 +52,6 @@ class _HomeSideBarState extends State<HomeSideBar>
         _sideBarItem('heart', widget.video.likes, style),
         _sideBarTap('comment', widget.video.comments, style, CommentPage()),
         _sideBarItem('bookmark', widget.video.bookmarks, style),
-        _sideBarTap('share', 'Share', style, SharePage()),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: AnimatedBuilder(
@@ -115,10 +115,22 @@ class _HomeSideBarState extends State<HomeSideBar>
   _sideBarTap(String iconName, String label, TextStyle style, Widget page) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => page),
-        );
+        showBottomSheet(
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (context) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 0),
+                child: DraggableScrollableSheet(
+                  maxChildSize: 0.5,
+                  initialChildSize: 0.5,
+                  minChildSize: 0.3,
+                  builder: (context, scrollController) {
+                    return const CommentPage();
+                  },
+                ),
+              );
+            });
       },
       child: Column(
         children: [

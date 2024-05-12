@@ -21,7 +21,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 24),
-      child: InkWell(
+      child: GestureDetector(
         onTap: onTap,
         child: Container(
           alignment: Alignment.center,
