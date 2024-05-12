@@ -24,8 +24,9 @@ class _RecentChatState extends State<RecentChats> {
     DateTime dateTime = timestamp.toDate();
     Duration difference = DateTime.now().difference(dateTime);
 
-     if (difference.inHours < 24) {
-      return DateFormat.Hm().format(dateTime);;
+    if (difference.inHours < 24) {
+      return DateFormat.Hm().format(dateTime);
+      ;
     } else if (difference.inDays < 30) {
       return '${difference.inDays}d';
     } else if (difference.inDays < 365) {
@@ -36,6 +37,7 @@ class _RecentChatState extends State<RecentChats> {
       return '${years}y';
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -136,14 +138,18 @@ class _RecentChatState extends State<RecentChats> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              isSender
-                                  ? datamessage['receiverName']
-                                  : datamessage['senderName'],
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue),
+                            Container(
+                              width: 200,
+                              child: Text(
+                                  isSender
+                                      ? datamessage['receiverName']
+                                      : datamessage['senderName'],
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                    overflow: TextOverflow.ellipsis,
+                                  )),
                             ),
                             SizedBox(height: 5),
                             Container(
@@ -172,8 +178,7 @@ class _RecentChatState extends State<RecentChats> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              formatTimestamp(
-                                  datamessage['timestamp']),
+                              formatTimestamp(datamessage['timestamp']),
                               style: TextStyle(
                                   fontSize: 15, color: Colors.black54),
                             ),
