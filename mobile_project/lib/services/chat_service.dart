@@ -7,33 +7,32 @@ import '../models/message.dart';
 class ChatService extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  String? _uid;
+  String? _name;
+  String? _id;
+  String? _avt;
+  Future<void> getUserData() async {
+    User currentUser = _auth.currentUser!;
+    _uid = currentUser.uid;
+    final DocumentSnapshot userDoc =
+    await FirebaseFirestore.instance.collection('users').doc(_uid).get();
+    _id = userDoc.get('ID');
+    _name = userDoc.get('Name');
+    _avt = userDoc.get('Avt');
+  }
 
-  // Future<String> getUserID() async {
-  //   String id = "";
-  //   final querySnapshot = await _firestore
-  //       .collection('users')
-  //       .where("Email", isEqualTo: _auth.currentUser!.email)
-  //       .get();
-  //   if (querySnapshot.docs.isNotEmpty) {
-  //     id = querySnapshot.docs[0].id;
-  //   } else {
-  //     print('Document does not exist');
-  //   }
-  //   return id;
-  // }
   // Send message
-  Future<void> sendMessage(String receiverId, String receiverName,
-      String chatterImg, String message) async {
+  Future<void> sendMessage(String receiverId, String receiverName, String message, String img) async {
     final Timestamp timestamp = Timestamp.now();
+     await getUserData();
     // Create message
     Message newMessage = Message(
       senderId: _auth.currentUser!.uid,
-      senderName: _auth.currentUser!.displayName.toString(),
+      senderName: _name??'',
       receiverId: receiverId,
       receiverName: receiverName,
       message: message,
       timestamp: timestamp,
-      chatterImg: chatterImg,
     );
     // Chatroom ID
     List<String> ids = [_auth.currentUser!.uid, receiverId];
@@ -44,11 +43,12 @@ class ChatService extends ChangeNotifier {
         await _firestore.collection("chatrooms").doc(chatRoomId).get();
     if (!chatRoomSnapshot.exists) {
       // Create a new chatroom document
-      await _firestore.collection("chatrooms").doc(chatRoomId).set({
+      _firestore.collection("chatrooms").doc(chatRoomId).set({
         "chatroomId": chatRoomId,
+        "imageUser1": img,
+        "imageUser2": _avt,
       });
     }
-
     // Add message to database
     await _firestore
         .collection("chatrooms")

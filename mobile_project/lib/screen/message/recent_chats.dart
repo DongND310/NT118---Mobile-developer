@@ -42,30 +42,43 @@ class _RecentChatState extends State<RecentChats> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Column(children: [
-      StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection("chatrooms").snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Có lỗi xảy ra.');
+
+          StreamBuilder<QuerySnapshot>(
+            stream: _firestore.collection("chatrooms").snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text('Có lỗi xảy ra.');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
           }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          return Container(
+            return Container(
               height: MediaQuery.of(context).size.height,
               child: ListView(
-                children: snapshot.data!.docs
-                    .map((doc) => _buildChatRoomList(doc))
-                    .toList(),
+                children: [
+                  for (var doc in snapshot.data!.docs)
+                    FutureBuilder(
+                      future: _buildChatRoomList(doc),
+                      builder: (context, AsyncSnapshot<Widget> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Container(); // or any loading indicator
+                        }
+                        return snapshot.data!;
+                      },
+                    ),
+                ],
               ));
         },
       ),
     ]));
   }
-
-  Widget _buildChatRoomList(DocumentSnapshot documentSnapshot) {
+//   String _getAvt (String id) {
+//   final DocumentSnapshot userDoc = FirebaseFirestore.instance.collection('users').doc(id).get() as DocumentSnapshot<Object?>;
+//   return userDoc.get('Avt');
+// }
+  Future<Widget> _buildChatRoomList(DocumentSnapshot documentSnapshot) async {
     Map<String, dynamic> data =
         documentSnapshot.data()! as Map<String, dynamic>;
     if (data['chatroomId'].contains(_auth.currentUser!.uid)) {
@@ -97,12 +110,12 @@ class _RecentChatState extends State<RecentChats> {
                           ? ChatPage(
                               receiverId: datamessage['receiverId'],
                               receiverName: datamessage['receiverName'],
-                              chatterImg: datamessage['chatterImg'],
+                              chatterImg: data["imageUser1"],
                             )
                           : ChatPage(
                               receiverId: datamessage['senderId'],
                               receiverName: datamessage['senderName'],
-                              chatterImg: datamessage['chatterImg'],
+                              chatterImg: data["imageUser2"],
                             ),
                     ),
                   );
@@ -122,10 +135,8 @@ class _RecentChatState extends State<RecentChats> {
 
                       CircleAvatar(
                         radius: 30,
-                        backgroundImage: datamessage['chatterImg'] != null
-                            ? NetworkImage(datamessage['chatterImg']!)
-                            : Image.asset('assets/images/default_avt.png')
-                                .image,
+                        backgroundImage: isSender? NetworkImage(data['imageUser1']) :
+                            NetworkImage(data['imageUser2']!)
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
@@ -176,19 +187,7 @@ class _RecentChatState extends State<RecentChats> {
                               style: TextStyle(
                                   fontSize: 15, color: Colors.black54),
                             ),
-                            // SizedBox(
-                            //   height: 10,
-                            // ),
-                            // Container(
-                            //   height: 23,
-                            //   width: 23,
-                            //   alignment: Alignment.center,
-                            //   decoration: BoxDecoration(
-                            //       color: Color(0xFF001141),
-                            //       borderRadius: BorderRadius.circular(25)
-                            //   ),
-                            //   child:Text("1",style: TextStyle(fontSize: 16, color: Colors.white,fontWeight: FontWeight.bold),) ,
-                            // )
+
                           ],
                         ),
                       )

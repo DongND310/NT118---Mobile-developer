@@ -19,7 +19,7 @@ class ChatBottomSheet extends StatelessWidget {
   void onSendMessage()  {
     if (_controller.text.isNotEmpty) {
        _chatService.sendMessage(
-          receiverId, receiverName, chatterImg, _controller.text);
+          receiverId, receiverName,  _controller.text, chatterImg,);
       _controller.clear();
     }
   }
