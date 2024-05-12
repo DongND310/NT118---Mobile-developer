@@ -15,12 +15,27 @@ class _RecentChatState extends State<RecentChats> {
   final ChatService _chatService = ChatService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String timestampToHourMinuteString(Timestamp timestamp) {
+  // String timestampToHourMinuteString(Timestamp timestamp) {
+  //   DateTime dateTime = timestamp.toDate();
+  //
+  //   return DateFormat.Hm().format(dateTime);// Hm tương ứng với "HH:mm"
+  // }
+  String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
+    Duration difference = DateTime.now().difference(dateTime);
 
-    return DateFormat.Hm().format(dateTime); // Hm tương ứng với "HH:mm"
+     if (difference.inHours < 24) {
+      return DateFormat.Hm().format(dateTime);;
+    } else if (difference.inDays < 30) {
+      return '${difference.inDays}d';
+    } else if (difference.inDays < 365) {
+      int months = difference.inDays ~/ 30;
+      return '${months}mo';
+    } else {
+      int years = difference.inDays ~/ 365;
+      return '${years}y';
+    }
   }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -94,28 +109,28 @@ class _RecentChatState extends State<RecentChats> {
                   height: 65,
                   child: Row(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(35),
-                        child: Image.network(
-                          'https://i.pinimg.com/736x/fd/7f/48/fd7f480aa83946195f004f34a0da9ad8.jpg',
-                          height: 65,
-                          width: 65,
-                        ),
-                      ),
-                      // CircleAvatar(
-                      //   radius: 25,
-                      //   backgroundImage: isSender
-                      //       ? datamessage['chatterImg'] != null
-                      //           ? NetworkImage(
-                      //                   datamessage['chatterImg'].toString())
-                      //               as ImageProvider
-                      //           : AssetImage('assets/images/default_avt.png')
-                      //       : datamessage['chatterImg'] != null
-                      //           ? NetworkImage(
-                      //                   datamessage['chatterImg'].toString())
-                      //               as ImageProvider
-                      //           : AssetImage('assets/images/default_avt.png'),
+                      // ClipRRect(
+                      //   borderRadius: BorderRadius.circular(35),
+                      //   child: Image.network(
+                      //     'https://i.pinimg.com/736x/fd/7f/48/fd7f480aa83946195f004f34a0da9ad8.jpg',
+                      //     height: 65,
+                      //     width: 65,
+                      //   ),
                       // ),
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: isSender
+                            ? datamessage['chatterImg'] != null
+                                ? NetworkImage(
+                                        datamessage['chatterImg'].toString())
+                                    as ImageProvider
+                                : AssetImage('assets/images/default_avt.png')
+                            : datamessage['chatterImg'] != null
+                                ? NetworkImage(
+                                        datamessage['chatterImg'].toString())
+                                    as ImageProvider
+                                : AssetImage('assets/images/default_avt.png'),
+                      ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
@@ -157,7 +172,7 @@ class _RecentChatState extends State<RecentChats> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              timestampToHourMinuteString(
+                              formatTimestamp(
                                   datamessage['timestamp']),
                               style: TextStyle(
                                   fontSize: 15, color: Colors.black54),

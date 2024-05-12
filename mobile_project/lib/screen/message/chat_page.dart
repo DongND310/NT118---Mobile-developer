@@ -52,19 +52,11 @@ class _ChatPageState extends State<ChatPage> {
           ),
           title: Row(
             children: [
-              // ClipRRect(
-              //   borderRadius: BorderRadius.circular(30),
-              //   child: Image.network(
-              //     'https://i.pinimg.com/736x/fd/7f/48/fd7f480aa83946195f004f34a0da9ad8.jpg',
-              //     height: 45,
-              //     width: 45,
-              //   ),
-              // ),
 
               CircleAvatar(
                 radius: 20,
                 backgroundImage: widget.chatterImg != null
-                    ? NetworkImage(widget.chatterImg!)
+                    ? NetworkImage(widget.chatterImg)
                     : Image.asset('assets/images/default_avt.png').image,
               ),
 
