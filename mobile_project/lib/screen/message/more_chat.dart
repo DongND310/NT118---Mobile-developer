@@ -4,8 +4,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class MoreScreen extends StatefulWidget {
-  final String userName;
-  MoreScreen({required this.userName});
+  final String receiverId;
+  final String receiverName;
+  final String chatterImg;
+
+  MoreScreen(
+      {required this.receiverId,
+        required this.receiverName,
+        required this.chatterImg});
   @override
   State<StatefulWidget> createState() => _MoreState();
 }
@@ -32,18 +38,17 @@ class _MoreState extends State<MoreScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ClipOval(
-                child: Image.network(
-                  'https://i.pinimg.com/736x/fd/7f/48/fd7f480aa83946195f004f34a0da9ad8.jpg',
-                  height: 150,
-                  width: 150,
-                ),
+              CircleAvatar(
+                radius: 80,
+                backgroundImage: widget.chatterImg != null
+                    ? NetworkImage(widget.chatterImg)
+                    : Image.asset('assets/images/default_avt.png').image,
               ),
               SizedBox(
                 height: 35,
               ),
               Text(
-                widget.userName,
+                widget.receiverName,
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
