@@ -48,7 +48,7 @@ class _CommentPageState extends State<CommentPage> {
                             border: InputBorder.none),
                       ),
                     ),
-                    Icon(Icons.send)
+                    GestureDetector(onTap: () {}, child: Icon(Icons.send)),
                   ],
                 ),
               ),

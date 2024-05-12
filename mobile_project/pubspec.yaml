@@ -29,6 +29,7 @@ dependencies:
   image_picker: ^1.1.1
   cached_network_image: ^3.3.1
   flutter_screenutil: ^5.9.0
+  flutter_launcher_icons: ^0.13.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -38,6 +39,11 @@ dev_dependencies:
 flutter_native_splash:
   color: "#000141"
   image: assets/images/ReelReplay2.png
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/img_launcher.png"
+  remove_alpha_ios: true
 
 flutter:
   uses-material-design: true

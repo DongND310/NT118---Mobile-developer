@@ -16,9 +16,9 @@ class ChatBottomSheet extends StatelessWidget {
       required this.receiverName,
       required this.chatterImg});
 
-  void onSendMessage() async {
+  void onSendMessage()  {
     if (_controller.text.isNotEmpty) {
-      await _chatService.sendMessage(
+       _chatService.sendMessage(
           receiverId, receiverName, chatterImg, _controller.text);
       _controller.clear();
     }
@@ -33,46 +33,49 @@ class ChatBottomSheet extends StatelessWidget {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 2,
             blurRadius: 10,
-            offset: Offset(0, 3))
+            offset: const Offset(0, 3))
       ]),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-              padding: EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.only(left: 10),
               child: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.emoji_emotions_outlined,
                   size: 30,
                 ),
                 color: Colors.blue,
                 onPressed: () {},
               )),
-          Padding(
-            padding: EdgeInsets.only(left: 20),
+          const SizedBox(width: 20),
+          Expanded(
             child: Container(
               alignment: Alignment.centerRight,
               width: 250,
               child: TextFormField(
                 cursorColor: Colors.blue,
                 controller: _controller,
-                decoration: InputDecoration(
-                    hintText: "Type something...", border: InputBorder.none),
+                decoration: const InputDecoration(
+                    hintText: "Hãy nhắn gì đi...", border: InputBorder.none),
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(right: 0),
-            child: IconButton(
-              onPressed: () {
-                onSendMessage();
-              },
-              icon: Icon(
-                Icons.send,
-                color: Colors.blue,
-                size: 30,
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                onPressed: () {
+                  onSendMessage();
+                },
+                icon: const Icon(
+                  Icons.send,
+                  color: Colors.blue,
+                  size: 30,
+                ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

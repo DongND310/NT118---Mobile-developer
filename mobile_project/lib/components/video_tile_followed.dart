@@ -3,8 +3,8 @@ import 'package:lottie/lottie.dart';
 import 'package:mobile_project/models/video.dart';
 import 'package:video_player/video_player.dart';
 
-class VideoTile extends StatefulWidget {
-  const VideoTile(
+class VideoTileIsFollowed extends StatefulWidget {
+  const VideoTileIsFollowed(
       {super.key,
       required this.video,
       required this.snappedPageIndex,
@@ -13,10 +13,10 @@ class VideoTile extends StatefulWidget {
   final int snappedPageIndex;
   final int currentIndex;
   @override
-  State<VideoTile> createState() => _VideoTileState();
+  State<VideoTileIsFollowed> createState() => _VideoTileIsFollowedState();
 }
 
-class _VideoTileState extends State<VideoTile> {
+class _VideoTileIsFollowedState extends State<VideoTileIsFollowed> {
   late VideoPlayerController _videoPlayerController;
   late Future _initializeVideoPlayer;
   bool _isVideoPlaying = true;
