@@ -19,7 +19,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _isFollowingSelected = false;
   final user = FirebaseAuth.instance.currentUser;
-
+  int _snappedPageIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,6 +83,11 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         body: PageView.builder(
+            onPageChanged: (int page) {
+              setState(() {
+                _snappedPageIndex = page;
+              });
+            },
             scrollDirection: Axis.vertical,
             itemCount: _isFollowingSelected ? videos.length : copyvideos.length,
             itemBuilder: (context, index) {
@@ -92,33 +97,31 @@ class _HomePageState extends State<HomePage> {
                   _isFollowingSelected
                       ? VideoTileIsFollowed(
                           video: copyvideos[index],
-                          snappedPageIndex: index,
+                          snappedPageIndex: _snappedPageIndex,
                           currentIndex: index,
                         )
                       : VideoTile(
                           video: videos[index],
-                          snappedPageIndex: index,
+                          snappedPageIndex: _snappedPageIndex,
                           currentIndex: index,
                         ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Expanded(
-                        flex: 4,
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height / 4,
-                          child: VideoDetail(
-                            video: _isFollowingSelected
-                                ? videos[index]
-                                : copyvideos[index],
-                            user: _isFollowingSelected
-                                ? users[index]
-                                : copyusers[index],
-                          ),
+                        flex: 6,
+                        child: VideoDetail(
+                          video: _isFollowingSelected
+                              ? videos[index]
+                              : copyvideos[index],
+                          user: _isFollowingSelected
+                              ? users[index]
+                              : copyusers[index],
                         ),
                       ),
                       Expanded(
-                        child: SizedBox(
+                        child: Container(
+                          alignment: Alignment.centerRight,
                           height: MediaQuery.of(context).size.height / 3,
                           child: HomeSideBar(
                             video: _isFollowingSelected

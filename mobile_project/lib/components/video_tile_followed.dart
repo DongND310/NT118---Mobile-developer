@@ -47,7 +47,7 @@ class _VideoTileIsFollowedState extends State<VideoTileIsFollowed> {
 
   @override
   Widget build(BuildContext context) {
-    (widget.snappedPageIndex == widget.currentIndex)
+    (widget.snappedPageIndex == widget.currentIndex && _isVideoPlaying)
         ? _videoPlayerController.play()
         : _videoPlayerController.pause();
     return Container(

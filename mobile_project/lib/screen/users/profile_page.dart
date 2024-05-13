@@ -356,7 +356,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   controller: _tabController,
                   children: [
                     VideoTab(),
-                    PostTab(),
+                    Expanded(child: PostTab()),
                     SaveTab(),
                     LikeTab(),
                   ],

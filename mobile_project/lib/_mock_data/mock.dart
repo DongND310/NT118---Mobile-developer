@@ -14,8 +14,16 @@ final List<User> users = [
 ];
 
 final List<Video> videos = [
-  Video('videos/v1.mp4', demoUser1, 'caption', 'audioName',
-      'https://picsum.photos/id/1/200/200', '154', '22', '5',),
+  Video(
+    'videos/v1.mp4',
+    demoUser1,
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec consectetur feugiat ex, at gravida tortor elementum eget. Nulla fermentum ultrices dolor in iaculis. Integer consequat quam eu dolor accumsan rutrum.',
+    'audioName',
+    'https://picsum.photos/id/1/200/200',
+    '154',
+    '22',
+    '5',
+  ),
   Video('videos/v2.mp4', demoUser2, 'caption', 'audioName',
       'https://picsum.photos/id/85/200/200', '15M', '4852', '25'),
   Video('videos/v3.mp4', demoUser3, 'caption', 'audioName',

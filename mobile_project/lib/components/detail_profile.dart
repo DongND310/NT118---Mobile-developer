@@ -43,36 +43,39 @@ class UserDetailInfo extends StatelessWidget {
           style: TextStyle(
               color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        Row(
-          children: [
-            Container(
-              width: 160,
-              child: Text(
-                change,
-                style: TextStyle(
-                    color: const Color.fromARGB(255, 95, 95, 95),
-                    fontSize: 16,
-                    overflow: TextOverflow.ellipsis),
-                textAlign: TextAlign.end,
+        Expanded(
+          child: Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  change,
+                  style: TextStyle(
+                      color: const Color.fromARGB(255, 95, 95, 95),
+                      fontSize: 16,
+                      overflow: TextOverflow.ellipsis),
+                  textAlign: TextAlign.end,
+                ),
               ),
-            ),
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => screenMap[lead] != null
-                          ? screenMap[lead]!(change)
-                          : Container(),
-                    ));
-              },
-              icon: const Icon(
-                Icons.arrow_forward_ios_sharp,
-                color: const Color.fromARGB(255, 95, 95, 95),
-                size: 20,
+              
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => screenMap[lead] != null
+                            ? screenMap[lead]!(change)
+                            : Container(),
+                      ));
+                },
+                icon: const Icon(
+                  Icons.arrow_forward_ios_sharp,
+                  color: const Color.fromARGB(255, 95, 95, 95),
+                  size: 20,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );

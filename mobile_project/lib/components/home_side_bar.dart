@@ -119,16 +119,13 @@ class _HomeSideBarState extends State<HomeSideBar>
             backgroundColor: Colors.transparent,
             context: context,
             builder: (context) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 0),
-                child: DraggableScrollableSheet(
-                  maxChildSize: 0.5,
-                  initialChildSize: 0.5,
-                  minChildSize: 0.3,
-                  builder: (context, scrollController) {
-                    return const CommentPage();
-                  },
-                ),
+              return DraggableScrollableSheet(
+                maxChildSize: 0.8,
+                initialChildSize: 0.8,
+                minChildSize: 0.3,
+                builder: (context, scrollController) {
+                  return const CommentPage();
+                },
               );
             });
       },
