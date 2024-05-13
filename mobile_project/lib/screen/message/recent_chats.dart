@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,15 +38,15 @@ class _RecentChatState extends State<RecentChats> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Column(children: [
-          StreamBuilder<QuerySnapshot>(
-            stream: _firestore.collection("chatrooms").snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+      StreamBuilder<QuerySnapshot>(
+        stream: _firestore.collection("chatrooms").snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
-            return Container(
+          return Container(
               height: MediaQuery.of(context).size.height,
               child: ListView(
                 children: [
@@ -56,7 +54,8 @@ class _RecentChatState extends State<RecentChats> {
                     FutureBuilder(
                       future: _buildChatRoomList(doc),
                       builder: (context, AsyncSnapshot<Widget> snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return Container(); // or any loading indicator
                         }
                         return snapshot.data!;
@@ -68,6 +67,7 @@ class _RecentChatState extends State<RecentChats> {
       ),
     ]));
   }
+
   Future<Widget> _buildChatRoomList(DocumentSnapshot documentSnapshot) async {
     Map<String, dynamic> data =
         documentSnapshot.data()! as Map<String, dynamic>;
@@ -83,101 +83,94 @@ class _RecentChatState extends State<RecentChats> {
               return Container();
             }
             var datamessage = snapshot.data!.docs[0];
-            bool isSender =false;
-            if(datamessage["senderId"]== _auth.currentUser!.uid)
-              {
-                isSender = true;
-              }
+            bool isSender = false;
+            if (datamessage["senderId"] == _auth.currentUser!.uid) {
+              isSender = true;
+            }
             return FutureBuilder(
-                future:  usersRef.doc(isSender?datamessage["receiverId"]:datamessage["senderId"] ).get(),
+                future: usersRef
+                    .doc(isSender
+                        ? datamessage["receiverId"]
+                        : datamessage["senderId"])
+                    .get(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (!snapshot.hasData) {
                     return Container();
                   }
                   UserModel userModel = UserModel.fromDoc(snapshot.data);
-                return Padding(
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatPage(
-                          receiverId: userModel.uid,
-                          receiverName: userModel.name,
-                        chatterImg: userModel.avt??'',
-                      )
-                    ),
-                  );
-                },
-                child: Container(
-                  height: 65,
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                          radius: 30,
-                          backgroundImage: NetworkImage(userModel.avt??'')
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 200,
-                              child: Text(
-                                  userModel.name,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
-                                    overflow: TextOverflow.ellipsis,
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChatPage(
+                                    receiverId: userModel.uid,
+                                    receiverName: userModel.name,
+                                    chatterImg: userModel.avt ?? '',
                                   )),
-                            ),
-                            SizedBox(height: 5),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.5,
-                              child: Text.rich(
-                                TextSpan(
-                                  text: isSender
-                                      ? "Bạn: " + datamessage['message']
-                                      : datamessage['message'],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black54,
+                        );
+                      },
+                      child: Container(
+                        height: 50,
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                                radius: 30,
+                                backgroundImage:
+                                    NetworkImage(userModel.avt ?? '')),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Text(userModel.name,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                          overflow: TextOverflow.ellipsis,
+                                        )),
                                   ),
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
+                                  Expanded(
+                                    child: Text.rich(
+                                      TextSpan(
+                                        text: isSender
+                                            ? "Bạn: " + datamessage['message']
+                                            : datamessage['message'],
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
+                            Spacer(),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Expanded(
+                                child: Text(
+                                  formatTimestamp(datamessage['timestamp']),
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.black54),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
-                      Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              formatTimestamp(datamessage['timestamp']),
-                              style: TextStyle(
-                                  fontSize: 15, color: Colors.black54),
-                            ),
-
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            );
+                    ),
+                  );
+                });
           });
-    });
-          }
+    }
     return Container();
   }
-
 }

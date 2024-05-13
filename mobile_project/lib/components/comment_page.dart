@@ -23,12 +23,9 @@ class _CommentPageState extends State<CommentPage> {
         child: Stack(
           children: [
             Positioned(
-                top: 5,
-                left: 0,
-                right: 0,
-                child: Center(
-                    child:
-                        Container(width: 90, height: 4, color: Colors.grey))),
+                top: 8,
+                left: 155,
+                child: Container(width: 90, height: 4, color: Colors.grey)),
             Positioned(
               bottom: 0,
               right: 0,

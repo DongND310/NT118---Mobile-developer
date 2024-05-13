@@ -69,70 +69,70 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           const SizedBox(
             width: 15,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // account name
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Container(
-                  width: 230,
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // account name
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          widget.name ?? '',
+                          style: const TextStyle(
+                              color: Colors.blue,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      ),
+
+                      // time, option
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              child: Text(
+                                formatTimestamp(widget.time),
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                                textAlign: TextAlign.end,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                // Navigator.pop(context);
+                              },
+                              icon: SvgPicture.asset(
+                                'assets/icons/post_option.svg',
+                                width: 6,
+                                height: 6,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]),
+
+                // post content
+                SizedBox(
+                  width: 300,
                   child: Text(
-                    widget.name ?? '',
-                    style: const TextStyle(
-                        color: Colors.blue,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        overflow: TextOverflow.ellipsis),
+                    widget.content,
+                    style: TextStyle(color: Colors.black),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
                   ),
                 ),
-                SizedBox(width: 5),
+                const SizedBox(height: 10),
 
-                // time, option
-                Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      child: Text(
-                        formatTimestamp(widget.time),
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        textAlign: TextAlign.end,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        // Navigator.pop(context);
-                      },
-                      icon: SvgPicture.asset(
-                        'assets/icons/post_option.svg',
-                        width: 6,
-                        height: 6,
-                      ),
-                    ),
-                  ],
-                ),
-              ]),
-
-              // post content
-              Container(
-                width: 300,
-                child: Text(
-                  widget.content,
-                  style: TextStyle(color: Colors.black),
-                  softWrap: true,
-                  overflow: TextOverflow.visible,
-                ),
-              ),
-              const SizedBox(height: 10),
-
-              // img
-              Container(
-                width: 325,
-                child: SingleChildScrollView(
+                // img
+                SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -161,51 +161,51 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              // interact icon
-              Row(
-                children: [
-                  SvgPicture.asset(
-                    'assets/icons/post_like.svg',
-                    width: 22,
-                    color: Colors.blue,
-                  ),
-                  const SizedBox(width: 18),
-                  SvgPicture.asset(
-                    'assets/icons/post_cmt.svg',
-                    width: 22,
-                    color: Colors.blue,
-                  ),
-                  const SizedBox(width: 18),
-                  SvgPicture.asset(
-                    'assets/icons/post_repost.svg',
-                    width: 22,
-                    color: Colors.blue,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
+                // interact icon
+                Row(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/post_like.svg',
+                      width: 22,
+                      color: Colors.blue,
+                    ),
+                    const SizedBox(width: 18),
+                    SvgPicture.asset(
+                      'assets/icons/post_cmt.svg',
+                      width: 22,
+                      color: Colors.blue,
+                    ),
+                    const SizedBox(width: 18),
+                    SvgPicture.asset(
+                      'assets/icons/post_repost.svg',
+                      width: 22,
+                      color: Colors.blue,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
 
-              // like, reply
-              Row(
-                children: [
-                  Text(
-                    '${widget.like} lượt thích',
-                    style: TextStyle(color: Colors.black54, fontSize: 14),
-                  ),
-                  const SizedBox(width: 15),
-                  Text(
-                    '${widget.reply} lượt phản hồi',
-                    style: TextStyle(color: Colors.black54, fontSize: 14),
-                  ),
-                ],
-              ),
+                // like, reply
+                Row(
+                  children: [
+                    Text(
+                      '${widget.like} lượt thích',
+                      style: TextStyle(color: Colors.black54, fontSize: 14),
+                    ),
+                    const SizedBox(width: 15),
+                    Text(
+                      '${widget.reply} lượt phản hồi',
+                      style: TextStyle(color: Colors.black54, fontSize: 14),
+                    ),
+                  ],
+                ),
 
-              const SizedBox(height: 20),
-            ],
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ],
       ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/components/comment_page.dart';
-import 'package:mobile_project/components/share_page.dart';
 import 'package:mobile_project/models/video.dart';
 
 class HomeSideBar extends StatefulWidget {
@@ -50,7 +49,7 @@ class _HomeSideBarState extends State<HomeSideBar>
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _sideBarItem('heart', widget.video.likes, style),
-        _sideBarTap('comment', widget.video.comments, style, CommentPage()),
+        _sideBarComment('comment', widget.video.comments, style),
         _sideBarItem('bookmark', widget.video.bookmarks, style),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -94,8 +93,8 @@ class _HomeSideBarState extends State<HomeSideBar>
         children: [
           SvgPicture.asset(
             'assets/icons/${_isActive[iconName]! ? '${iconName}_filled' : iconName}.svg',
-            width: 25,
-            height: 25,
+            width: 30,
+            height: 30,
           ),
           const SizedBox(
             height: 5,
@@ -112,13 +111,14 @@ class _HomeSideBarState extends State<HomeSideBar>
     );
   }
 
-  _sideBarTap(String iconName, String label, TextStyle style, Widget page) {
+  _sideBarComment(String iconName, String label, TextStyle style) {
     return GestureDetector(
       onTap: () {
         showBottomSheet(
             backgroundColor: Colors.transparent,
             context: context,
             builder: (context) {
+<<<<<<< Updated upstream
               return DraggableScrollableSheet(
                 maxChildSize: 0.8,
                 initialChildSize: 0.8,
@@ -126,6 +126,19 @@ class _HomeSideBarState extends State<HomeSideBar>
                 builder: (context, scrollController) {
                   return const CommentPage();
                 },
+=======
+              return Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: DraggableScrollableSheet(
+                  maxChildSize: 0.5,
+                  initialChildSize: 0.5,
+                  minChildSize: 0.3,
+                  builder: (context, scrollController) {
+                    return const CommentPage();
+                  },
+                ),
+>>>>>>> Stashed changes
               );
             });
       },
