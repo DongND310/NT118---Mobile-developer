@@ -119,7 +119,6 @@ class _HomePageState extends State<HomePage> {
                               : copyusers[index],
                         ),
                       ),
-<<<<<<< Updated upstream
                       Expanded(
                         child: Container(
                           alignment: Alignment.centerRight,
@@ -129,14 +128,6 @@ class _HomePageState extends State<HomePage> {
                                 ? videos[index]
                                 : copyvideos[index],
                           ),
-=======
-                    ),
-                    Expanded(
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.height / 3,
-                        child: HomeSideBar(
-                          video: videos[index],
->>>>>>> Stashed changes
                         ),
                       ),
                     ],

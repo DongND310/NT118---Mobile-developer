@@ -134,6 +134,7 @@ class _RecentChatState extends State<RecentChats> {
                                           overflow: TextOverflow.ellipsis,
                                         )),
                                   ),
+                                  SizedBox(height: 5),
                                   Expanded(
                                     child: Text.rich(
                                       TextSpan(
@@ -141,7 +142,7 @@ class _RecentChatState extends State<RecentChats> {
                                             ? "Bạn: " + datamessage['message']
                                             : datamessage['message'],
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 15,
                                           color: Colors.black54,
                                         ),
                                       ),

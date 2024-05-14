@@ -38,10 +38,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text, password: passwordController.text);
         Navigator.pop(context);
-        Navigator.pushReplacement(
-            context,
-            // MaterialPageRoute(builder: (context) => VerifyEmailScreen()));
-            MaterialPageRoute(builder: (context) => InputInfoScreen()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => VerifyEmailScreen()));
+        // MaterialPageRoute(builder: (context) => InputInfoScreen()));
       } else {
         Navigator.pop(context);
         ErrorMessageg("Mật khẩu không trùng khớp.");
