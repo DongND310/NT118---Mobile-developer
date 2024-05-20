@@ -1,48 +1,84 @@
 {
   "project_info": {
-    "project_number": "368195787132",
-    "project_id": "videomobileapp-8c0b3",
-    "storage_bucket": "videomobileapp-8c0b3.appspot.com"
+    "project_number": "427606475366",
+    "project_id": "reelreplay-80451",
+    "storage_bucket": "reelreplay-80451.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:368195787132:android:689d4eafc5a3a898e92cf9",
+        "mobilesdk_app_id": "1:427606475366:android:41e4689dfa2cc2a4d323a7",
         "android_client_info": {
-          "package_name": "com.example.mobile_project"
+          "package_name": "Reel.Replay"
         }
       },
       "oauth_client": [
         {
-          "client_id": "368195787132-5apim7je6vr0rtpk01vk3olijf0s4ink.apps.googleusercontent.com",
+          "client_id": "427606475366-523p468bh2fmpj608rim2iedeo9ar47e.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.mobile_project",
+            "package_name": "Reel.Replay",
             "certificate_hash": "ba9633db6c8eb02e441293df18b82d5faec8de65"
           }
         },
         {
-          "client_id": "368195787132-vmq0ejuos6dmo5c9pnahs055ee4l8if5.apps.googleusercontent.com",
+          "client_id": "427606475366-h6kgb95np6knksrhaemlbco82csrp9c3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDEC6ABX8NmsxKVF_uYMMltH-mmPI_iY28"
+          "current_key": "AIzaSyDlVW-fznoS2KYtpNM_B_QvX4FHG4amI8E"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "368195787132-vmq0ejuos6dmo5c9pnahs055ee4l8if5.apps.googleusercontent.com",
+              "client_id": "427606475366-h6kgb95np6knksrhaemlbco82csrp9c3.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "368195787132-hd1nal163lnemaumingrq8pbjlepkto8.apps.googleusercontent.com",
+              "client_id": "427606475366-iie3iejn0af843c1u6gr2jki1nec8cg3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.mobileProject"
+                "bundle_id": "Reel.Replay"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427606475366:android:f08b3a303fbc56d5d323a7",
+        "android_client_info": {
+          "package_name": "com.example.mobile_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "427606475366-h6kgb95np6knksrhaemlbco82csrp9c3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlVW-fznoS2KYtpNM_B_QvX4FHG4amI8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "427606475366-h6kgb95np6knksrhaemlbco82csrp9c3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "427606475366-iie3iejn0af843c1u6gr2jki1nec8cg3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "Reel.Replay"
               }
             }
           ]

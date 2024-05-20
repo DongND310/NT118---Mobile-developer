@@ -109,14 +109,15 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
     }
 
     if (accountnameController.text.trim().isEmpty ||
-        usernameController.text.trim().isEmpty ||
-        phoneController.text.trim().isEmpty ||
-        dob.isEmpty ||
-        day == "null" ||
-        month == "null" ||
-        year == "null" ||
-        gender == "null" ||
-        nation == "null") {
+            usernameController.text.trim().isEmpty ||
+            phoneController.text.trim().isEmpty ||
+            dob.isEmpty ||
+            day == "null" ||
+            month == "null" ||
+            year == "null" ||
+            gender == "null"
+        // || nation == "null"
+        ) {
       MissingInfoDialog();
       return;
     }
