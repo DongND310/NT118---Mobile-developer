@@ -9,6 +9,21 @@ class PhoneChangeScreen extends StatelessWidget {
   final TextEditingController _textEditingController = TextEditingController();
   PhoneChangeScreen({super.key, required this.text});
 
+  // final TextEditingController _textEditingController = TextEditingController();
+  final usersCollection = FirebaseFirestore.instance.collection('users');
+  Future<void> updateUserData(String data) async {
+    try {
+      if (data.trim().isNotEmpty) {
+        User? currentUser = FirebaseAuth.instance.currentUser;
+        if (currentUser != null) {
+          await usersCollection.doc(currentUser.uid).update({'Phone': data});
+        }
+      } else {}
+    } catch (e) {
+      print('Error updating user data: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _textEditingController.text = text ?? '';
@@ -33,10 +48,27 @@ class PhoneChangeScreen extends StatelessWidget {
           ),
         ),
         title: const Text(
-          'Số điện thoại người dùng',
+          'Số điện thoại',
           style: TextStyle(
               fontSize: 20, color: Colors.blue, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 30),
+            child: GestureDetector(
+              onTap: () {
+                String data = _textEditingController.text.trim();
+                print(data);
+                updateUserData(data);
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Lưu',
+                style: TextStyle(color: Colors.blue, fontSize: 15),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Container(
         color: Colors.white,

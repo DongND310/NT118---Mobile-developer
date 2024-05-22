@@ -21,7 +21,7 @@ class _EmailChangeScreenState extends State<EmailChangeScreen> {
       if (data.trim().isNotEmpty) {
         User? currentUser = FirebaseAuth.instance.currentUser;
         if (currentUser != null) {
-          await usersCollection.doc(currentUser.uid).update({'Name': data});
+          await usersCollection.doc(currentUser.uid).update({'Email': data});
         }
       } else {}
     } catch (e) {

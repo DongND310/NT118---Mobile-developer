@@ -119,14 +119,16 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                   // sdt
                   UserDetailInfo(
                     text: "Số điện thoại",
-                    change: maskString(_phone ?? '', 3),
+                    // change: maskString(_phone ?? '', 3),
+                    change: _phone ?? '',
                     lead: "_phone",
                   ),
 
                   //Email
                   UserDetailInfo(
                     text: "Email",
-                    change: maskString(_email ?? '', 12),
+                    // change: maskString(_email ?? '', 12),
+                    change: _email ?? '',
                     lead: "_email",
                   ),
 

@@ -57,7 +57,6 @@ class UserDetailInfo extends StatelessWidget {
                   textAlign: TextAlign.end,
                 ),
               ),
-              
               IconButton(
                 onPressed: () {
                   Navigator.push(
