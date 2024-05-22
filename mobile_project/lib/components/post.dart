@@ -203,7 +203,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   ],
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
               ],
             ),
           ),
