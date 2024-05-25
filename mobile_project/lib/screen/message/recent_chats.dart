@@ -42,26 +42,28 @@ class _RecentChatState extends State<RecentChats> {
         stream: _firestore.collection("chatrooms").snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
-          return Container(
+          return SizedBox(
               height: MediaQuery.of(context).size.height,
-              child: ListView(
-                children: [
-                  for (var doc in snapshot.data!.docs)
-                    FutureBuilder(
-                      future: _buildChatRoomList(doc),
-                      builder: (context, AsyncSnapshot<Widget> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Container(); // or any loading indicator
-                        }
-                        return snapshot.data!;
-                      },
-                    ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    for (var doc in snapshot.data!.docs)
+                      FutureBuilder(
+                        future: _buildChatRoomList(doc),
+                        builder: (context, AsyncSnapshot<Widget> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container(); // or any loading indicator
+                          }
+                          return snapshot.data!;
+                        },
+                      ),
+                  ],
+                ),
               ));
         },
       ),

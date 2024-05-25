@@ -138,7 +138,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                child: Container(
+                child: SizedBox(
                   width: double.infinity,
                   child: Column(
                     children: [
@@ -148,7 +148,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: emailController,
                           label: "Email",
                           hint: "Nhập email người dùng",
-                          obscureText: false),
+                         ),
 
                       MyTextField(
                           controller: passwordController,
@@ -186,9 +186,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       GestureDetector(
                         onTap: () async {
                           // AuthService().signInWithGoogle();
-                          var userCredential =
-                              await AuthService().signInWithGoogle();
-                          var email = userCredential.user!.email;
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(

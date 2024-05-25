@@ -14,7 +14,7 @@ final List<User> copyusers = [
   demoUser8,
 ];
 
-final List<Video> copyvideos = [
+List<Video> copyvideos = [
   Video('videos/v3.mp4', demoUser4, 'caption', 'hong on roi',
       'https://picsum.photos/id/85/200/200', '154', '22', '5'),
   Video('videos/v2.mp4', demoUser5, 'caption', 'audioName',

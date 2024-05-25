@@ -13,7 +13,7 @@ final List<User> users = [
   demoUser3,
 ];
 
-final List<Video> videos = [
+List<Video> videos = [
   Video(
     'videos/v1.mp4',
     demoUser1,

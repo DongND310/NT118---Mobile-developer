@@ -11,7 +11,7 @@ class MyTextField extends StatelessWidget {
       required this.controller,
       required this.label,
       required this.hint,
-      required this.obscureText});
+      this.obscureText = false});
 
   @override
   Widget build(BuildContext context) {

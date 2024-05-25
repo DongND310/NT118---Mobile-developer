@@ -146,12 +146,7 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                     lead: "_gender",
                   ),
 
-                  // nation
-                  UserDetailInfo(
-                    text: "Quốc gia",
-                    change: _nation ?? '',
-                    lead: "_nation",
-                  ),
+                
                 ]),
           ],
         ),

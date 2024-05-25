@@ -6,6 +6,7 @@ class SaveTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.all(0),
       itemCount: 4,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

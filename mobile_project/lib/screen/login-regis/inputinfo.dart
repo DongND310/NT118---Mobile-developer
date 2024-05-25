@@ -60,24 +60,6 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   @override
   void initState() {
     super.initState();
-    fetchData();
-  }
-
-  // API nation list
-  Future<void> fetchData() async {
-    final response =
-        await http.get(Uri.parse('https://restcountries.com/v3.1/all'));
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      setState(() {
-        nationList = data
-            .map<String>((country) => country['name']['common'] as String)
-            .toList();
-        nationList.sort();
-      });
-    } else {
-      throw Exception('Failed to load countries');
-    }
   }
 
   Future inputPersonalInfo() async {
@@ -183,15 +165,17 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
           ),
         ),
       ),
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
-        child: ListView(
-            padding: const EdgeInsets.only(top: 0.0, left: 40, right: 45),
-            children: [
+        child: Padding(
+          padding: const EdgeInsets.only(top: 0.0, left: 20, right: 20),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(children: [
               const Text(
                 'Thông tin người dùng',
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: 30,
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2,
@@ -215,20 +199,20 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                   const SizedBox(height: 10),
                   // user name, name, phone,...
                   MyTextField(
-                      controller: accountnameController,
-                      label: "Tên tài khoản",
-                      hint: "Nhập tên tài khoản",
-                      obscureText: false),
+                    controller: accountnameController,
+                    label: "Tên tài khoản",
+                    hint: "Nhập tên tài khoản",
+                  ),
                   MyTextField(
-                      controller: usernameController,
-                      label: "Tên người dùng",
-                      hint: "Nhập tên người dùng",
-                      obscureText: false),
+                    controller: usernameController,
+                    label: "Tên người dùng",
+                    hint: "Nhập tên người dùng",
+                  ),
                   MyTextField(
-                      controller: phoneController,
-                      label: "Số điện thoại",
-                      hint: "Nhập số điện thoại người dùng",
-                      obscureText: false),
+                    controller: phoneController,
+                    label: "Số điện thoại",
+                    hint: "Nhập số điện thoại người dùng",
+                  ),
                   //dob
                   const SizedBox(height: 20),
                   const Text(
@@ -316,28 +300,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
 
                   //nation
                   const SizedBox(height: 20),
-                  const Text(
-                    'Quốc gia',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  const SizedBox(height: 5),
-                  InputDropDown(
-                    options: nationList,
-                    hintText: "Quốc gia",
-                    width: 400,
-                    onChanged: (String newValue) {
-                      setState(() {
-                        selectedNation = newValue;
-                      });
-                    },
-                  ),
 
-                  const SizedBox(
-                    height: 25,
-                  ),
                   // button
                   MyButton(
                     onTap: inputPersonalInfo,
@@ -349,6 +312,8 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
                 ],
               ),
             ]),
+          ),
+        ),
       ),
     );
   }
@@ -360,12 +325,12 @@ class InputDropDown extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final double? width;
   const InputDropDown({
-    Key? key,
+    super.key,
     required this.options,
     this.hintText,
     this.onChanged,
     this.width,
-  }) : super(key: key);
+  });
   @override
   _InputDropDownState createState() => _InputDropDownState();
 }
@@ -375,16 +340,17 @@ class _InputDropDownState extends State<InputDropDown> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: widget.width,
       child: InputDecorator(
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Colors.black12),
+              borderSide: const BorderSide(width: 2, color: Colors.black12),
               borderRadius: BorderRadius.circular(5)),
           focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Colors.blue),
+              borderSide: const BorderSide(width: 2, color: Colors.blue),
               borderRadius: BorderRadius.circular(5)),
         ),
         child: DropdownButtonHideUnderline(
@@ -431,11 +397,11 @@ class RadioButtonList extends StatefulWidget {
   final String? selectedOption;
   final ValueChanged<String>? onChanged;
   const RadioButtonList({
-    Key? key,
+    super.key,
     required this.options,
     this.selectedOption,
     this.onChanged,
-  }) : super(key: key);
+  });
   @override
   _RadioButtonListState createState() => _RadioButtonListState();
 }

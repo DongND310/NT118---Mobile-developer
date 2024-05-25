@@ -6,7 +6,6 @@ import 'package:mobile_project/screen/users/change_info/change_email.dart';
 import 'package:mobile_project/screen/users/change_info/change_gender.dart';
 import 'package:mobile_project/screen/users/change_info/change_id.dart';
 import 'package:mobile_project/screen/users/change_info/change_name.dart';
-import 'package:mobile_project/screen/users/change_info/change_nation.dart';
 import 'package:mobile_project/screen/users/change_info/change_phone.dart';
 import 'package:mobile_project/screen/users/change_info/change_pass.dart';
 
@@ -29,7 +28,6 @@ class UserDetailInfo extends StatelessWidget {
     '_id': (change) => IdChangeScreen(text: change),
     '_name': (change) => NameChangeScreen(text: change),
     '_phone': (change) => PhoneChangeScreen(text: change),
-    '_nation': (change) => NationChangeScreen(text: change),
     '_pass': (change) => PassChangeScreen(text: change),
   };
 
@@ -39,8 +37,8 @@ class UserDetailInfo extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          text ?? '',
-          style: TextStyle(
+          text,
+          style: const TextStyle(
               color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
         ),
         Expanded(
@@ -50,8 +48,8 @@ class UserDetailInfo extends StatelessWidget {
               Expanded(
                 child: Text(
                   change,
-                  style: TextStyle(
-                      color: const Color.fromARGB(255, 95, 95, 95),
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 95, 95, 95),
                       fontSize: 16,
                       overflow: TextOverflow.ellipsis),
                   textAlign: TextAlign.end,
@@ -69,7 +67,7 @@ class UserDetailInfo extends StatelessWidget {
                 },
                 icon: const Icon(
                   Icons.arrow_forward_ios_sharp,
-                  color: const Color.fromARGB(255, 95, 95, 95),
+                  color: Color.fromARGB(255, 95, 95, 95),
                   size: 20,
                 ),
               ),

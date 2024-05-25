@@ -39,9 +39,10 @@ class _PostTabState extends State<PostTab> {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.only(top: 0.0, left: 10, right: 0),
       children: [
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         PostDetailScreen(
           name: _id ?? '',
           content:

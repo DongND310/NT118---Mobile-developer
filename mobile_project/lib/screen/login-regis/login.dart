@@ -11,7 +11,7 @@ import 'welcome.dart';
 import 'package:mobile_project/screen/homepage/home_page.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
       String errorMessage;
       print(e.code);
       switch (e.code) {
-        case 'invalid-email':
+        case 'R-email':
           errorMessage = 'Email không hợp lệ.';
           break;
         case 'invalid-credential':
@@ -154,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: emailController,
                           label: "Email",
                           hint: "Nhập email người dùng",
-                          obscureText: false),
+                       ),
                       MyTextField(
                           controller: passwordController,
                           label: "Password",
@@ -166,28 +166,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
 
                       //remember - forgot pass
-                      Container(
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ForgotPassScreen()));
-                                },
-                                child: const Text(
-                                  'Quên mật khẩu?',
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 16,
-                                  ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ForgotPassScreen()));
+                              },
+                              child: const Text(
+                                'Quên mật khẩu?',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 16,
                                 ),
-                              )
-                            ]),
-                      ),
+                              ),
+                            )
+                          ]),
                       const SizedBox(height: 15),
 
                       // login button

@@ -253,7 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   );
                                 },
                                 child: Container(
-                                  height: 55,
+                                  height: 45,
                                   width: 260,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -354,7 +354,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 },
                 body: TabBarView(
                   controller: _tabController,
-                  children: [
+                  children: const [
                     VideoTab(),
                     Expanded(child: PostTab()),
                     SaveTab(),

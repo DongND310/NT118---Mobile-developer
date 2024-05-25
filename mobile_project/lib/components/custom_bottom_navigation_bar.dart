@@ -7,7 +7,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
       {super.key, required this.selectedPageIndex, required this.onIconTap});
   final int selectedPageIndex;
   final Function onIconTap;
-
   @override
   Widget build(BuildContext context) {
     final barHeight = MediaQuery.of(context).size.height * 0.06;
