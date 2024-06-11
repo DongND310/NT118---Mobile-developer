@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,6 +13,7 @@ import 'package:mobile_project/models/user_model.dart';
 import 'package:mobile_project/screen/Follow/follower_listview.dart';
 import 'package:mobile_project/services/database_services.dart';
 import 'package:mobile_project/util/imagepicker.dart';
+import 'change_info/change_avt.dart';
 import 'profile_change.dart';
 import 'proflie_setting.dart';
 import 'tab_like.dart';
@@ -142,13 +144,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 height: 15,
                               ),
                               // avatar + userID
-                              CircleAvatar(
-                                radius: 50,
-                                backgroundImage: userModel.avt != null
-                                    ? NetworkImage(userModel.avt!)
-                                    : Image.asset(
-                                            'assets/images/default_avt.png')
-                                        .image,
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AvtChangeScreen(),
+                                    ),
+                                  );
+                                },
+                                child: CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage: userModel.avt != null
+                                      ? NetworkImage(userModel.avt!)
+                                      : Image.asset(
+                                              'assets/images/default_avt.png')
+                                          .image,
+                                ),
                               ),
 
                               const SizedBox(
