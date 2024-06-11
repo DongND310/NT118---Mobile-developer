@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/screen/login-regis/inputinfo.dart';
 
+import '../profile_detail.dart';
+
 class DobChangeScreen extends StatefulWidget {
   final String? text;
 
@@ -107,7 +109,13 @@ class _DobChangeScreenState extends State<DobChangeScreen> {
         elevation: 0.5,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailProfileScreen(),
+              ),
+            );
           },
           icon: SvgPicture.asset(
             'assets/icons/ep_back.svg',
@@ -127,7 +135,13 @@ class _DobChangeScreenState extends State<DobChangeScreen> {
               onTap: () {
                 String data = _textEditingController.text.trim();
                 updateUserData(data);
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailProfileScreen(),
+                  ),
+                );
               },
               child: Text(
                 'Lưu',

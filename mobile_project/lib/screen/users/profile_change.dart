@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/components/detail_profile.dart';
@@ -6,6 +7,7 @@ import 'package:mobile_project/components/inputtext.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'change_info/change_avt.dart';
 import 'profile_page.dart';
 
 class ChangeProfilePage extends StatefulWidget {
@@ -39,6 +41,7 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
     _name = userDoc.get('Name');
     _avt = userDoc.get('Avt');
     _bio = userDoc.get('Bio');
+    _uid = userDoc.get('UID');
     // _name = userDoc.get('Name');
     setState(() {});
   }
@@ -65,13 +68,16 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
         elevation: 0.5,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => ProfileScreen(),
-            //   ),
-            // );
+            // Navigator.pop(context);
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileScreen(
+                  currentUserId: _uid!,
+                ),
+              ),
+            );
           },
           icon: SvgPicture.asset(
             'assets/icons/ep_back.svg',
@@ -97,19 +103,29 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const SizedBox(height: 20),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Ảnh đại diện',
+                      const Text('Ảnh đại diện',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 18,
                               fontWeight: FontWeight.bold)),
                       Row(
                         children: [
-                          Text('Chỉnh sửa',
-                              style:
-                                  TextStyle(color: Colors.blue, fontSize: 15)),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AvtChangeScreen(),
+                                ),
+                              );
+                            },
+                            child: Text('Chỉnh sửa',
+                                style: TextStyle(
+                                    color: Colors.blue, fontSize: 15)),
+                          ),
                           SizedBox(width: 20)
                         ],
                       ),

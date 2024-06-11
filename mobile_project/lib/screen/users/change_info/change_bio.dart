@@ -57,7 +57,13 @@ class _BioChangeScreenState extends State<BioChangeScreen> {
         elevation: 0.5,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChangeProfilePage(),
+              ),
+            );
           },
           icon: SvgPicture.asset(
             'assets/icons/ep_back.svg',
@@ -76,15 +82,15 @@ class _BioChangeScreenState extends State<BioChangeScreen> {
             child: GestureDetector(
               onTap: () async {
                 String data = _textEditingController.text.trim();
-                // updateUserData(data);
+                updateUserData(data);
                 await updateUserData(data);
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => ChangeProfilePage(),
-                //   ),
-                // );
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChangeProfilePage(),
+                  ),
+                );
+                // Navigator.pop(context);
               },
               child: Text(
                 'Lưu',

@@ -6,6 +6,8 @@ import 'package:mobile_project/components/inputtext.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'proflie_setting.dart';
+
 class DetailProfileScreen extends StatefulWidget {
   DetailProfileScreen({super.key});
 
@@ -73,7 +75,13 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
         elevation: 0.5,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileSettingPage(),
+              ),
+            );
           },
           icon: SvgPicture.asset(
             'assets/icons/ep_back.svg',
@@ -145,8 +153,6 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                     change: _gender ?? '',
                     lead: "_gender",
                   ),
-
-                
                 ]),
           ],
         ),

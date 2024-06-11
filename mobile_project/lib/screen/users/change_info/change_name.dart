@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/components/detail_change.dart';
 
+import '../profile_change.dart';
+
 class NameChangeScreen extends StatefulWidget {
   final String? text;
 
@@ -45,7 +47,13 @@ class _NameChangeScreenState extends State<NameChangeScreen> {
         elevation: 0.5,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChangeProfilePage(),
+              ),
+            );
           },
           icon: SvgPicture.asset(
             'assets/icons/ep_back.svg',
@@ -66,7 +74,13 @@ class _NameChangeScreenState extends State<NameChangeScreen> {
                 String data = _textEditingController.text.trim();
                 print(data);
                 updateUserData(data);
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChangeProfilePage(),
+                  ),
+                );
               },
               child: Text(
                 'Lưu',

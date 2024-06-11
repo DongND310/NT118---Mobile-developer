@@ -29,7 +29,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
     NotificationPage(),
     ProfileScreen(
       currentUserId: widget.currentUserID,
-      visitedUserID: widget.currentUserID,
+      // visitedUserID: widget.currentUserID,
     ),
   ];
 

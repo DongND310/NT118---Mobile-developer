@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../profile_detail.dart';
+
 class GenderChangeScreen extends StatefulWidget {
   final String? text;
 
@@ -68,7 +70,13 @@ class _GenderChangeScreenState extends State<GenderChangeScreen> {
         elevation: 0.5,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailProfileScreen(),
+              ),
+            );
           },
           icon: SvgPicture.asset(
             'assets/icons/ep_back.svg',
@@ -88,7 +96,13 @@ class _GenderChangeScreenState extends State<GenderChangeScreen> {
               onTap: () {
                 if (selectedGender != null) {
                   updateUserData(selectedGender!);
-                  Navigator.pop(context);
+                  // Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailProfileScreen(),
+                    ),
+                  );
                 }
               },
               child: Text(

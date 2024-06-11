@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
@@ -7,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:mobile_project/components/navigation_container.dart';
 import 'package:mobile_project/screen/login-regis/welcome.dart';
 
+import 'profile_change.dart';
 import 'profile_detail.dart';
+import 'profile_page.dart';
 
 class ProfileSettingPage extends StatefulWidget {
   ProfileSettingPage({super.key});
@@ -18,6 +21,8 @@ class ProfileSettingPage extends StatefulWidget {
 
 class _ProfileSettingPageState extends State<ProfileSettingPage> {
   final user = FirebaseAuth.instance.currentUser!;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String? _uid;
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
@@ -61,6 +66,21 @@ class _ProfileSettingPageState extends State<ProfileSettingPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+  void getUserData() async {
+    User currentUser = _auth.currentUser!;
+    _uid = currentUser.uid;
+    final DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(_uid).get();
+    _uid = userDoc.get('UID');
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -73,7 +93,15 @@ class _ProfileSettingPageState extends State<ProfileSettingPage> {
         elevation: 0.5,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileScreen(
+                  currentUserId: _uid!,
+                ),
+              ),
+            );
           },
           icon: SvgPicture.asset(
             'assets/icons/ep_back.svg',

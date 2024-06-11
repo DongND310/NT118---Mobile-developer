@@ -1,11 +1,17 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/models/user_model.dart';
 import 'package:mobile_project/screen/Follow/follower_listview.dart';
 import 'package:mobile_project/services/database_services.dart';
+import 'package:mobile_project/util/imagepicker.dart';
 import 'profile_change.dart';
 import 'proflie_setting.dart';
 import 'tab_like.dart';
@@ -15,9 +21,11 @@ import 'tab_video.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen(
-      {super.key, required this.currentUserId, required this.visitedUserID});
+      // {super.key, required this.currentUserId, required this.visitedUserID});
+      {super.key,
+      required this.currentUserId});
   final String currentUserId;
-  final String visitedUserID;
+  // final String visitedUserID;
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -32,7 +40,8 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   getFollowersCount() async {
     int followersCount =
-        await DatabaseServices.followersNum(widget.visitedUserID);
+        // await DatabaseServices.followersNum(widget.visitedUserID);
+        await DatabaseServices.followersNum(widget.currentUserId);
     if (mounted) {
       setState(() {
         _followersCount = followersCount;
@@ -42,7 +51,8 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   getFollowingCount() async {
     int followingCount =
-        await DatabaseServices.followingNum(widget.visitedUserID);
+        // await DatabaseServices.followingNum(widget.visitedUserID);
+        await DatabaseServices.followingNum(widget.currentUserId);
     if (mounted) {
       setState(() {
         _followingCount = followingCount;
@@ -73,7 +83,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-          future: usersRef.doc(widget.visitedUserID).get(),
+          // future: usersRef.doc(widget.visitedUserID).get(),
+          future: usersRef.doc(widget.currentUserId).get(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
               return Center(

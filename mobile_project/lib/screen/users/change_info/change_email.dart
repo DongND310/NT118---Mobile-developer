@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/components/detail_change.dart';
 
+import '../profile_detail.dart';
+
 class EmailChangeScreen extends StatefulWidget {
   final String? text;
 
@@ -44,7 +46,13 @@ class _EmailChangeScreenState extends State<EmailChangeScreen> {
         elevation: 0.5,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailProfileScreen(),
+              ),
+            );
           },
           icon: SvgPicture.asset(
             'assets/icons/ep_back.svg',
@@ -65,7 +73,13 @@ class _EmailChangeScreenState extends State<EmailChangeScreen> {
                 String data = _textEditingController.text.trim();
                 print(data);
                 updateUserData(data);
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailProfileScreen(),
+                  ),
+                );
               },
               child: Text(
                 'Lưu',
