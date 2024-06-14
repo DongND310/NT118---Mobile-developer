@@ -1,8 +1,15 @@
+import 'dart:ffi';
+import 'package:provider/provider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/components/post.dart';
+import 'package:mobile_project/services/post_service.dart';
+
+import '../../models/post_model.dart';
+import '../posts_videos/list_post.dart';
 
 class PostTab extends StatefulWidget {
   const PostTab({super.key});
@@ -18,6 +25,8 @@ class _PostTabState extends State<PostTab> {
   String? _name;
   String? _id;
   String? _avt;
+
+  PostService _postService = PostService();
 
   @override
   void initState() {
@@ -38,83 +47,32 @@ class _PostTabState extends State<PostTab> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.only(top: 0.0, left: 10, right: 0),
-      children: [
-        const SizedBox(height: 10),
-        PostDetailScreen(
-          name: _id ?? '',
-          content:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec consectetur feugiat ex, at gravida tortor elementum eget. Nulla fermentum ultrices dolor in iaculis. Integer consequat quam eu dolor accumsan rutrum.",
-          img: _avt,
-          imgList: [
-            'https://picsum.photos/id/1068/500/500',
-            'https://picsum.photos/id/1069/500/500',
-            'https://picsum.photos/id/1070/500/500'
-          ],
-          like: 520,
-          reply: 180,
-          time: Timestamp.now(),
+    return StreamProvider<List<PostModel>>(
+      initialData: [], // Initial data can be an empty list
+      create: (context) =>
+          PostService().getPostsByUser(FirebaseAuth.instance.currentUser?.uid),
+      child: Scaffold(
+        body: Container(
+          child: ListPosts(),
         ),
-        Container(
-          height: 0.3,
-          color: Colors.grey,
-        ),
-        SizedBox(height: 10),
-        PostDetailScreen(
-          name: _id ?? '',
-          content:
-              "Nullam nisl odio, volutpat quis nulla eget, placerat posuere leo. Pellentesque lobortis ultricies ligula, eget facilisis dui tempor eget. Maecenas ullamcorper orci id nisl maximus sagittis. Suspendisse potenti. Mauris ut mi maximus.",
-          img: _avt,
-          imgList: [
-            'https://picsum.photos/id/1045/500/500',
-            'https://picsum.photos/id/1044/500/500',
-            'https://picsum.photos/id/1047/500/500',
-            'https://picsum.photos/id/1048/500/500',
-            'https://picsum.photos/id/1049/500/500',
-            'https://picsum.photos/id/1050/500/500',
-            'https://picsum.photos/id/1051/500/500',
-            'https://picsum.photos/id/1052/500/500',
-          ],
-          like: 30,
-          reply: 11,
-          time: Timestamp.fromDate(DateTime(2024, 05, 07)),
-        ),
-        Container(
-          height: 0.3,
-          color: Colors.grey,
-        ),
-        SizedBox(height: 10),
-        PostDetailScreen(
-          name: _id ?? '',
-          content: "Sữa tươi trân châu đường đen 100% đường 100% đá ;D",
-          img: _avt,
-          imgList: [
-            'https://picsum.photos/id/1000/500/500',
-            'https://picsum.photos/id/1001/500/500',
-            'https://picsum.photos/id/1002/500/500',
-            'https://picsum.photos/id/1003/500/500'
-          ],
-          like: 654,
-          reply: 321,
-          time: Timestamp.fromDate(DateTime(2024, 05, 05)),
-        ),
-        Container(
-          height: 0.3,
-          color: Colors.grey,
-        ),
-        SizedBox(height: 10),
-        PostDetailScreen(
-          name: _id ?? '',
-          content: "Hello world!",
-          img: _avt,
-          imgList: [],
-          like: 999,
-          reply: 999,
-          time: Timestamp.fromDate(DateTime(2024, 04, 01)),
-        ),
-      ],
+      ),
     );
+
+    // ListView(
+    //   physics: const BouncingScrollPhysics(),
+    //   padding: const EdgeInsets.only(top: 0.0, left: 10, right: 0),
+    //   children: [
+    //     const SizedBox(height: 10),
+    //     PostDetailScreen(
+    //       name: _id ?? '',
+    //       content: "Hello world!",
+    //       img: _avt,
+    //       imgList: [],
+    //       like: 999,
+    //       reply: 999,
+    //       time: Timestamp.fromDate(DateTime(2024, 04, 01)),
+    //     ),
+    //   ],
+    // );
   }
 }

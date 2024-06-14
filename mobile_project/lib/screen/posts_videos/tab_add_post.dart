@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/components/navigation_container.dart';
+import 'package:mobile_project/services/post_service.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({super.key});
@@ -13,9 +15,11 @@ class AddPostScreen extends StatefulWidget {
 class _AddPostScreenState extends State<AddPostScreen> {
   final user = FirebaseAuth.instance.currentUser!;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final PostService _postService = PostService();
 
   TextEditingController _textEditingController = TextEditingController();
   bool _showClearButton = false;
+  String content = '';
 
   String? _uid;
   String? _name;
@@ -57,7 +61,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
           elevation: 0.5,
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              // Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      NavigationContainer(currentUserID: user!.uid),
+                ),
+              );
             },
             icon: SvgPicture.asset(
               'assets/icons/ep_back.svg',
@@ -75,7 +86,17 @@ class _AddPostScreenState extends State<AddPostScreen> {
               padding: const EdgeInsets.only(right: 30),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pop(context);
+                  if (content != "") {
+                    _postService.createPost('', _uid!, _name!, _avt!, content);
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            NavigationContainer(currentUserID: user!.uid),
+                      ),
+                    );
+                  }
                 },
                 child: const Text(
                   'Đăng',
@@ -147,6 +168,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       style: const TextStyle(fontSize: 16),
                       textInputAction: TextInputAction.done,
                       onChanged: (value) {
+                        setState(() {
+                          content = value;
+                        });
                         _updateClearButtonVisibility(value);
                       },
                     ),
@@ -155,21 +179,21 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       height: 5,
                     ),
                     // interact icon
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/post_img.svg',
-                          width: 22,
-                          // color: Colors.blue,
-                        ),
-                        const SizedBox(width: 18),
-                        SvgPicture.asset(
-                          'assets/icons/post_hashtag.svg',
-                          width: 22,
-                          // color: Colors.blue,
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     SvgPicture.asset(
+                    //       'assets/icons/post_img.svg',
+                    //       width: 22,
+                    //       // color: Colors.blue,
+                    //     ),
+                    //     const SizedBox(width: 18),
+                    //     SvgPicture.asset(
+                    //       'assets/icons/post_hashtag.svg',
+                    //       width: 22,
+                    //       // color: Colors.blue,
+                    //     ),
+                    //   ],
+                    // ),
                   ])),
             ])));
   }

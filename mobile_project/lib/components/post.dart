@@ -10,7 +10,8 @@ class PostDetailScreen extends StatefulWidget {
   final String? img;
   final int like;
   final int reply;
-  final List<String> imgList;
+  // final List<String> imgList;
+  // final Timestamp time;
   final Timestamp time;
 
   PostDetailScreen(
@@ -20,7 +21,7 @@ class PostDetailScreen extends StatefulWidget {
       required this.img,
       required this.like,
       required this.reply,
-      required this.imgList,
+      // required this.imgList,
       required this.time});
 
   @override
@@ -121,7 +122,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
                 // post content
                 SizedBox(
-                  width: 300,
+                  width: 330,
                   child: Text(
                     widget.content,
                     style: TextStyle(color: Colors.black),
@@ -132,61 +133,61 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 const SizedBox(height: 10),
 
                 // img
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: List.generate(
-                      widget.imgList.length,
-                      (index) => Container(
-                        margin: EdgeInsets.only(right: 5),
-                        width: 150,
-                        height: 150,
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: widget.imgList[index] != null
-                              ? Image.network(
-                                  widget.imgList[index],
-                                  width: 150,
-                                  height: 150,
-                                  fit: BoxFit.cover,
-                                )
-                              : SizedBox(),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // SingleChildScrollView(
+                //   scrollDirection: Axis.horizontal,
+                //   child: Row(
+                //     mainAxisSize: MainAxisSize.min,
+                //     children: List.generate(
+                //       widget.imgList.length,
+                //       (index) => Container(
+                //         margin: EdgeInsets.only(right: 5),
+                //         width: 150,
+                //         height: 150,
+                //         decoration: BoxDecoration(
+                //           color: Colors.grey,
+                //           borderRadius: BorderRadius.circular(10),
+                //         ),
+                //         child: ClipRRect(
+                //           borderRadius: BorderRadius.circular(10),
+                //           child: widget.imgList[index] != null
+                //               ? Image.network(
+                //                   widget.imgList[index],
+                //                   width: 150,
+                //                   height: 150,
+                //                   fit: BoxFit.cover,
+                //                 )
+                //               : SizedBox(),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
 
                 // interact icon
                 Row(
                   children: [
                     SvgPicture.asset(
                       'assets/icons/post_like.svg',
-                      width: 22,
+                      width: 20,
                       color: Colors.blue,
                     ),
                     const SizedBox(width: 18),
                     SvgPicture.asset(
                       'assets/icons/post_cmt.svg',
-                      width: 22,
+                      width: 20,
                       color: Colors.blue,
                     ),
                     const SizedBox(width: 18),
                     SvgPicture.asset(
                       'assets/icons/post_repost.svg',
-                      width: 22,
+                      width: 20,
                       color: Colors.blue,
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
 
                 // like, reply
                 Row(
@@ -202,8 +203,12 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 30),
+                Container(
+                  height: 1,
+                  color: const Color.fromARGB(120, 158, 158, 158),
+                ),
+                const SizedBox(height: 20),
               ],
             ),
           ),

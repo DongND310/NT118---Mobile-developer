@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'tab_add_post.dart';
-import 'tab_add_video.dart';
+import '../posts_videos/tab_add_post.dart';
+import '../posts_videos/tab_add_video.dart';
 
 class AddVideoPage extends StatefulWidget {
   const AddVideoPage({super.key});

@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/components/navigation_container.dart';
+
+import '../homepage/home_page.dart';
 
 class AddVideoScreen extends StatefulWidget {
   const AddVideoScreen({super.key});
@@ -9,6 +13,8 @@ class AddVideoScreen extends StatefulWidget {
 }
 
 class _AddVideoScreenState extends State<AddVideoScreen> {
+  final user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +28,14 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
         elevation: 0.5,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    NavigationContainer(currentUserID: user!.uid),
+              ),
+            );
           },
           icon: SvgPicture.asset(
             'assets/icons/ep_back.svg',
