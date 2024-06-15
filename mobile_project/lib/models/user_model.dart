@@ -13,19 +13,19 @@ class UserModel {
   String phone;
   String dob;
   String gender;
-  String nation;
+  // String nation;
   String? avt;
   String? bio;
 
   UserModel(
-      {required this.id,
-      required this.uid,
+      {required this.uid,
+      required this.id,
       required this.name,
       required this.email,
       required this.phone,
       required this.dob,
       required this.gender,
-      required this.nation,
+      // required this.nation,
       required this.bio,
       required this.avt});
 
@@ -38,7 +38,7 @@ class UserModel {
         phone: doc['Phone'],
         dob: doc['DOB'],
         gender: doc['Gender'],
-        nation: doc['Nation'],
+        // nation: doc['Nation'],
         bio: doc['Bio'],
         avt: doc['Avt']);
   }
@@ -65,7 +65,8 @@ class StoreData {
   Future<String> saveData({required Uint8List file}) async {
     String resp = " Có lỗi xảy ra.";
     try {
-      String imageUrl = await uploadImageToStorage('${user.uid}_profileImage', file);
+      String imageUrl =
+          await uploadImageToStorage('${user.uid}_profileImage', file);
 
       await _firestore
           .collection('users')

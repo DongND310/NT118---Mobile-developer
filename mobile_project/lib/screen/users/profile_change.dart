@@ -43,7 +43,6 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
     _avt = userDoc.get('Avt');
     _bio = userDoc.get('Bio');
     _uid = userDoc.get('UID');
-    // _name = userDoc.get('Name');
     setState(() {});
   }
 

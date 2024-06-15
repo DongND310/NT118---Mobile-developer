@@ -17,9 +17,9 @@ class PostService {
       return PostModel(
         postId: doc.id,
         creatorId: data?['creatorId'] ?? '',
-        creatorName: data?['creatorName'] ?? '',
-        creatorImg: data?['creatorImg'] ?? '',
         content: data?['content'] ?? '',
+        like: data?['like'] ?? 0,
+        reply: data?['reply'] ?? 0,
         timestamp: data?['timestamp'] ?? 0,
       );
     }).toList();
@@ -43,9 +43,9 @@ class PostService {
     PostModel newPost = PostModel(
       postId: '',
       creatorId: creatorId,
-      creatorName: creatorName,
-      creatorImg: creatorImg,
       content: content,
+      like: 0,
+      reply: 0,
       timestamp: timestamp,
     );
 
@@ -53,17 +53,48 @@ class PostService {
         await _firestore.collection("posts").add(newPost.toMap());
 
     String postId = docRef.id;
-    // newPost.postId = postId;
     newPost = PostModel(
         postId: postId,
         creatorId: _uid!,
-        creatorName: _name!,
-        creatorImg: _avt!,
         content: content,
+        like: 0,
+        reply: 0,
         timestamp: timestamp);
     await docRef.update({'postId': postId});
 
     await _firestore.collection("posts").doc(postId).set(newPost.toMap());
+  }
+
+  Future<void> likePost(PostModel post, bool isDisLike) async {
+    print(post.postId);
+    if (isDisLike) {
+      await FirebaseFirestore.instance
+          .collection("posts")
+          .doc(post.postId)
+          .collection("likes")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .delete();
+    }
+    if (!isDisLike) {
+      await FirebaseFirestore.instance
+          .collection("posts")
+          .doc(post.postId)
+          .collection("likes")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .set({});
+    }
+  }
+
+  Stream<bool> getCurrentUserLike(PostModel post) {
+    return FirebaseFirestore.instance
+        .collection("posts")
+        .doc(post.postId)
+        .collection("likes")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.exists;
+    });
   }
 
   Stream<List<PostModel>> getPostsByUser(uid) {

@@ -25,8 +25,8 @@ import 'tab_video.dart';
 class ProfileScreen extends StatefulWidget {
   ProfileScreen(
       {super.key, required this.currentUserId, required this.visitedUserID});
-      // {super.key,
-      // required this.currentUserId});
+  // {super.key,
+  // required this.currentUserId});
   final String currentUserId;
   final String visitedUserID;
   @override
@@ -67,11 +67,10 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     super.initState();
-    if(widget.currentUserId != widget.visitedUserID)
-      {
-        _isVisited = true;
-      }
-    _tabController = TabController(length: !_isVisited?4:2, vsync: this);
+    if (widget.currentUserId != widget.visitedUserID) {
+      _isVisited = true;
+    }
+    _tabController = TabController(length: !_isVisited ? 4 : 2, vsync: this);
     _tabController.addListener(_handleTabSelection);
     getFollowersCount();
     getFollowingCount();
@@ -104,309 +103,311 @@ class _ProfileScreenState extends State<ProfileScreen>
             }
             UserModel userModel = UserModel.fromDoc(snapshot.data);
             return DefaultTabController(
-              length: !_isVisited?4:2,
+              length: !_isVisited ? 4 : 2,
               child: NestedScrollView(
-                headerSliverBuilder: (context, index) {
-                  return [
-                    SliverAppBar(
-                      centerTitle: true,
-                      automaticallyImplyLeading: false,
-                      pinned: true,
-                      floating: true,
-                      snap: true,
-                      backgroundColor: Colors.white,
-                      elevation: 0.5,
-                      title: Text(
-                        userModel.id,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      actions: [
-                        Visibility(
-                          visible: !_isVisited,
-                            child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProfileSettingPage(),
-                              ),
-                            );
-                          },
-                          icon: SvgPicture.asset(
-                            'assets/icons/setting_list.svg',
-                            width: 18,
+                  headerSliverBuilder: (context, index) {
+                    return [
+                      SliverAppBar(
+                        centerTitle: true,
+                        automaticallyImplyLeading: false,
+                        pinned: true,
+                        floating: true,
+                        snap: true,
+                        backgroundColor: Colors.white,
+                        elevation: 0.5,
+                        title: Text(
+                          userModel.id,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ))
-                        ,
-                      ],
-                    ),
-                    SliverToBoxAdapter(
-                      child: Container(
-                        color: Colors.white,
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              // avatar + userID
-                              GestureDetector(
-                                onTap: () {
+                        ),
+                        actions: [
+                          Visibility(
+                              visible: !_isVisited,
+                              child: IconButton(
+                                onPressed: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => AvtChangeScreen(),
+                                      builder: (context) =>
+                                          ProfileSettingPage(),
                                     ),
                                   );
                                 },
-                                child: CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage: userModel.avt != null
-                                      ? NetworkImage(userModel.avt!)
-                                      : Image.asset(
-                                              'assets/images/default_avt.png')
-                                          .image,
+                                icon: SvgPicture.asset(
+                                  'assets/icons/setting_list.svg',
+                                  width: 18,
                                 ),
-                              ),
-
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                userModel.name,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0,
+                              )),
+                        ],
+                      ),
+                      SliverToBoxAdapter(
+                        child: Container(
+                          color: Colors.white,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  height: 15,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
+                                // avatar + userID
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AvtChangeScreen(),
+                                      ),
+                                    );
+                                  },
+                                  child: CircleAvatar(
+                                    radius: 50,
+                                    backgroundImage: userModel.avt != null
+                                        ? NetworkImage(userModel.avt!)
+                                        : Image.asset(
+                                                'assets/images/default_avt.png')
+                                            .image,
+                                  ),
+                                ),
 
-                              // follow
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 0.0, left: 40, right: 45),
-                                child: Row(
-                                  children: [
-                                    // following
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ListFollowerScreen(), // update following
-                                            ),
-                                          );
-                                        },
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              '$_followingCount',
-                                              style: const TextStyle(
-                                                color: Colors.blue,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  userModel.name,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+
+                                // follow
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 0.0, left: 40, right: 45),
+                                  child: Row(
+                                    children: [
+                                      // following
+                                      Expanded(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ListFollowerScreen(), // update following
                                               ),
-                                            ),
-                                            const Text(
-                                              'Đang theo dõi',
-                                              style: TextStyle(
-                                                color: Colors.black54,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.normal,
+                                            );
+                                          },
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                '$_followingCount',
+                                                style: const TextStyle(
+                                                  color: Colors.blue,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                              const Text(
+                                                'Đang theo dõi',
+                                                style: TextStyle(
+                                                  color: Colors.black54,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
 
-                                    // follower
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ListFollowerScreen(),
-                                            ),
-                                          );
-                                        },
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              '$_followersCount',
-                                              style: const TextStyle(
-                                                color: Colors.blue,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
+                                      // follower
+                                      Expanded(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ListFollowerScreen(),
                                               ),
-                                            ),
-                                            const Text(
-                                              'Người theo dõi',
-                                              style: TextStyle(
-                                                color: Colors.black54,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.normal,
+                                            );
+                                          },
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                '$_followersCount',
+                                                style: const TextStyle(
+                                                  color: Colors.blue,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                              const Text(
+                                                'Người theo dõi',
+                                                style: TextStyle(
+                                                  color: Colors.black54,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 25,
-                              ),
-
-                              // btn edit profile
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ChangeProfilePage(),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  height: 45,
-                                  width: 260,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(color: Colors.blue),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.2),
-                                        spreadRadius: 0.5,
-                                        blurRadius: 8,
-                                        offset: Offset(0, 3),
                                       ),
                                     ],
                                   ),
-                                  child: const Center(
-                                    child: Text(
-                                      'Chỉnh sửa hồ sơ',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.blue,
+                                ),
+                                const SizedBox(
+                                  height: 25,
+                                ),
+
+                                // btn edit profile
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ChangeProfilePage(),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 45,
+                                    width: 260,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(color: Colors.blue),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.2),
+                                          spreadRadius: 0.5,
+                                          blurRadius: 8,
+                                          offset: Offset(0, 3),
+                                        ),
+                                      ],
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'Chỉnh sửa hồ sơ',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.blue,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
 
-                              // bio
-                              const SizedBox(
-                                height: 25,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 0.0, left: 40, right: 45),
-                                child: Text(
-                                  userModel.bio ?? '',
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    color: const Color.fromARGB(193, 0, 0, 0),
-                                    fontWeight: FontWeight.normal,
+                                // bio
+                                const SizedBox(
+                                  height: 25,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 0.0, left: 40, right: 45),
+                                  child: Text(
+                                    userModel.bio ?? '',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      color: const Color.fromARGB(193, 0, 0, 0),
+                                      fontWeight: FontWeight.normal,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                            ]),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                              ]),
+                        ),
                       ),
-                    ),
-                    SliverPersistentHeader(
-                        pinned: true,
-                        floating: false,
-                        delegate: _SliverAppBarDelegate(
-                          TabBar(
-                            controller: _tabController,
-                            tabs: [
-                              Tab(
-                                icon: SvgPicture.asset(
-                                  _tabController.index == 0
-                                      ? 'assets/icons/list_video_selected.svg'
-                                      : 'assets/icons/list_video.svg',
-                                  width: 25,
+                      SliverPersistentHeader(
+                          pinned: true,
+                          floating: false,
+                          delegate: _SliverAppBarDelegate(
+                            TabBar(
+                              controller: _tabController,
+                              tabs: [
+                                Tab(
+                                  icon: SvgPicture.asset(
+                                    _tabController.index == 0
+                                        ? 'assets/icons/list_video_selected.svg'
+                                        : 'assets/icons/list_video.svg',
+                                    width: 25,
+                                  ),
                                 ),
-                              ),
-                              Tab(
-                                icon: SvgPicture.asset(
-                                  _tabController.index == 1
-                                      ? 'assets/icons/list_post_selected.svg'
-                                      : 'assets/icons/list_post.svg',
-                                  width: 25,
+                                Tab(
+                                  icon: SvgPicture.asset(
+                                    _tabController.index == 1
+                                        ? 'assets/icons/list_post_selected.svg'
+                                        : 'assets/icons/list_post.svg',
+                                    width: 25,
+                                  ),
                                 ),
-                              ),
-                              Visibility(
-                                visible: !_isVisited,
-                                child: Tab(
-                                icon: SvgPicture.asset(
-                                  _tabController.index == 2
-                                      ? 'assets/icons/list_save_selected.svg'
-                                      : 'assets/icons/list_save.svg',
-                                  width: 17,
+                                Visibility(
+                                  visible: !_isVisited,
+                                  child: Tab(
+                                    icon: SvgPicture.asset(
+                                      _tabController.index == 2
+                                          ? 'assets/icons/list_save_selected.svg'
+                                          : 'assets/icons/list_save.svg',
+                                      width: 17,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              ),
-                              Visibility(
-                                visible: !_isVisited,
-                                child: Tab(
-                                icon: SvgPicture.asset(
-                                  _tabController.index == 3
-                                      ? 'assets/icons/list_like_selected.svg'
-                                      : 'assets/icons/list_like.svg',
-                                  width: 23,
-                                ),
-                              ),)
-                            ],
-                            indicatorColor: Colors.blue,
-                            onTap: (index) {
-                              _tabController.animateTo(index);
-                            },
-                          ),
-                        ))
-                  ];
-                },
-                body:!_isVisited? TabBarView(
-                  controller: _tabController,
-                  children: const [
-                    VideoTab(),
-                    Expanded(child: PostTab()),
-                    SaveTab(),
-                    LikeTab(),
-                  ],
-                )
-                    :TabBarView(
-                  controller: _tabController,
-                  children: [
-                    VideoTab(),
-                    PostTab(),
-                  ],
-                )
-              ),
+                                Visibility(
+                                  visible: !_isVisited,
+                                  child: Tab(
+                                    icon: SvgPicture.asset(
+                                      _tabController.index == 3
+                                          ? 'assets/icons/list_like_selected.svg'
+                                          : 'assets/icons/list_like.svg',
+                                      width: 23,
+                                    ),
+                                  ),
+                                )
+                              ],
+                              indicatorColor: Colors.blue,
+                              onTap: (index) {
+                                _tabController.animateTo(index);
+                              },
+                            ),
+                          ))
+                    ];
+                  },
+                  body: !_isVisited
+                      ? TabBarView(
+                          controller: _tabController,
+                          children: const [
+                            VideoTab(),
+                            Expanded(child: PostTab()),
+                            SaveTab(),
+                            LikeTab(),
+                          ],
+                        )
+                      : TabBarView(
+                          controller: _tabController,
+                          children: [
+                            VideoTab(),
+                            PostTab(),
+                          ],
+                        )),
             );
           }),
     );

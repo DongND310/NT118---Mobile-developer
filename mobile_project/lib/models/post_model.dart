@@ -3,16 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class PostModel {
   final String postId;
   final String creatorId;
-  final String creatorName;
-  final String creatorImg;
   final String content;
+  int? like;
+  int? reply;
   final Timestamp timestamp;
 
   PostModel({
     required this.postId,
     required this.creatorId,
-    required this.creatorName,
-    required this.creatorImg,
+    required this.like,
+    required this.reply,
     required this.content,
     required this.timestamp,
   });
@@ -23,9 +23,9 @@ class PostModel {
     return PostModel(
       postId: doc.id,
       creatorId: data['creatorId'] ?? '',
-      creatorName: data['creatorName'] ?? '',
-      creatorImg: data['creatorImg'] ?? '',
       content: data['content'] ?? '',
+      like: 0,
+      reply: 0,
       timestamp: data['timestamp'] ?? 0,
     );
   }
@@ -35,9 +35,9 @@ class PostModel {
     return {
       'postId': postId,
       'creatorId': creatorId,
-      'creatorName': creatorName,
-      'creatorImg': creatorImg,
       'content': content,
+      'like': like,
+      'reply': reply,
       'timestamp': timestamp,
     };
   }

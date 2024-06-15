@@ -1,22 +1,23 @@
 // import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/services/post_service.dart';
 
 class PostDetailScreen extends StatefulWidget {
-  final String name;
+  String? name;
   final String content;
-  final String? img;
+  String? img;
   final int like;
   final int reply;
-  // final List<String> imgList;
-  // final Timestamp time;
   final Timestamp time;
 
   PostDetailScreen(
       {super.key,
-      required this.name,
+      this.name,
       required this.content,
       required this.img,
       required this.like,
@@ -53,13 +54,12 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // avt
           Padding(
-            padding: EdgeInsets.only(top: 10),
+            padding: EdgeInsets.only(top: 10, left: 10),
             child: CircleAvatar(
               radius: 20,
               backgroundImage: widget.img != null
@@ -73,6 +73,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // account name
                 Row(
@@ -121,8 +122,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     ]),
 
                 // post content
-                SizedBox(
-                  width: 330,
+                Padding(
+                  padding: EdgeInsets.only(right: 10),
                   child: Text(
                     widget.content,
                     style: TextStyle(color: Colors.black),
@@ -131,84 +132,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-
-                // img
-                // SingleChildScrollView(
-                //   scrollDirection: Axis.horizontal,
-                //   child: Row(
-                //     mainAxisSize: MainAxisSize.min,
-                //     children: List.generate(
-                //       widget.imgList.length,
-                //       (index) => Container(
-                //         margin: EdgeInsets.only(right: 5),
-                //         width: 150,
-                //         height: 150,
-                //         decoration: BoxDecoration(
-                //           color: Colors.grey,
-                //           borderRadius: BorderRadius.circular(10),
-                //         ),
-                //         child: ClipRRect(
-                //           borderRadius: BorderRadius.circular(10),
-                //           child: widget.imgList[index] != null
-                //               ? Image.network(
-                //                   widget.imgList[index],
-                //                   width: 150,
-                //                   height: 150,
-                //                   fit: BoxFit.cover,
-                //                 )
-                //               : SizedBox(),
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-
-                const SizedBox(height: 5),
-
-                // interact icon
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/post_like.svg',
-                      width: 20,
-                      color: Colors.blue,
-                    ),
-                    const SizedBox(width: 18),
-                    SvgPicture.asset(
-                      'assets/icons/post_cmt.svg',
-                      width: 20,
-                      color: Colors.blue,
-                    ),
-                    const SizedBox(width: 18),
-                    SvgPicture.asset(
-                      'assets/icons/post_repost.svg',
-                      width: 20,
-                      color: Colors.blue,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 15),
-
-                // like, reply
-                Row(
-                  children: [
-                    Text(
-                      '${widget.like} lượt thích',
-                      style: TextStyle(color: Colors.black54, fontSize: 14),
-                    ),
-                    const SizedBox(width: 15),
-                    Text(
-                      '${widget.reply} lượt phản hồi',
-                      style: TextStyle(color: Colors.black54, fontSize: 14),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                Container(
-                  height: 1,
-                  color: const Color.fromARGB(120, 158, 158, 158),
-                ),
-                const SizedBox(height: 20),
               ],
             ),
           ),

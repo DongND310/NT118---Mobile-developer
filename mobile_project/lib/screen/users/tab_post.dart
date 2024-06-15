@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mobile_project/components/post.dart';
+import 'package:mobile_project/components/postdetail.dart';
 import 'package:mobile_project/services/post_service.dart';
 
 import '../../models/post_model.dart';
@@ -57,22 +57,5 @@ class _PostTabState extends State<PostTab> {
         ),
       ),
     );
-
-    // ListView(
-    //   physics: const BouncingScrollPhysics(),
-    //   padding: const EdgeInsets.only(top: 0.0, left: 10, right: 0),
-    //   children: [
-    //     const SizedBox(height: 10),
-    //     PostDetailScreen(
-    //       name: _id ?? '',
-    //       content: "Hello world!",
-    //       img: _avt,
-    //       imgList: [],
-    //       like: 999,
-    //       reply: 999,
-    //       time: Timestamp.fromDate(DateTime(2024, 04, 01)),
-    //     ),
-    //   ],
-    // );
   }
 }
