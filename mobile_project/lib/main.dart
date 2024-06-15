@@ -22,7 +22,7 @@ class MainApp extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
-            return NavigationContainer(currentUserID: snapshot.data!.uid);
+            return NavigationContainer(currentUserID: snapshot.data!.uid,pageIndex: 0,);
           } else {
             return WelcomeScreen();
           }

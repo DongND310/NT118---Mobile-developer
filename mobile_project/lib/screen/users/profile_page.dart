@@ -36,7 +36,8 @@ class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final user = FirebaseAuth.instance.currentUser!;
-
+  bool _isPressed = false;
+  bool _isVisited = false;
   int _followersCount = 0;
   int _followingCount = 0;
 
@@ -65,7 +66,11 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    if(widget.currentUserId != widget.visitedUserID)
+      {
+        _isVisited = true;
+      }
+    _tabController = TabController(length: !_isVisited?4:2, vsync: this);
     _tabController.addListener(_handleTabSelection);
     getFollowersCount();
     getFollowingCount();
@@ -97,7 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             }
             UserModel userModel = UserModel.fromDoc(snapshot.data);
             return DefaultTabController(
-              length: 4,
+              length: !_isVisited?4:2,
               child: NestedScrollView(
                 headerSliverBuilder: (context, index) {
                   return [
@@ -118,7 +123,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                       ),
                       actions: [
-                        IconButton(
+                        Visibility(
+                          visible: !_isVisited,
+                            child: IconButton(
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -131,7 +138,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                             'assets/icons/setting_list.svg',
                             width: 18,
                           ),
-                        ),
+                        ))
+                        ,
                       ],
                     ),
                     SliverToBoxAdapter(
@@ -350,7 +358,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   width: 25,
                                 ),
                               ),
-                              Tab(
+                              Visibility(
+                                visible: !_isVisited,
+                                child: Tab(
                                 icon: SvgPicture.asset(
                                   _tabController.index == 2
                                       ? 'assets/icons/list_save_selected.svg'
@@ -358,14 +368,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   width: 17,
                                 ),
                               ),
-                              Tab(
+                              ),
+                              Visibility(
+                                visible: !_isVisited,
+                                child: Tab(
                                 icon: SvgPicture.asset(
                                   _tabController.index == 3
                                       ? 'assets/icons/list_like_selected.svg'
                                       : 'assets/icons/list_like.svg',
                                   width: 23,
                                 ),
-                              ),
+                              ),)
                             ],
                             indicatorColor: Colors.blue,
                             onTap: (index) {
@@ -375,7 +388,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ))
                   ];
                 },
-                body: TabBarView(
+                body:!_isVisited? TabBarView(
                   controller: _tabController,
                   children: const [
                     VideoTab(),
@@ -383,7 +396,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                     SaveTab(),
                     LikeTab(),
                   ],
-                ),
+                )
+                    :TabBarView(
+                  controller: _tabController,
+                  children: [
+                    VideoTab(),
+                    PostTab(),
+                  ],
+                )
               ),
             );
           }),

@@ -97,10 +97,11 @@ class _ProfileSettingPageState extends State<ProfileSettingPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ProfileScreen(
-                  currentUserId: _uid!,
-                  visitedUserID: _uid!,
-                ),
+                builder: (context) => NavigationContainer(currentUserID: _uid!,pageIndex: 4,)
+                //     ProfileScreen(
+                //   currentUserId: _uid!,
+                //   visitedUserID: _uid!,
+                // ),
               ),
             );
           },

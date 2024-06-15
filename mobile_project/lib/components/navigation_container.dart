@@ -10,8 +10,8 @@ import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:mobile_project/screen/users/profile_page.dart';
 
 class NavigationContainer extends StatefulWidget {
-  NavigationContainer({super.key, required this.currentUserID});
-
+  NavigationContainer({super.key, required this.currentUserID, this.pageIndex});
+  int? pageIndex;
   final String currentUserID;
   @override
   _NavigationContainerState createState() => _NavigationContainerState();
@@ -30,7 +30,12 @@ class _NavigationContainerState extends State<NavigationContainer> {
       visitedUserID: widget.currentUserID,
     ),
   ];
-
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _selectedPageIndex = widget.pageIndex!;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
