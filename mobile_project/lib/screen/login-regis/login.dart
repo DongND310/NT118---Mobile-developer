@@ -8,7 +8,6 @@ import 'package:mobile_project/services/auth_service.dart';
 import 'forgotpass.dart';
 import 'signup.dart';
 import 'welcome.dart';
-import 'package:mobile_project/screen/homepage/home_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

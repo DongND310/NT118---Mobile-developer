@@ -365,7 +365,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     borderRadius: BorderRadius.circular(18.0),
                     borderSide: BorderSide.none,
                   ),
-                  suffixIcon: Padding(
+                  suffixIcon: _textEditingController==null ?null:
+                  Padding(
                     padding: const EdgeInsets.only(right: 0.0),
                     child: IconButton(
                       onPressed: () {

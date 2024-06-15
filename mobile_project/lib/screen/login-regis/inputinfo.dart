@@ -1,14 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobile_project/components/inputtext.dart';
 import 'package:mobile_project/components/button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:mobile_project/util/imagepicker.dart';
 import 'regisnoti.dart';
 
 class InputInfoScreen extends StatefulWidget {

@@ -20,7 +20,7 @@ class ChatService extends ChangeNotifier {
   }
 
   // Send message
-  Future<void> sendMessage(String receiverId, String receiverName, String message, String img) async {
+  Future<void> sendMessage(String receiverId, String receiverName, String message) async {
     final Timestamp timestamp = Timestamp.now();
      await getUserData();
     // Create message
@@ -43,8 +43,6 @@ class ChatService extends ChangeNotifier {
       // Create a new chatroom document
       _firestore.collection("chatrooms").doc(chatRoomId).set({
         "chatroomId": chatRoomId,
-        "imageUser1": img,
-        "imageUser2": _avt,
       });
     }
     // Add message to database

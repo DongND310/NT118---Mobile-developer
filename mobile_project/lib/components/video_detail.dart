@@ -1,15 +1,15 @@
 import 'package:expandable_text/expandable_text.dart';
+import 'package:mobile_project/models/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_project/models/user.dart';
 import 'package:mobile_project/models/video.dart';
-import 'package:mobile_project/screen/account/account_page.dart';
+import '../screen/users/profile_page.dart';
 
 class VideoDetail extends StatelessWidget {
   const VideoDetail({super.key, required this.video, required this.user});
   final Video video;
+  //final UserModel user;
   final User user;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,7 +23,7 @@ class VideoDetail extends StatelessWidget {
           title: GestureDetector(
             onTap: (){
               Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => AccountPage()));
+                  builder: (context) => ProfileScreen(currentUserId: "CP5ovzUbQTYsCsY8PN8tyf4mxjg1", visitedUserID: "G0BT9oat2MW8ltF56E0nm3An05w2")));
             },
             child: Text(
               "${video.postedBy.username} - Follow",
@@ -35,7 +35,10 @@ class VideoDetail extends StatelessWidget {
           ),
           leading: CircleAvatar(
             radius: 14,
-            backgroundImage: NetworkImage(user.profileImageUrl),
+              backgroundImage: NetworkImage(user.profileImageUrl!)
+            // backgroundImage: user.avt != null?NetworkImage(user.avt!)
+            //     : Image.asset(
+            //   'assets/images/default_avt.png').image,
           ),
         ),
         Padding(

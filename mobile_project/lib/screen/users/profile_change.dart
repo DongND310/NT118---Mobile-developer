@@ -75,6 +75,7 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
               MaterialPageRoute(
                 builder: (context) => ProfileScreen(
                   currentUserId: _uid!,
+                  visitedUserID: _uid!,
                 ),
               ),
             );

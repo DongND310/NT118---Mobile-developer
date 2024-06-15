@@ -23,11 +23,11 @@ import 'tab_video.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen(
-      // {super.key, required this.currentUserId, required this.visitedUserID});
-      {super.key,
-      required this.currentUserId});
+      {super.key, required this.currentUserId, required this.visitedUserID});
+      // {super.key,
+      // required this.currentUserId});
   final String currentUserId;
-  // final String visitedUserID;
+  final String visitedUserID;
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }

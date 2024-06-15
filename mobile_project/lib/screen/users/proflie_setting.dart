@@ -99,6 +99,7 @@ class _ProfileSettingPageState extends State<ProfileSettingPage> {
               MaterialPageRoute(
                 builder: (context) => ProfileScreen(
                   currentUserId: _uid!,
+                  visitedUserID: _uid!,
                 ),
               ),
             );

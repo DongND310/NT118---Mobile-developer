@@ -4,15 +4,27 @@ import 'package:mobile_project/constants.dart';
 
 class DatabaseServices {
   static Future<int> followersNum(String userID) async {
-    QuerySnapshot followersSnapshot =
-        await followersRef.doc(userID).collection('userFollowers').get();
-    return followersSnapshot.docs.length;
+    try {
+      QuerySnapshot querySnapshot = await followsRef
+          .where('followed_user_id', isEqualTo: userID)
+          .get();
+      return querySnapshot.size;
+    } catch (e) {
+      print("Error getting followers: $e");
+      return 0;
+    }
   }
 
   static Future<int> followingNum(String userID) async {
-    QuerySnapshot followingSnapshot =
-        await followingRef.doc(userID).collection('userFollowing').get();
-    return followingSnapshot.docs.length;
+    try {
+      QuerySnapshot querySnapshot = await followsRef
+          .where('following_user_id', isEqualTo: userID)
+          .get();
+      return querySnapshot.size;
+    } catch (e) {
+      print("Error getting followers: $e");
+      return 0;
+    }
   }
 
   static Future<QuerySnapshot> searchUsers(String name) async {

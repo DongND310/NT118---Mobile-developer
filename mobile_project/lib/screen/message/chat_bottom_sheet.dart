@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -21,7 +22,7 @@ class ChatBottomSheet extends StatelessWidget {
         receiverId,
         receiverName,
         _controller.text,
-        chatterImg,
+        //chatterImg,
       );
       _controller.clear();
     }
@@ -55,6 +56,7 @@ class ChatBottomSheet extends StatelessWidget {
           Expanded(
             child: Container(
               alignment: Alignment.centerRight,
+              width: 250,
               child: TextFormField(
                 cursorColor: Colors.blue,
                 controller: _controller,

@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobile_project/_mock_data/mock.dart';
-import 'package:mobile_project/components/custom_bottom_navigation_bar.dart';
 import 'package:mobile_project/screen/homepage/add_video_page.dart';
 import 'package:mobile_project/screen/homepage/home_page.dart';
 import 'package:mobile_project/screen/homepage/notification_page.dart';
@@ -29,7 +27,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
     NotificationPage(),
     ProfileScreen(
       currentUserId: widget.currentUserID,
-      // visitedUserID: widget.currentUserID,
+      visitedUserID: widget.currentUserID,
     ),
   ];
 
