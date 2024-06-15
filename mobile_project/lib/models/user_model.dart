@@ -65,7 +65,7 @@ class StoreData {
   Future<String> saveData({required Uint8List file}) async {
     String resp = " Có lỗi xảy ra.";
     try {
-      String imageUrl = await uploadImageToStorage('profileImage', file);
+      String imageUrl = await uploadImageToStorage('${user.uid}_profileImage', file);
 
       await _firestore
           .collection('users')

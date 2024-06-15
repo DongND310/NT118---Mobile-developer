@@ -25,7 +25,7 @@ class AvtChangeScreen extends StatefulWidget {
 
 class _AvtChangeScreenState extends State<AvtChangeScreen> {
   final TextEditingController _textEditingController = TextEditingController();
-  final usersCollection = FirebaseFirestore.instance.collection('users');
+  //final usersCollection = FirebaseFirestore.instance.collection('users');
   final user = FirebaseAuth.instance.currentUser!;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? _uid;
