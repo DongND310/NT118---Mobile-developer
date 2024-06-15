@@ -70,6 +70,7 @@ class _RecentChatState extends State<RecentChats> {
       ),
     ]));
   }
+
   Future<Widget> _buildChatRoomList(DocumentSnapshot documentSnapshot) async {
     Map<String, dynamic> data =
         documentSnapshot.data()! as Map<String, dynamic>;
@@ -126,7 +127,7 @@ class _RecentChatState extends State<RecentChats> {
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children:[
+                                children: [
                                   Expanded(
                                     child: Text(userModel.name,
                                         style: TextStyle(
@@ -138,13 +139,18 @@ class _RecentChatState extends State<RecentChats> {
                                   ),
                                   SizedBox(height: 5),
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                        width: (MediaQuery.of(context).size.width+30)/2,
-                                        child: Text( isSender
-                                            ? "Bạn: ${datamessage['message'] ?? ''}"
-                                            : datamessage['message'] ?? '',
+                                        width:
+                                            (MediaQuery.of(context).size.width +
+                                                    30) /
+                                                2,
+                                        child: Text(
+                                          isSender
+                                              ? "Bạn: ${datamessage['message'] ?? ''}"
+                                              : datamessage['message'] ?? '',
                                           style: TextStyle(
                                             fontSize: 15,
                                             color: Colors.black54,
@@ -154,14 +160,15 @@ class _RecentChatState extends State<RecentChats> {
                                           softWrap: false,
                                         ),
                                       ),
-                                      SizedBox(width: 15),
+                                      SizedBox(width: 10),
                                       Align(
                                         alignment: Alignment.bottomRight,
-                                        child:
-                                        Text(
-                                          formatTimestamp(datamessage['timestamp']),
+                                        child: Text(
+                                          formatTimestamp(
+                                              datamessage['timestamp']),
                                           style: TextStyle(
-                                              fontSize: 15, color: Colors.black54),
+                                              fontSize: 15,
+                                              color: Colors.black54),
                                         ),
                                         // Expanded(
                                         //   child:
@@ -174,7 +181,6 @@ class _RecentChatState extends State<RecentChats> {
                                 ],
                               ),
                             ),
-
                           ],
                         ),
                       ),
@@ -185,5 +191,4 @@ class _RecentChatState extends State<RecentChats> {
     }
     return Container();
   }
-
 }

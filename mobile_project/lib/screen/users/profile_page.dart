@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_project/_mock_data/mock.dart';
+import 'package:mobile_project/components/navigation_container.dart';
 import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/models/user_model.dart';
 import 'package:mobile_project/screen/Follow/follower_listview.dart';
@@ -86,6 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     super.dispose();
   }
 
+  User? currentUser = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

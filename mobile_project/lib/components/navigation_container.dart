@@ -19,6 +19,8 @@ class NavigationContainer extends StatefulWidget {
 
 class _NavigationContainerState extends State<NavigationContainer> {
   int _selectedPageIndex = 0;
+  // int _selectedPageIndex = index;
+  // int _selectedPageIndex = indexPage;
   final user = FirebaseAuth.instance.currentUser;
   late final List<Widget> _pages = [
     HomePage(currentUserId: widget.currentUserID),

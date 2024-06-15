@@ -6,6 +6,7 @@ import 'package:mobile_project/components/detail_profile.dart';
 import 'package:mobile_project/components/inputtext.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mobile_project/components/navigation_container.dart';
 
 import 'change_info/change_avt.dart';
 import 'profile_page.dart';
@@ -73,9 +74,12 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ProfileScreen(
-                  currentUserId: _uid!,
-                  visitedUserID: _uid!,
+                // builder: (context) => ProfileScreen(
+                //   currentUserId: _uid!,
+                // ),
+                builder: (context) => NavigationContainer(
+                  currentUserID: _uid!,
+                  pageIndex: 4,
                 ),
               ),
             );
