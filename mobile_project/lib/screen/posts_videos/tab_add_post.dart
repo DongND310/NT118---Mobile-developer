@@ -65,8 +65,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      NavigationContainer(currentUserID: user!.uid),
+                  builder: (context) => NavigationContainer(
+                    currentUserID: user!.uid,
+                    pageIndex: 0,
+                  ),
                 ),
               );
             },

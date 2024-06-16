@@ -13,7 +13,6 @@ class UserModel {
   String phone;
   String dob;
   String gender;
-  // String nation;
   String? avt;
   String? bio;
 
@@ -25,20 +24,18 @@ class UserModel {
       required this.phone,
       required this.dob,
       required this.gender,
-      // required this.nation,
       required this.bio,
       required this.avt});
 
   factory UserModel.fromDoc(DocumentSnapshot doc) {
     return UserModel(
-        id: doc['ID'],
         uid: doc['UID'],
+        id: doc['ID'],
         name: doc['Name'],
         email: doc['Email'],
         phone: doc['Phone'],
         dob: doc['DOB'],
         gender: doc['Gender'],
-        // nation: doc['Nation'],
         bio: doc['Bio'],
         avt: doc['Avt']);
   }

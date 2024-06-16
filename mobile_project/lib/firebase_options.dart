@@ -41,30 +41,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: "AIzaSyB9Xcj_LY6J6O4DzvSmmYXsU6wXrgtn_M4",
-    appId: "1:427606475366:web:1504d55516fc50bad323a7",
-    messagingSenderId: "427606475366",
-    projectId: "reelreplay-80451",
-    authDomain: "reelreplay-80451.firebaseapp.com",
-    storageBucket: "reelreplay-80451.appspot.com",
+    apiKey: 'AIzaSyDrS4wLVRvee7soH9J1yfmTsP4Dq_CB3m8',
+    appId: '1:402679655358:web:752c1e004fe9f180ce27ef',
+    messagingSenderId: '402679655358',
+    projectId: 'nt118-reelreplay',
+    authDomain: 'nt118-reelreplay.firebaseapp.com',
+    storageBucket: 'nt118-reelreplay.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: "AIzaSyB9Xcj_LY6J6O4DzvSmmYXsU6wXrgtn_M4",
-    appId: "1:427606475366:web:1504d55516fc50bad323a7",
-    messagingSenderId: "427606475366",
-    projectId: "reelreplay-80451",
-    authDomain: "reelreplay-80451.firebaseapp.com",
-    storageBucket: "reelreplay-80451.appspot.com",
+    apiKey: 'AIzaSyBDryibj-98tAmkyJcC7J0qjyqwIoL60-I',
+    appId: '1:402679655358:android:360da8ee3356bd94ce27ef',
+    messagingSenderId: '402679655358',
+    projectId: 'nt118-reelreplay',
+    storageBucket: 'nt118-reelreplay.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: "AIzaSyB9Xcj_LY6J6O4DzvSmmYXsU6wXrgtn_M4",
-    appId: "1:427606475366:web:1504d55516fc50bad323a7",
-    messagingSenderId: "427606475366",
-    projectId: "reelreplay-80451",
-    authDomain: "reelreplay-80451.firebaseapp.com",
-    storageBucket: "reelreplay-80451.appspot.com",
+    apiKey: 'AIzaSyBCc3ZMA-y3_QP932SXJaIkRBZHloWF0tw',
+    appId: '1:402679655358:ios:cc38c3b4b8e4983fce27ef',
+    messagingSenderId: '402679655358',
+    projectId: 'nt118-reelreplay',
+    storageBucket: 'nt118-reelreplay.appspot.com',
+    iosBundleId: 'com.example.mobileProject',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -77,11 +76,12 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: "AIzaSyB9Xcj_LY6J6O4DzvSmmYXsU6wXrgtn_M4",
-    appId: "1:427606475366:web:1504d55516fc50bad323a7",
-    messagingSenderId: "427606475366",
-    projectId: "reelreplay-80451",
-    authDomain: "reelreplay-80451.firebaseapp.com",
-    storageBucket: "reelreplay-80451.appspot.com",
+    apiKey: 'AIzaSyB9Xcj_LY6J6O4DzvSmmYXsU6wXrgtn_M4',
+    appId: '1:427606475366:web:892f20d90b4a9b5dd323a7',
+    messagingSenderId: '427606475366',
+    projectId: 'reelreplay-80451',
+    authDomain: 'reelreplay-80451.firebaseapp.com',
+    storageBucket: 'reelreplay-80451.appspot.com',
   );
+
 }

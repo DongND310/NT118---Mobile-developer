@@ -83,8 +83,10 @@ class RegisterSuccessScreen extends StatelessWidget {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            NavigationContainer(currentUserID: user.uid)));
+                        builder: (context) => NavigationContainer(
+                              currentUserID: user.uid,
+                              pageIndex: 0,
+                            )));
               },
               child: Container(
                 height: 55,

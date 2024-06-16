@@ -42,8 +42,10 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                NavigationContainer(currentUserID: currentUser.uid),
+            builder: (context) => NavigationContainer(
+              currentUserID: currentUser.uid,
+              pageIndex: 0,
+            ),
           ),
         );
       } else {
@@ -150,10 +152,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 20),
                       //Email, password
                       MyTextField(
-                          controller: emailController,
-                          label: "Email",
-                          hint: "Nhập email người dùng",
-                       ),
+                        controller: emailController,
+                        label: "Email",
+                        hint: "Nhập email người dùng",
+                      ),
                       MyTextField(
                           controller: passwordController,
                           label: "Password",
@@ -165,26 +167,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
 
                       //remember - forgot pass
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ForgotPassScreen()));
-                              },
-                              child: const Text(
-                                'Quên mật khẩu?',
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            )
-                          ]),
+                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ForgotPassScreen()));
+                          },
+                          child: const Text(
+                            'Quên mật khẩu?',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 16,
+                            ),
+                          ),
+                        )
+                      ]),
                       const SizedBox(height: 15),
 
                       // login button
@@ -213,7 +212,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               builder: (BuildContext context, snapshot) {
                                 if (snapshot.hasData) {
                                   return NavigationContainer(
-                                      currentUserID: snapshot.data!.uid);
+                                    currentUserID: snapshot.data!.uid,
+                                    pageIndex: 0,
+                                  );
                                 } else {
                                   return WelcomeScreen();
                                 }
