@@ -21,26 +21,18 @@ class _RecentChatState extends State<RecentChats> {
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
     Duration difference = DateTime.now().difference(dateTime);
-    if (dateTime.year == DateTime
-        .now()
-        .year &&
-        dateTime.month == DateTime
-            .now()
-            .month &&
-        dateTime.day == DateTime
-            .now()
-            .day) {
+    if (dateTime.year == DateTime.now().year &&
+        dateTime.month == DateTime.now().month &&
+        dateTime.day == DateTime.now().day) {
       return DateFormat.Hm().format(dateTime);
-    }
-    else {
+    } else {
       if (difference.inSeconds < 60) {
         return '${difference.inSeconds}s';
       } else if (difference.inMinutes < 60) {
         return '${difference.inMinutes}m';
       } else if (difference.inHours < 24) {
         return '${difference.inHours}h';
-      }
-      else if (difference.inDays < 30) {
+      } else if (difference.inDays < 30) {
         return '${difference.inDays}d';
       } else if (difference.inDays < 365) {
         int months = difference.inDays ~/ 30;
@@ -51,6 +43,7 @@ class _RecentChatState extends State<RecentChats> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -86,6 +79,7 @@ class _RecentChatState extends State<RecentChats> {
       ),
     ]));
   }
+
   Future<Widget> _buildChatRoomList(DocumentSnapshot documentSnapshot) async {
     Map<String, dynamic> data =
         documentSnapshot.data()! as Map<String, dynamic>;
@@ -142,7 +136,7 @@ class _RecentChatState extends State<RecentChats> {
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children:[
+                                children: [
                                   Expanded(
                                     child: Text(userModel.name,
                                         style: const TextStyle(
@@ -160,7 +154,7 @@ class _RecentChatState extends State<RecentChats> {
                                       Container(
                                         width:
                                             (MediaQuery.of(context).size.width +
-                                                    30) /
+                                                    20) /
                                                 2,
                                         child: Text(
                                           isSender
@@ -178,11 +172,12 @@ class _RecentChatState extends State<RecentChats> {
                                       SizedBox(width: 30),
                                       Align(
                                         alignment: Alignment.bottomRight,
-                                        child:
-                                        Text(
-                                          formatTimestamp(datamessage['timestamp']),
+                                        child: Text(
+                                          formatTimestamp(
+                                              datamessage['timestamp']),
                                           style: TextStyle(
-                                              fontSize: 15, color: Colors.black54),
+                                              fontSize: 15,
+                                              color: Colors.black54),
                                         ),
                                         // Expanded(
                                         //   child:
@@ -195,7 +190,6 @@ class _RecentChatState extends State<RecentChats> {
                                 ],
                               ),
                             ),
-
                           ],
                         ),
                       ),
@@ -206,5 +200,4 @@ class _RecentChatState extends State<RecentChats> {
     }
     return Container();
   }
-
 }
