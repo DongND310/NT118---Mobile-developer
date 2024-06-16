@@ -18,8 +18,9 @@ class PostService {
         postId: doc.id,
         creatorId: data?['creatorId'] ?? '',
         content: data?['content'] ?? '',
-        like: data?['like'] ?? 0,
-        reply: data?['reply'] ?? 0,
+        // likesList: data?['likesList'],
+        // likeCount: data?['likeCount'] ?? 0,
+        replyCount: data?['replyCount'],
         timestamp: data?['timestamp'] ?? 0,
       );
     }).toList();
@@ -44,8 +45,9 @@ class PostService {
       postId: '',
       creatorId: creatorId,
       content: content,
-      like: 0,
-      reply: 0,
+      // likesList: [],
+      // likeCount: 0,
+      replyCount: 0,
       timestamp: timestamp,
     );
 
@@ -57,8 +59,9 @@ class PostService {
         postId: postId,
         creatorId: _uid!,
         content: content,
-        like: 0,
-        reply: 0,
+        // likesList: [],
+        // likeCount: 0,
+        replyCount: 0,
         timestamp: timestamp);
     await docRef.update({'postId': postId});
 
@@ -66,22 +69,20 @@ class PostService {
   }
 
   Future<void> likePost(PostModel post, bool isDisLike) async {
-    print(post.postId);
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final likeRef = _firestore
+        .collection("posts")
+        .doc(post.postId)
+        .collection("likes")
+        .doc(userId);
+
     if (isDisLike) {
-      await FirebaseFirestore.instance
-          .collection("posts")
-          .doc(post.postId)
-          .collection("likes")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .delete();
-    }
-    if (!isDisLike) {
-      await FirebaseFirestore.instance
-          .collection("posts")
-          .doc(post.postId)
-          .collection("likes")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .set({});
+      await likeRef.delete();
+    } else {
+      await likeRef.set({
+        'userId': userId,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
     }
   }
 

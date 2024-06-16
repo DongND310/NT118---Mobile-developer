@@ -4,15 +4,17 @@ class PostModel {
   final String postId;
   final String creatorId;
   final String content;
-  int? like;
-  int? reply;
+  int? likeCount;
+  // List<String> likesList;
+  int? replyCount;
   final Timestamp timestamp;
 
   PostModel({
     required this.postId,
     required this.creatorId,
-    required this.like,
-    required this.reply,
+    // required this.likeCount,
+    // required this.likesList,
+    required this.replyCount,
     required this.content,
     required this.timestamp,
   });
@@ -24,8 +26,9 @@ class PostModel {
       postId: doc.id,
       creatorId: data['creatorId'] ?? '',
       content: data['content'] ?? '',
-      like: 0,
-      reply: 0,
+      // likesList: [],
+      // likeCount: 0,
+      replyCount: data['replyCount'],
       timestamp: data['timestamp'] ?? 0,
     );
   }
@@ -36,8 +39,9 @@ class PostModel {
       'postId': postId,
       'creatorId': creatorId,
       'content': content,
-      'like': like,
-      'reply': reply,
+      // 'likesList': likesList,
+      // 'likeCount': likeCount,
+      'replyCount': replyCount,
       'timestamp': timestamp,
     };
   }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/models/post_model.dart';
 import 'package:mobile_project/services/post_service.dart';
 import 'package:mobile_project/services/user_service.dart';
@@ -51,6 +52,7 @@ class _ListPostsState extends State<ListPosts> {
   Widget build(BuildContext context) {
     final posts = Provider.of<List<PostModel>?>(context) ?? [];
     posts.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
     return ListView.builder(
       itemCount: posts.length,
       itemBuilder: (context, index) {
@@ -69,6 +71,10 @@ class _ListPostsState extends State<ListPosts> {
                   stream: _postService.getCurrentUserLike(post),
                   builder:
                       (BuildContext context, AsyncSnapshot<bool> snapshotLike) {
+                    DocumentReference postRef = FirebaseFirestore.instance
+                        .collection('posts')
+                        .doc(post.postId);
+
                     if (!snapshotLike.hasData) {
                       return Center(child: CircularProgressIndicator());
                     }
@@ -81,65 +87,13 @@ class _ListPostsState extends State<ListPosts> {
                             name: _name ?? '',
                             content: post.content,
                             img: _avt ?? '',
-                            like: post.like!,
-                            reply: post.reply!,
+                            postId: post.postId,
+                            // likesList: List<String>.from(post.likesList ?? []),
+                            likesList: [],
+                            // likeCount: 0,
+                            // replyCount: post.replyCount,
+                            replyCount: '',
                             time: post.timestamp,
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 65),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    GestureDetector(
-                                      child: SvgPicture.asset(
-                                        snapshotLike.data!
-                                            ? 'assets/icons/post_liked.svg'
-                                            : 'assets/icons/post_like.svg',
-                                        width: 20,
-                                        // color: Colors.blue,
-                                      ),
-                                      onTap: () {
-                                        _postService.likePost(
-                                            post, snapshotLike.data!);
-                                      },
-                                    ),
-                                    const SizedBox(width: 18),
-                                    SvgPicture.asset(
-                                      'assets/icons/post_cmt.svg',
-                                      width: 20,
-                                      color: Colors.blue,
-                                    ),
-                                    const SizedBox(width: 18),
-                                    SvgPicture.asset(
-                                      'assets/icons/post_repost.svg',
-                                      width: 20,
-                                      color: Colors.blue,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '${post.like} lượt thích',
-                                      style: TextStyle(
-                                          color: Colors.black54, fontSize: 14),
-                                    ),
-                                    const SizedBox(width: 15),
-                                    Text(
-                                      '${post.reply} lượt phản hồi',
-                                      style: TextStyle(
-                                          color: Colors.black54, fontSize: 14),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 20),
-                                Divider(),
-                              ],
-                            ),
                           ),
                         ],
                       ),

@@ -1,1 +1,38 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"nt118-reelreplay","appId":"1:402679655358:android:360da8ee3356bd94ce27ef","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"nt118-reelreplay","configurations":{"android":"1:402679655358:android:360da8ee3356bd94ce27ef","ios":"1:402679655358:ios:cc38c3b4b8e4983fce27ef","web":"1:402679655358:web:752c1e004fe9f180ce27ef"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "nt118-reelreplay",
+          "appId": "1:402679655358:android:360da8ee3356bd94ce27ef",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "nt118-reelreplay",
+          "configurations": {
+            "android": "1:402679655358:android:360da8ee3356bd94ce27ef",
+            "ios": "1:402679655358:ios:cc38c3b4b8e4983fce27ef",
+            "web": "1:402679655358:web:752c1e004fe9f180ce27ef"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ]
+}

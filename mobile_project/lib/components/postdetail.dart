@@ -1,18 +1,20 @@
-// import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/screen/posts_videos/like_button.dart';
 import 'package:mobile_project/services/post_service.dart';
 
 class PostDetailScreen extends StatefulWidget {
   String? name;
   final String content;
   String? img;
-  final int like;
-  final int reply;
+  final String postId;
+  // final int likeCount;
+  String? replyCount;
+  final List<String> likesList;
   final Timestamp time;
 
   PostDetailScreen(
@@ -20,9 +22,10 @@ class PostDetailScreen extends StatefulWidget {
       this.name,
       required this.content,
       required this.img,
-      required this.like,
-      required this.reply,
-      // required this.imgList,
+      required this.postId,
+      // required this.likeCount,
+      required this.replyCount,
+      required this.likesList,
       required this.time});
 
   @override
@@ -48,6 +51,56 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     } else {
       int years = difference.inDays ~/ 365;
       return '${years}y';
+    }
+  }
+
+  late bool isLiked;
+  int likeCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    isLiked = false;
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId)
+        .snapshots()
+        .listen((DocumentSnapshot snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          // Đọc danh sách likes từ snapshot và tính độ dài
+          Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+          List<dynamic> likesList = data?['likesList'];
+          likeCount = likesList.length;
+          isLiked = likesList.contains(currentUser.uid);
+        });
+      }
+    });
+  }
+
+  final currentUser = FirebaseAuth.instance.currentUser!;
+
+  void toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+    });
+
+    DocumentReference postRef =
+        FirebaseFirestore.instance.collection('posts').doc(widget.postId);
+
+    Stream<DocumentSnapshot> postStream = FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId)
+        .snapshots();
+
+    if (isLiked) {
+      postRef.update({
+        'likesList': FieldValue.arrayUnion([currentUser.uid])
+      });
+    } else {
+      postRef.update({
+        'likesList': FieldValue.arrayRemove([currentUser.uid])
+      });
     }
   }
 
@@ -132,6 +185,49 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
+                const SizedBox(height: 10),
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        // like button
+                        LikeButton(isLiked: isLiked, onTap: toggleLike),
+                        const SizedBox(width: 18),
+                        SvgPicture.asset(
+                          'assets/icons/post_cmt.svg',
+                          width: 20,
+                          color: Colors.blue,
+                        ),
+                        const SizedBox(width: 18),
+                        SvgPicture.asset(
+                          'assets/icons/post_repost.svg',
+                          width: 20,
+                          color: Colors.blue,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text(
+                          '${likeCount} lượt thích',
+                          style: const TextStyle(
+                              color: Colors.black54, fontSize: 14),
+                        ),
+                        const SizedBox(width: 15),
+                        Text(
+                          '${widget.replyCount} lượt phản hồi',
+                          style: const TextStyle(
+                              color: Colors.black54, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Divider(),
+                  ],
+                ),
               ],
             ),
           ),
