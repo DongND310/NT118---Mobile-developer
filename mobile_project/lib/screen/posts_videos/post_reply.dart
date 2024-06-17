@@ -115,12 +115,15 @@ class _PostReplyState extends State<PostReply> {
             ),
           ),
           body: Container(
-            child: Column(
+            child: Stack(
               children: [
                 // get post
-                Expanded(child: ListPosts()),
-
+                ListPosts(),
+                // Expanded(child: ListPosts()),
                 // get comment
+                SizedBox(
+                  height: 30,
+                ),
                 StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection('posts')
@@ -136,10 +139,9 @@ class _PostReplyState extends State<PostReply> {
                     }
 
                     return Padding(
-                      padding: const EdgeInsets.only(left: 30),
+                      padding: const EdgeInsets.only(left: 30, bottom: 50),
                       child: ListView(
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
                         children: snapshot.data!.docs.map((doc) {
                           final replyData = doc.data() as Map<String, dynamic>;
 
@@ -157,7 +159,6 @@ class _PostReplyState extends State<PostReply> {
                     );
                   },
                 ),
-
                 Positioned(
                   bottom: 0,
                   right: 0,
