@@ -18,10 +18,8 @@ class PostService {
         postId: doc.id,
         creatorId: data?['creatorId'] ?? '',
         content: data?['content'] ?? '',
-        // likesList: data?['likesList'],
-        // likeCount: data?['likeCount'] ?? 0,
-        replyCount: data?['replyCount'],
         timestamp: data?['timestamp'] ?? 0,
+        ref: doc.reference,
       );
     }).toList();
   }
@@ -45,9 +43,6 @@ class PostService {
       postId: '',
       creatorId: creatorId,
       content: content,
-      // likesList: [],
-      // likeCount: 0,
-      replyCount: 0,
       timestamp: timestamp,
     );
 
@@ -59,9 +54,6 @@ class PostService {
         postId: postId,
         creatorId: _uid!,
         content: content,
-        // likesList: [],
-        // likeCount: 0,
-        replyCount: 0,
         timestamp: timestamp);
     await docRef.update({'postId': postId});
 
@@ -105,5 +97,56 @@ class PostService {
         .orderBy("timestamp", descending: false)
         .snapshots()
         .map(_postListFromSnapshot);
+  }
+
+  // Future<void> getPostsById(id) {
+  //   return _firestore
+  //       .collection('posts')
+  //       .where('postrId', isEqualTo: id)
+  //       .orderBy("timestamp", descending: false)
+  //       .snapshots()
+  //       .map(_postListFromSnapshot);
+  // }
+
+  Stream<List<PostModel>> getPostsById(String id) {
+    return _firestore
+        .collection('posts')
+        .where('postId', isEqualTo: id)
+        .orderBy('timestamp', descending: false)
+        .snapshots()
+        .map((snapshot) => _postListFromSnapshot(snapshot));
+  }
+
+  Stream<List<PostModel>> getRepliesByPostId(String postId) {
+    return _firestore
+        .collection('replies')
+        .where('postId', isEqualTo: postId)
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((snapshot) => _postListFromSnapshot(snapshot));
+  }
+
+  PostModel _postFromSnapshot(DocumentSnapshot snapshot) {
+    final data = snapshot.data() as Map<String, dynamic>?;
+    return PostModel(
+      postId: snapshot.id,
+      creatorId: data?['creatorId'] ?? '',
+      content: data?['content'] ?? '',
+      timestamp: data?['timestamp'] ?? Timestamp.now(),
+      ref: snapshot.reference,
+    );
+  }
+
+  Future<List<PostModel>> getReplies(PostModel post) async {
+    if (post.ref != null) {
+      QuerySnapshot querySnapshot = await post.ref!
+          .collection("replies")
+          .orderBy("timestamp", descending: true)
+          .get();
+
+      return _postListFromSnapshot(querySnapshot);
+    } else {
+      return [];
+    }
   }
 }

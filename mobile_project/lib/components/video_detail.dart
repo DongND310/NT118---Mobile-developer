@@ -21,9 +21,13 @@ class VideoDetail extends StatelessWidget {
           minLeadingWidth: 0,
           horizontalTitleGap: 10,
           title: GestureDetector(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => ProfileScreen(currentUserId: "CP5ovzUbQTYsCsY8PN8tyf4mxjg1", visitedUserID: "G0BT9oat2MW8ltF56E0nm3An05w2")));
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProfileScreen(
+                          currentUserId: "AmGA5dhS8VS38XHy2gPKTxMV5cl2",
+                          visitedUserID: "G0BT9oat2MW8ltF56E0nm3An05w2")));
             },
             child: Text(
               "${video.postedBy.username} - Follow",
@@ -34,12 +38,11 @@ class VideoDetail extends StatelessWidget {
             ),
           ),
           leading: CircleAvatar(
-            radius: 14,
-              backgroundImage: NetworkImage(user.profileImageUrl!)
-            // backgroundImage: user.avt != null?NetworkImage(user.avt!)
-            //     : Image.asset(
-            //   'assets/images/default_avt.png').image,
-          ),
+              radius: 14, backgroundImage: NetworkImage(user.profileImageUrl!)
+              // backgroundImage: user.avt != null?NetworkImage(user.avt!)
+              //     : Image.asset(
+              //   'assets/images/default_avt.png').image,
+              ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14),

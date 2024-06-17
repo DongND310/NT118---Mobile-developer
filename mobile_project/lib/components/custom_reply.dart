@@ -1,38 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mobile_project/screen/posts_videos/like_button.dart';
-import 'package:mobile_project/services/post_service.dart';
 
-import '../screen/posts_videos/post_reply.dart';
+import '../screen/posts_videos/like_button.dart';
 
-class PostDetailScreen extends StatefulWidget {
-  String? name;
+class CustomPostReply extends StatefulWidget {
   final String content;
-  String? img;
   final String postId;
+  final String userId;
+  final String replyId;
   final List<String> likesList;
   final List<String> repliesList;
-  final Timestamp time;
-
-  PostDetailScreen(
+  final Timestamp timestamp;
+  CustomPostReply(
       {super.key,
-      this.name,
       required this.content,
-      required this.img,
       required this.postId,
+      required this.userId,
+      required this.replyId,
       required this.likesList,
       required this.repliesList,
-      required this.time});
+      required this.timestamp});
 
   @override
-  State<PostDetailScreen> createState() => _PostDetailScreenState();
+  State<CustomPostReply> createState() => _CustomPostReplyState();
 }
 
-class _PostDetailScreenState extends State<PostDetailScreen> {
+class _CustomPostReplyState extends State<CustomPostReply> {
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
     Duration difference = DateTime.now().difference(dateTime);
@@ -57,28 +52,46 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   late bool isLiked;
   int likeCount = 0;
   int replyCount = 0;
+  String? _name;
+  String? _avt;
 
   @override
   void initState() {
     super.initState();
+    getUserData();
+
     isLiked = false;
     FirebaseFirestore.instance
         .collection('posts')
         .doc(widget.postId)
+        .collection('replies')
+        .doc(widget.replyId)
         .snapshots()
         .listen((DocumentSnapshot snapshot) {
       if (snapshot.exists) {
         setState(() {
-          // Đọc danh sách likes từ snapshot và tính độ dài
           Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
           List<dynamic> likesList = data?['likesList'];
           likeCount = likesList.length;
           isLiked = likesList.contains(currentUser.uid);
 
+          
           List<dynamic> repliesList = data?['repliesList'];
           replyCount = repliesList.length;
         });
       }
+    });
+  }
+
+  void getUserData() async {
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userId)
+        .get();
+
+    setState(() {
+      _name = userDoc.get('Name');
+      _avt = userDoc.get('Avt');
     });
   }
 
@@ -89,12 +102,17 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       isLiked = !isLiked;
     });
 
-    DocumentReference postRef =
-        FirebaseFirestore.instance.collection('posts').doc(widget.postId);
+    DocumentReference postRef = FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId)
+        .collection('replies')
+        .doc(widget.replyId);
 
     Stream<DocumentSnapshot> postStream = FirebaseFirestore.instance
         .collection('posts')
         .doc(widget.postId)
+        .collection('replies')
+        .doc(widget.replyId)
         .snapshots();
 
     if (isLiked) {
@@ -119,8 +137,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             padding: EdgeInsets.only(top: 10, left: 10),
             child: CircleAvatar(
               radius: 20,
-              backgroundImage: widget.img != null
-                  ? NetworkImage(widget.img!)
+              backgroundImage: _avt != null
+                  ? NetworkImage(_avt!)
                   : Image.asset('assets/images/default_avt.png').image,
             ),
           ),
@@ -138,7 +156,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          widget.name ?? '',
+                          _name ?? '',
                           style: const TextStyle(
                               color: Colors.blue,
                               fontSize: 18,
@@ -147,37 +165,24 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         ),
                       ),
 
-                      // time, option
+                      // time
                       Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              child: Text(
-                                formatTimestamp(widget.time),
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                                textAlign: TextAlign.end,
-                              ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 15),
+                          child: Text(
+                            formatTimestamp(widget.timestamp),
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
                             ),
-                            IconButton(
-                              onPressed: () {
-                                // Navigator.pop(context);
-                              },
-                              icon: SvgPicture.asset(
-                                'assets/icons/post_option.svg',
-                                width: 6,
-                                height: 6,
-                              ),
-                            ),
-                          ],
+                            textAlign: TextAlign.end,
+                          ),
                         ),
                       ),
                     ]),
 
+                const SizedBox(height: 10),
                 // post content
                 Padding(
                   padding: EdgeInsets.only(right: 10),
@@ -188,8 +193,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     overflow: TextOverflow.visible,
                   ),
                 ),
-                const SizedBox(height: 10),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
 
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,25 +205,19 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         const SizedBox(width: 18),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PostReply(
-                                        postId: widget.postId,
-                                      )),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => PostReply(
+                            //             postId: widget.postId,
+                            //           )),
+                            // );
                           },
                           child: SvgPicture.asset(
                             'assets/icons/post_cmt.svg',
                             width: 20,
                             color: Colors.blue,
                           ),
-                        ),
-                        const SizedBox(width: 18),
-                        SvgPicture.asset(
-                          'assets/icons/post_repost.svg',
-                          width: 20,
-                          color: Colors.blue,
                         ),
                       ],
                     ),
@@ -233,14 +231,13 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         ),
                         const SizedBox(width: 15),
                         Text(
-                          '${replyCount} lượt phản hồi',
+                          ' lượt phản hồi',
                           style: const TextStyle(
                               color: Colors.black54, fontSize: 14),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
-                    Divider(),
+                    const SizedBox(height: 30),
                   ],
                 ),
               ],

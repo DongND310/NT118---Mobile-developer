@@ -47,9 +47,6 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
     _phone = userDoc.get('Phone');
     _gender = userDoc.get('Gender');
     _nation = userDoc.get('Nation');
-    // _name = userDoc.get('Name');
-    print(_id);
-    print(_name);
     setState(() {});
   }
 

@@ -4,19 +4,16 @@ class PostModel {
   final String postId;
   final String creatorId;
   final String content;
-  int? likeCount;
   // List<String> likesList;
-  int? replyCount;
   final Timestamp timestamp;
+  DocumentReference? ref;
 
   PostModel({
     required this.postId,
     required this.creatorId,
-    // required this.likeCount,
-    // required this.likesList,
-    required this.replyCount,
     required this.content,
     required this.timestamp,
+    this.ref,
   });
 
   // Chuyển đổi từ Firestore document thành PostModel
@@ -26,9 +23,6 @@ class PostModel {
       postId: doc.id,
       creatorId: data['creatorId'] ?? '',
       content: data['content'] ?? '',
-      // likesList: [],
-      // likeCount: 0,
-      replyCount: data['replyCount'],
       timestamp: data['timestamp'] ?? 0,
     );
   }
@@ -39,9 +33,6 @@ class PostModel {
       'postId': postId,
       'creatorId': creatorId,
       'content': content,
-      // 'likesList': likesList,
-      // 'likeCount': likeCount,
-      'replyCount': replyCount,
       'timestamp': timestamp,
     };
   }
