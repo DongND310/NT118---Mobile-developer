@@ -46,9 +46,6 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 final usersCollection = FirebaseFirestore.instance.collection('users');
 final user = FirebaseAuth.instance.currentUser!;
-final FirebaseAuth _auth = FirebaseAuth.instance;
-String? _uid;
-String? _avt;
 
 class StoreData {
   Future<String> uploadImageToStorage(String childName, Uint8List file) async {
@@ -71,7 +68,6 @@ class StoreData {
           .update({'Avt': imageUrl});
 
       resp = 'success';
-      print('save ảnh thành công');
     } catch (err) {
       resp = err.toString();
     }

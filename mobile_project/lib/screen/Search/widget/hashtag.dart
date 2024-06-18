@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Hashtag extends StatelessWidget {
@@ -32,7 +30,7 @@ class Hashtag extends StatelessWidget {
                           color: Colors.blue,
                         ),
                       ),
-                      Text("description", style: TextStyle(fontSize: 15))
+                      const Text("description", style: TextStyle(fontSize: 15))
                     ]))
           ],
         ),

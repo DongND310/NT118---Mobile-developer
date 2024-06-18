@@ -42,7 +42,7 @@ class _CommentPageState extends State<CommentPage> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.only(
+      borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30), topRight: Radius.circular(30)),
       child: Container(
         color: Colors.white,
@@ -109,7 +109,7 @@ class _CommentPageState extends State<CommentPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
                       child: CircleAvatar(
                         radius: 20,
                         backgroundImage: _avt != null
@@ -124,7 +124,7 @@ class _CommentPageState extends State<CommentPage> {
                       child: Stack(
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(right: 30),
+                            padding: const EdgeInsets.only(right: 30),
                             child: TextField(
                               controller: comment,
                               autofocus: false,
@@ -151,7 +151,7 @@ class _CommentPageState extends State<CommentPage> {
                               top: 0,
                               bottom: 0,
                               child: IconButton(
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.clear,
                                   size: 18,
                                 ),
@@ -166,10 +166,10 @@ class _CommentPageState extends State<CommentPage> {
                         ],
                       ),
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     GestureDetector(
                       onTap: () {},
-                      child: Icon(
+                      child: const Icon(
                         Icons.send,
                         color: Colors.blue,
                       ),

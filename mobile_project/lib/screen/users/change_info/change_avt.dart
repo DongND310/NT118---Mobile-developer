@@ -6,13 +6,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mobile_project/_mock_data/mock.dart';
-import 'package:mobile_project/components/detail_change.dart';
 import 'package:mobile_project/models/user_model.dart';
 import 'package:mobile_project/util/imagepicker.dart';
 
 import '../profile_change.dart';
-import '../profile_page.dart';
 
 class AvtChangeScreen extends StatefulWidget {
   String? text;
@@ -59,9 +56,6 @@ class _AvtChangeScreenState extends State<AvtChangeScreen> {
       _image = img;
     });
   }
-
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> updateProfileImg() async {
     try {

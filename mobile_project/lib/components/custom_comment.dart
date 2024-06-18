@@ -54,7 +54,7 @@ class _CustomCommentState extends State<CustomComment> {
         children: [
           // avt
           Padding(
-            padding: EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 10),
             child: CircleAvatar(
               radius: 20,
               backgroundImage: widget.img != null
@@ -87,7 +87,7 @@ class _CustomCommentState extends State<CustomComment> {
                   width: 320,
                   child: Text(
                     widget.content,
-                    style: TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black),
                     softWrap: true,
                     overflow: TextOverflow.visible,
                     textAlign: TextAlign.start,
@@ -107,11 +107,11 @@ class _CustomCommentState extends State<CustomComment> {
                               fontWeight: FontWeight.normal,
                             ),
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           GestureDetector(
                             onTap: () {},
                             child: const Text("Trả lời",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -142,14 +142,14 @@ class _CustomCommentState extends State<CustomComment> {
                 // like, reply
                 Row(
                   children: [
-                    Text(
+                    const Text(
                       '----',
                       style: TextStyle(color: Colors.black54, fontSize: 14),
                     ),
                     const SizedBox(width: 10),
                     Text(
                       'Xem ${widget.reply} câu trả lời',
-                      style: TextStyle(color: Colors.black54, fontSize: 14),
+                      style: const TextStyle(color: Colors.black54, fontSize: 14),
                     ),
                   ],
                 ),

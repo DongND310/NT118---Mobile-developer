@@ -5,7 +5,7 @@ class ChangeInfoField extends StatelessWidget {
   // final String? text;
   final controller;
 
-  ChangeInfoField(
+  const ChangeInfoField(
       {super.key,
       required this.label,
       // required this.text,
@@ -20,22 +20,22 @@ class ChangeInfoField extends StatelessWidget {
           const SizedBox(height: 20),
           Text(
             label,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           TextField(
             controller: controller,
             cursorColor: Colors.blue,
             decoration: InputDecoration(
-              enabledBorder: UnderlineInputBorder(
+              enabledBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.blue),
               ),
-              focusedBorder: UnderlineInputBorder(
+              focusedBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.blue),
               ),
               suffixIcon: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.cancel,
-                  color: const Color.fromARGB(151, 0, 0, 0),
+                  color: Color.fromARGB(151, 0, 0, 0),
                   size: 22,
                 ),
                 onPressed: () {

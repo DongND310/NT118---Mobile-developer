@@ -23,14 +23,14 @@ class _SearchBarState extends State<SearchFollowerBar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 15),
+      padding: const EdgeInsets.symmetric(vertical: 15),
       child: SizedBox(
         height: 40,
         width: 350,
         child: TextField(
           controller: _textEditingController,
           onChanged: _onChanged,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
           ),
           decoration: InputDecoration(

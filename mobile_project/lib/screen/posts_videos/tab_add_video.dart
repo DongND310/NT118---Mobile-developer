@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/components/navigation_container.dart';
 
-import '../homepage/home_page.dart';
 
 class AddVideoScreen extends StatefulWidget {
   const AddVideoScreen({super.key});

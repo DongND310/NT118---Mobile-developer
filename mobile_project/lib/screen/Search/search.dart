@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/screen/Search/widget/account_detail.dart';
 import 'package:mobile_project/screen/Search/widget/hashtag.dart';
 import 'package:mobile_project/screen/Search/widget/search_history_detail.dart';
 import 'package:mobile_project/screen/Search/widget/suggest_detail.dart';
 import 'package:mobile_project/screen/Search/widget/video_search.dart';
-import 'package:mobile_project/services/database_services.dart';
 
 import 'hashtagview.dart';
 
@@ -106,16 +103,15 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  late Future<QuerySnapshot> _users;
 
   late bool _showresult;
   List<String> _search = [];
-  TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
 
   String? _avt;
   String? _uid;
   final user = FirebaseAuth.instance.currentUser!;
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -145,7 +141,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return TabBarView(children: [
       SingleChildScrollView(
           child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -153,7 +149,7 @@ class _SearchScreenState extends State<SearchScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   "Tài khoản",
                   style: TextStyle(
                     fontSize: 18,
@@ -164,12 +160,12 @@ class _SearchScreenState extends State<SearchScreen> {
                   children: [
                     TextButton(
                       onPressed: () {},
-                      child: Text(
+                      child: const Text(
                         "Xem thêm",
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
-                          color: const Color.fromARGB(195, 0, 0, 0),
+                          color: Color.fromARGB(195, 0, 0, 0),
                         ),
                       ),
                     ),
@@ -183,8 +179,8 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
             AccountDetail(widget.account[1], widget.descript, _avt ?? ''),
-            SizedBox(height: 15),
-            Text(
+            const SizedBox(height: 15),
+            const Text(
               "Video",
               style: TextStyle(
                 fontSize: 18,
@@ -192,7 +188,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             GridView.builder(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -213,15 +209,15 @@ class _SearchScreenState extends State<SearchScreen> {
       )),
       SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        physics: AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemExtent: 100,
                       itemCount: widget.account.length,
@@ -233,10 +229,10 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       Container(
           child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: GridView.builder(
-          physics: PageScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          physics: const PageScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 10,
             mainAxisExtent: 218,
@@ -257,11 +253,11 @@ class _SearchScreenState extends State<SearchScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: SizedBox(
                   height: 50 * widget.hashtag.length.toDouble(),
                   child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemExtent: 70,
                       itemCount: widget.hashtag.length,
@@ -299,7 +295,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           'assets/icons/search.svg',
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Text(_search[index]),
@@ -345,10 +341,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         .toList();
                   });
                 },
-                style: TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 18),
                 decoration: InputDecoration(
                   hintText: 'Tìm kiếm',
-                  hintStyle: TextStyle(color: Colors.grey, fontSize: 15),
+                  hintStyle: const TextStyle(color: Colors.grey, fontSize: 15),
                   prefixIcon: Padding(
                     padding: const EdgeInsets.only(
                       left: 10.0,
@@ -399,12 +395,12 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               )
             ],
             bottom: _showresult
-                ? TabBar(
+                ? const TabBar(
                     tabs: [
                       Tab(text: "Thịnh hành"),
                       Tab(text: "Tài khoản"),
@@ -416,8 +412,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     labelColor: Colors.blue,
                   )
                 : PreferredSize(
-                    child: Container(), // Container
-                    preferredSize: Size.fromHeight(0.0),
+                    preferredSize: const Size.fromHeight(0.0),
+                    child: Container(),
                   ),
           ),
           body: _showresult
@@ -425,7 +421,7 @@ class _SearchScreenState extends State<SearchScreen> {
               : _textEditingController.text.isNotEmpty
                   ? _searchListView()
                   : SingleChildScrollView(
-                      physics: AlwaysScrollableScrollPhysics(),
+                      physics: const AlwaysScrollableScrollPhysics(),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,

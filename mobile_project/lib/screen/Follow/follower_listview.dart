@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/screen/Follow/search_bar.dart';
@@ -8,6 +7,8 @@ import 'package:mobile_project/screen/Follow/search_bar.dart';
 import '../Search/widget/account_detail.dart';
 
 class ListFollowerScreen extends StatefulWidget {
+  ListFollowerScreen({super.key});
+
   @override
   State<StatefulWidget> createState() => _ListFollowerState();
   final List<String> account = [
@@ -27,12 +28,12 @@ class ListFollowerScreen extends StatefulWidget {
 class _ListFollowerState extends State<ListFollowerScreen> {
   bool _isPressed = false;
   List<String> _search = [];
-  TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
 
   String? _avt;
   String? _uid;
   final user = FirebaseAuth.instance.currentUser!;
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -66,14 +67,14 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                 Navigator.pop(context);
               },
             ),
-            title: Text("Username",
+            title: const Text("Username",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                     color: Colors.blue)),
             centerTitle: true,
-            bottom: TabBar(
+            bottom: const TabBar(
               tabs: [
                 Tab(text: "Follower 500K"),
                 Tab(text: "Following 100K"),
@@ -88,7 +89,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
             children: [
               SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(
                     children: [
                       SearchFollowerBar((value) {
@@ -103,7 +104,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                       }, _textEditingController),
                       ListView.builder(
                         physics:
-                            NeverScrollableScrollPhysics(), // Đặt physics này để ListView không cuộn
+                            const NeverScrollableScrollPhysics(), // Đặt physics này để ListView không cuộn
                         shrinkWrap: true,
                         itemExtent: 100,
                         itemCount: _textEditingController.text.isNotEmpty
@@ -129,7 +130,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                 },
                                 style: ButtonStyle(
                                   minimumSize: MaterialStateProperty.all<Size>(
-                                    Size(125, 35),
+                                    const Size(125, 35),
                                   ),
                                   backgroundColor: MaterialStateProperty.all<
                                           Color>(
@@ -144,7 +145,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                     ),
                                   ),
                                 ),
-                                child: Text('Follow'),
+                                child: const Text('Follow'),
                               ),
                             ],
                           );
@@ -156,7 +157,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
               ),
               SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(
                     children: [
                       SearchFollowerBar((value) {
@@ -171,7 +172,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                       }, _textEditingController),
                       ListView.builder(
                         physics:
-                            NeverScrollableScrollPhysics(), // Đặt physics này để ListView không cuộn
+                            const NeverScrollableScrollPhysics(), // Đặt physics này để ListView không cuộn
                         shrinkWrap: true,
                         itemExtent: 100,
                         itemCount: _textEditingController.text.isNotEmpty
@@ -197,7 +198,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                 },
                                 style: ButtonStyle(
                                   minimumSize: MaterialStateProperty.all<Size>(
-                                    Size(125, 35),
+                                    const Size(125, 35),
                                   ),
                                   backgroundColor: MaterialStateProperty.all<
                                           Color>(
@@ -212,7 +213,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                     ),
                                   ),
                                 ),
-                                child: Text('Follow'),
+                                child: const Text('Follow'),
                               ),
                             ],
                           );
@@ -224,7 +225,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
               ),
               SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(
                     children: [
                       SearchFollowerBar((value) {
@@ -239,7 +240,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                       }, _textEditingController),
                       ListView.builder(
                         physics:
-                            NeverScrollableScrollPhysics(), // Đặt physics này để ListView không cuộn
+                            const NeverScrollableScrollPhysics(), // Đặt physics này để ListView không cuộn
                         shrinkWrap: true,
                         itemExtent: 100,
                         itemCount: _textEditingController.text.isNotEmpty
@@ -265,7 +266,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                 },
                                 style: ButtonStyle(
                                   minimumSize: MaterialStateProperty.all<Size>(
-                                    Size(125, 35),
+                                    const Size(125, 35),
                                   ),
                                   backgroundColor: MaterialStateProperty.all<
                                           Color>(
@@ -280,7 +281,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                     ),
                                   ),
                                 ),
-                                child: Text('Bạn bè'),
+                                child: const Text('Bạn bè'),
                               ),
                             ],
                           );

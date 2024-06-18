@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/screen/posts_videos/like_button.dart';
-import 'package:mobile_project/services/post_service.dart';
 
 import '../screen/posts_videos/post_reply.dart';
 
@@ -116,7 +113,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         children: [
           // avt
           Padding(
-            padding: EdgeInsets.only(top: 10, left: 10),
+            padding: const EdgeInsets.only(top: 10, left: 10),
             child: CircleAvatar(
               radius: 20,
               backgroundImage: widget.img != null
@@ -180,10 +177,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
                 // post content
                 Padding(
-                  padding: EdgeInsets.only(right: 10),
+                  padding: const EdgeInsets.only(right: 10),
                   child: Text(
                     widget.content,
-                    style: TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black),
                     softWrap: true,
                     overflow: TextOverflow.visible,
                   ),
@@ -239,7 +236,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    Divider(),
+                    const Divider(),
                   ],
                 ),
               ],

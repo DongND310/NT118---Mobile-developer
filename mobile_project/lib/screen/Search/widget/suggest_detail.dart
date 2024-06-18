@@ -6,11 +6,11 @@ class SuggestDetail extends StatelessWidget {
   @override
   final List<String> hashtag;
 
-  SuggestDetail(this.hashtag);
+  const SuggestDetail(this.hashtag, {super.key});
 
   Widget build(BuildContext context) {
     return ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: hashtag.length,
         itemBuilder: (BuildContext context, int index) {
@@ -33,7 +33,7 @@ class SuggestDetail extends StatelessWidget {
                     ),
                   ],
                 ),
-                Padding(padding: EdgeInsets.symmetric(horizontal: 15.0),
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: Row(//video
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

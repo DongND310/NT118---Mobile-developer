@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class AccountDetail extends StatefulWidget {
   @override
@@ -15,13 +13,14 @@ class AccountDetail extends StatefulWidget {
 }
 
 class _AccountDetailState extends State<AccountDetail> {
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-            padding: EdgeInsets.only(top: 5, bottom: 5),
+            padding: const EdgeInsets.only(top: 5, bottom: 5),
             child: Container(
               width: 70,
               height: 70,
@@ -34,20 +33,20 @@ class _AccountDetailState extends State<AccountDetail> {
                 backgroundImage: NetworkImage(widget.img)
               ),
             )),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(widget.account,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.blue)),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Text(widget.descript,
-                  style: TextStyle(fontSize: 16, color: Colors.black54)),
+                  style: const TextStyle(fontSize: 16, color: Colors.black54)),
             ],
           ),
         ),

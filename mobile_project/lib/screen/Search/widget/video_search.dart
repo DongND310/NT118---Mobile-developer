@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class VideoSearch extends StatelessWidget {
@@ -31,7 +29,7 @@ class VideoSearch extends StatelessWidget {
             ),
           ),
           Text(title,
-              style: TextStyle(
+              style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                   color: Colors.blue)),
@@ -40,7 +38,7 @@ class VideoSearch extends StatelessWidget {
             children: [
               Text(
                 account,
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,16 +49,16 @@ class VideoSearch extends StatelessWidget {
                     width: 20,
                     height: 20,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Text(
                     numLike,
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   )
                 ],
               )
             ],
           ),
-          SizedBox(height: 9),
+          const SizedBox(height: 9),
         ],
       ),
     );

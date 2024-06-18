@@ -17,9 +17,9 @@ class _CustomFollowNotificationState extends State<CustomFollowNotification> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(left: 5),
-            child: const CircleAvatar(
+            child: CircleAvatar(
               radius: 25,
               backgroundImage: AssetImage("assets/images/avatar.png"),
             ),
@@ -66,12 +66,12 @@ class _CustomFollowNotificationState extends State<CustomFollowNotification> {
               ],
             ),
           ),
-          Container(
+          SizedBox(
             width: 100,
             height: 80,
             child: Padding(
               // padding: EdgeInsets.only(left: follow == false ? 50 : 30),
-              padding: EdgeInsets.only(left: 5),
+              padding: const EdgeInsets.only(left: 5),
               child: CustomButton(
                 height: 45,
                 color: follow == false ? Colors.blue : const Color(0xffF1FCFD),

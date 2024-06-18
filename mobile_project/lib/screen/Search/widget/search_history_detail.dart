@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SearchHistoryDetail extends StatefulWidget{
@@ -9,7 +7,7 @@ class SearchHistoryDetail extends StatefulWidget{
   State<StatefulWidget> createState() => _SearchHistoryState();
   final List<String> searchhistory;
   final bool showmore;
-  SearchHistoryDetail(this.searchhistory, this.showmore, {super.key});
+  const SearchHistoryDetail(this.searchhistory, this.showmore, {super.key});
 }
 
 class _SearchHistoryState extends State<SearchHistoryDetail>{
@@ -26,9 +24,9 @@ class _SearchHistoryState extends State<SearchHistoryDetail>{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: ListView.builder(
-              physics: PageScrollPhysics(),
+              physics: const PageScrollPhysics(),
               shrinkWrap: true,
               itemExtent: 35,
               itemCount: _show ? widget.searchhistory.length : 3,

@@ -27,7 +27,7 @@ class MainApp extends StatelessWidget {
               pageIndex: 0,
             );
           } else {
-            return WelcomeScreen();
+            return const WelcomeScreen();
           }
         });
   }

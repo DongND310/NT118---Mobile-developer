@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HashTagScreen extends StatefulWidget {
@@ -8,7 +6,7 @@ class HashTagScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HashTagState();
 
-  HashTagScreen(this.hashtag);
+  const HashTagScreen(this.hashtag, {super.key});
 }
 
 class _HashTagState extends State<HashTagScreen> {
@@ -28,9 +26,9 @@ class _HashTagState extends State<HashTagScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -43,7 +41,7 @@ class _HashTagState extends State<HashTagScreen> {
                       width: 100,
                       height: 100,
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,17 +52,17 @@ class _HashTagState extends State<HashTagScreen> {
                           children: [
                             Text(
                               widget.hashtag,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue),
                             ),
-                            Text("Bài đăng của 118K",
+                            const Text("Bài đăng của 118K",
                                 style: TextStyle(
                                     fontSize: 15, color: Colors.black38))
                           ],
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Row(
                           children: [
                             DecoratedBox(
@@ -84,7 +82,7 @@ class _HashTagState extends State<HashTagScreen> {
                                         icon: SvgPicture.asset(
                                           "assets/icons/vector.svg",
                                         )),
-                                    Text(
+                                    const Text(
                                       "Thêm vào yêu thích",
                                       style: TextStyle(
                                           fontSize: 15,
@@ -100,14 +98,14 @@ class _HashTagState extends State<HashTagScreen> {
                     )
                   ],
                 ),
-                Padding(
+                const Padding(
                     padding: EdgeInsets.only(top: 20, bottom: 20),
                     child: Text("Description here")),
                 Container(
                   child: GridView.builder(
                     shrinkWrap: true,
-                    physics: PageScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    physics: const PageScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       crossAxisSpacing: 1,
                       mainAxisExtent: 160,
