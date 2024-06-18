@@ -188,8 +188,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     overflow: TextOverflow.visible,
                   ),
                 ),
-                const SizedBox(height: 10),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
 
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

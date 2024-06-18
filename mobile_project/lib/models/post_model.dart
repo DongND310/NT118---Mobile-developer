@@ -27,6 +27,16 @@ class PostModel {
     );
   }
 
+  factory PostModel.fromMap(Map<String, dynamic> map, String id) {
+    return PostModel(
+      postId: id,
+      content: map['content'] ?? '',
+      creatorId: map['userId'] ?? '',
+      timestamp: map['timestamp'] ?? '',
+      // Initialize other fields from map as needed
+    );
+  }
+
   // Chuyển đổi từ PostModel thành Map<String, dynamic>
   Map<String, dynamic> toMap() {
     return {

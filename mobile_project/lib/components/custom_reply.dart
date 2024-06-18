@@ -75,7 +75,6 @@ class _CustomPostReplyState extends State<CustomPostReply> {
           likeCount = likesList.length;
           isLiked = likesList.contains(currentUser.uid);
 
-          
           List<dynamic> repliesList = data?['repliesList'];
           replyCount = repliesList.length;
         });
