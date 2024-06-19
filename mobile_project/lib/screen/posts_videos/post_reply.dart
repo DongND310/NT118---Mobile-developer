@@ -26,11 +26,32 @@ class _PostReplyState extends State<PostReply> {
   String? _avt;
   String? _name;
   bool _showClearButton = false;
-
+  late bool isLiked;
+  int likeCount = 0;
+  int replyCount = 0;
   @override
   void initState() {
     super.initState();
     getUserData();
+    isLiked = false;
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId)
+        .snapshots()
+        .listen((DocumentSnapshot snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          // Đọc danh sách likes từ snapshot và tính độ dài
+          Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+          List<dynamic> likesList = data?['likesList'];
+          likeCount = likesList.length;
+          isLiked = likesList.contains(user.uid);
+
+          List<dynamic> repliesList = data?['repliesList'];
+          replyCount = repliesList.length;
+        });
+      }
+    });
   }
 
   void getUserData() async {
@@ -69,7 +90,29 @@ class _PostReplyState extends State<PostReply> {
     comment.clear();
   }
 
-  late bool isLiked;
+  void toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+    });
+
+    DocumentReference postRef =
+        FirebaseFirestore.instance.collection('posts').doc(widget.postId);
+
+    Stream<DocumentSnapshot> postStream = FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId)
+        .snapshots();
+
+    if (isLiked) {
+      postRef.update({
+        'likesList': FieldValue.arrayUnion([user.uid])
+      });
+    } else {
+      postRef.update({
+        'likesList': FieldValue.arrayRemove([user.uid])
+      });
+    }
+  }
 
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
@@ -213,7 +256,8 @@ class _PostReplyState extends State<PostReply> {
                               Row(
                                 children: [
                                   // like button
-                                  LikeButton(isLiked: true, onTap: null),
+                                  LikeButton(
+                                      isLiked: isLiked, onTap: toggleLike),
                                   const SizedBox(width: 18),
                                   GestureDetector(
                                     onTap: () {
@@ -243,13 +287,13 @@ class _PostReplyState extends State<PostReply> {
                               Row(
                                 children: [
                                   Text(
-                                    '{likeCount} lượt thích',
+                                    '${likeCount} lượt thích',
                                     style: const TextStyle(
                                         color: Colors.black54, fontSize: 14),
                                   ),
                                   const SizedBox(width: 15),
                                   Text(
-                                    '{replyCount} lượt phản hồi',
+                                    '${replyCount} lượt phản hồi',
                                     style: const TextStyle(
                                         color: Colors.black54, fontSize: 14),
                                   ),
