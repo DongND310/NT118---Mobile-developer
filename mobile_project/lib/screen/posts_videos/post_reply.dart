@@ -41,7 +41,6 @@ class _PostReplyState extends State<PostReply> {
         .listen((DocumentSnapshot snapshot) {
       if (snapshot.exists) {
         setState(() {
-          // Đọc danh sách likes từ snapshot và tính độ dài
           Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
           List<dynamic> likesList = data?['likesList'];
           likeCount = likesList.length;
@@ -66,28 +65,33 @@ class _PostReplyState extends State<PostReply> {
     });
   }
 
-  void addReply(String content) {
-    DocumentReference postRef =
-        FirebaseFirestore.instance.collection('posts').doc(widget.postId);
-    String replyId = FirebaseFirestore.instance.collection('posts').doc().id;
+  void addReplyPost(String content) {
+    if (content.trim().isNotEmpty) {
+      DocumentReference postRef =
+          FirebaseFirestore.instance.collection('posts').doc(widget.postId);
+      String replyId = FirebaseFirestore.instance.collection('posts').doc().id;
 
-    postRef.update({
-      'repliesList': FieldValue.arrayUnion([replyId])
-    });
+      postRef.update({
+        'repliesList': FieldValue.arrayUnion([replyId])
+      });
 
-    FirebaseFirestore.instance
-        .collection('posts')
-        .doc(widget.postId)
-        .collection('replies')
-        .doc(replyId)
-        .set({
-      "content": content,
-      "userId": user.uid,
-      "postId": widget.postId,
-      "replyId": replyId,
-      "timestamp": Timestamp.now()
-    });
-    comment.clear();
+      FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.postId)
+          .collection('replies')
+          .doc(replyId)
+          .set({
+        "content": content,
+        "userId": user.uid,
+        "postId": widget.postId,
+        "replyId": replyId,
+        "timestamp": Timestamp.now()
+      });
+      comment.clear();
+      setState(() {
+        _showClearButton = false;
+      });
+    }
   }
 
   void toggleLike() {
@@ -148,7 +152,7 @@ class _PostReplyState extends State<PostReply> {
             appBar: AppBar(
               title: Text('Bình luận'),
             ),
-            body: Center(
+            body: const Center(
               child: CircularProgressIndicator(),
             ),
           );
@@ -192,11 +196,13 @@ class _PostReplyState extends State<PostReply> {
                     Padding(
                       padding: EdgeInsets.zero,
                       child: ListTile(
-                        contentPadding: EdgeInsets.only(left: 15, right: 10),
+                        contentPadding:
+                            const EdgeInsets.only(left: 15, right: 10),
                         title: Row(
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(top: 10, right: 20),
+                              padding:
+                                  const EdgeInsets.only(top: 10, right: 20),
                               child: CircleAvatar(
                                 radius: 20,
                                 backgroundImage: _avt != null
@@ -245,14 +251,16 @@ class _PostReplyState extends State<PostReply> {
                             ),
                           ],
                         ),
-
                         subtitle: Padding(
                           padding: const EdgeInsets.only(
                               left: 10, top: 15, bottom: 20, right: 5),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(post.content),
-                              SizedBox(height: 20),
+                              Text(
+                                post.content,
+                              ),
+                              const SizedBox(height: 20),
                               Row(
                                 children: [
                                   // like button
@@ -302,11 +310,10 @@ class _PostReplyState extends State<PostReply> {
                             ],
                           ),
                         ),
-                        // title: ListPosts(),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 30, bottom: 40),
+                      padding: const EdgeInsets.only(left: 30, bottom: 50),
                       child: StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance
                             .collection('posts')
@@ -316,7 +323,7 @@ class _PostReplyState extends State<PostReply> {
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
-                            return Center(
+                            return const Center(
                               child: CircularProgressIndicator(),
                             );
                           }
@@ -338,7 +345,7 @@ class _PostReplyState extends State<PostReply> {
 
                           return ListView.builder(
                             shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: replies.length,
                             itemBuilder: (context, index) {
                               return replies[index];
@@ -357,26 +364,28 @@ class _PostReplyState extends State<PostReply> {
                 child: Container(
                   height: 60,
                   color: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: Row(
                     children: [
                       CircleAvatar(
                         radius: 20,
                         backgroundImage: _avt != null
                             ? NetworkImage(_avt!)
-                            : AssetImage('assets/images/default_avt.png')
+                            : const AssetImage('assets/images/default_avt.png')
                                 as ImageProvider,
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: TextField(
                           controller: comment,
                           autofocus: false,
-                          maxLines: 1,
+                          maxLines: 5,
+                          minLines: 1,
                           cursorColor: Colors.blue,
                           decoration: InputDecoration(
                             hintText: "Thêm bình luận",
-                            hintStyle: TextStyle(
+                            hintStyle: const TextStyle(
                               color: Colors.grey,
                             ),
                             border: OutlineInputBorder(
@@ -384,16 +393,16 @@ class _PostReplyState extends State<PostReply> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25),
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                 color: Colors.blue,
                                 width: 1.0,
                               ),
                             ),
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 20),
                             suffixIcon: _showClearButton
                                 ? IconButton(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.clear,
                                       size: 18,
                                       color: Colors.grey,
@@ -414,10 +423,10 @@ class _PostReplyState extends State<PostReply> {
                           },
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       GestureDetector(
-                        onTap: () => addReply(comment.text),
-                        child: Icon(
+                        onTap: () => addReplyPost(comment.text),
+                        child: const Icon(
                           Icons.send,
                           color: Colors.blue,
                         ),

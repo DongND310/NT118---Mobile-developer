@@ -2,33 +2,34 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mobile_project/components/custom_subreply.dart';
 
 import '../screen/posts_videos/like_button.dart';
 
-class CustomPostReply extends StatefulWidget {
+class CustomSubReply extends StatefulWidget {
   final String content;
-  final String postId;
   final String userId;
+  final String postId;
   final String replyId;
+  final String subreplyId;
   final List<String> likesList;
   final List<String> repliesList;
   final Timestamp timestamp;
-  CustomPostReply(
+  CustomSubReply(
       {super.key,
       required this.content,
-      required this.postId,
+      required this.subreplyId,
       required this.userId,
+      required this.postId,
       required this.replyId,
       required this.likesList,
       required this.repliesList,
       required this.timestamp});
 
   @override
-  State<CustomPostReply> createState() => _CustomPostReplyState();
+  State<CustomSubReply> createState() => _CustomSubReplyState();
 }
 
-class _CustomPostReplyState extends State<CustomPostReply> {
+class _CustomSubReplyState extends State<CustomSubReply> {
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
     Duration difference = DateTime.now().difference(dateTime);
@@ -51,8 +52,6 @@ class _CustomPostReplyState extends State<CustomPostReply> {
   }
 
   late bool isLiked;
-  late bool isSubLiked;
-  late bool isSubRepLiked;
   int likeCount = 0;
   int replyCount = 0;
   String? _name;
@@ -61,7 +60,6 @@ class _CustomPostReplyState extends State<CustomPostReply> {
   bool _showReplyField = false;
   TextEditingController comment = TextEditingController();
   bool _showClearButton = false;
-  bool isSubReply = false;
 
   @override
   void initState() {
@@ -70,10 +68,12 @@ class _CustomPostReplyState extends State<CustomPostReply> {
 
     isLiked = false;
     FirebaseFirestore.instance
-        .collection('posts')
-        .doc(widget.postId)
         .collection('replies')
         .doc(widget.replyId)
+        .collection('subreplies')
+        .doc(widget.subreplyId)
+        // .collection('subsubreplies')
+        // .doc()
         .snapshots()
         .listen((DocumentSnapshot snapshot) {
       if (snapshot.exists) {
@@ -110,10 +110,10 @@ class _CustomPostReplyState extends State<CustomPostReply> {
     });
 
     DocumentReference postRef = FirebaseFirestore.instance
-        .collection('posts')
-        .doc(widget.postId)
         .collection('replies')
-        .doc(widget.replyId);
+        .doc(widget.replyId)
+        .collection('subreplies')
+        .doc(widget.subreplyId);
 
     if (isLiked) {
       postRef.update({
@@ -135,78 +135,47 @@ class _CustomPostReplyState extends State<CustomPostReply> {
     });
   }
 
-  void addReplyComment(String content) {
+  void addSubReplyComment(String content) {
     DocumentReference postRef = FirebaseFirestore.instance
-        .collection('posts')
+        .collection('post')
         .doc(widget.postId)
         .collection('replies')
-        .doc(widget.replyId);
+        .doc(widget.replyId)
+        .collection('subreplies')
+        .doc(widget.subreplyId);
 
-    if (!isSubReply) {
-      // Add subreply
-      String subsubreplyId = FirebaseFirestore.instance
-          .collection('posts')
-          .doc(widget.postId)
-          .collection('replies')
-          .doc(widget.replyId)
-          .collection('subreplies')
-          .doc(widget.replyId)
-          .collection('subsubreplies')
-          .doc()
-          .id;
-      postRef.update({
-        'repliesList': FieldValue.arrayUnion([subsubreplyId])
-      });
+    String subsubreplyId = FirebaseFirestore.instance
+        .collection('post')
+        .doc(widget.postId)
+        .collection('replies')
+        .doc(widget.replyId)
+        .collection('subreplies')
+        .doc(widget.subreplyId)
+        .collection('subsubreplies')
+        .doc()
+        .id;
+    postRef.update({
+      'repliesList': FieldValue.arrayUnion([subsubreplyId])
+    });
 
-      FirebaseFirestore.instance
-          .collection('post')
-          .doc(widget.postId)
-          .collection('replies')
-          .doc(widget.replyId)
-          .collection('subreplies')
-          .doc(widget.replyId)
-          .collection('subsubreplies')
-          .doc(subsubreplyId)
-          .set({
-        "content": content,
-        "userId": user.uid,
-        "postId": widget.postId,
-        "replyId": widget.replyId,
-        // "subreplyId": widget.subreplyId,
-        "subsubreplyId": subsubreplyId,
-        "timestamp": Timestamp.now()
-      });
-    } else {
-      // Add subsubreply
-      String subsubreplyId = FirebaseFirestore.instance
-          .collection('posts')
-          .doc(widget.postId)
-          .collection('replies')
-          .doc(widget.replyId)
-          .collection('subreplies')
-          .doc()
-          .collection('subsubreplies')
-          .doc()
-          .id;
-
-      FirebaseFirestore.instance
-          .collection('posts')
-          .doc(widget.postId)
-          .collection('replies')
-          .doc(widget.replyId)
-          .collection('subreplies')
-          .doc(widget.replyId)
-          .collection('subsubreplies')
-          .doc(subsubreplyId)
-          .set({
-        "content": content,
-        "userId": currentUser.uid,
-        "postId": widget.postId,
-        "replyId": subsubreplyId,
-        "timestamp": Timestamp.now()
-      });
-    }
-
+    FirebaseFirestore.instance
+        .collection('post')
+        .doc(widget.postId)
+        .collection('replies')
+        .doc(widget.replyId)
+        .collection('subreplies')
+        .doc(widget.replyId)
+        .collection('subsubreplies')
+        .doc(subsubreplyId)
+        .set({
+      "content": content,
+      "userId": user.uid,
+      "postId": widget.postId,
+      "replyId": widget.replyId,
+      "subreplyId": widget.subreplyId,
+      "subsubreplyId": subsubreplyId,
+      "timestamp": Timestamp.now()
+    });
     comment.clear();
     setState(() {
       _showReplyField = false;
@@ -311,12 +280,6 @@ class _CustomPostReplyState extends State<CustomPostReply> {
                               style: const TextStyle(
                                   color: Colors.black54, fontSize: 14),
                             ),
-                            const SizedBox(width: 15),
-                            Text(
-                              '${replyCount} lượt phản hồi',
-                              style: const TextStyle(
-                                  color: Colors.black54, fontSize: 14),
-                            ),
                           ],
                         ),
                         const SizedBox(height: 20),
@@ -329,11 +292,9 @@ class _CustomPostReplyState extends State<CustomPostReply> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 40),
+          padding: const EdgeInsets.only(left: 50),
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
-                .collection('posts')
-                .doc(widget.postId)
                 .collection('replies')
                 .doc(widget.replyId)
                 .collection('subreplies')
@@ -346,13 +307,14 @@ class _CustomPostReplyState extends State<CustomPostReply> {
                 );
               }
 
-              final List<CustomPostReply> subreplies =
+              final List<CustomSubReply> subreplies =
                   snapshot.data!.docs.map((doc) {
                 final subreplyData = doc.data() as Map<String, dynamic>;
-                return CustomPostReply(
+                return CustomSubReply(
+                  postId: subreplyData['postId'],
                   content: subreplyData['content'],
                   userId: subreplyData['userId'],
-                  postId: subreplyData['postId'],
+                  subreplyId: subreplyData['subreplyId'],
                   replyId: subreplyData['replyId'],
                   likesList: [],
                   repliesList: [],
@@ -371,57 +333,9 @@ class _CustomPostReplyState extends State<CustomPostReply> {
             },
           ),
         ),
-
-        // subsubreplies
-        Padding(
-          padding: const EdgeInsets.only(left: 60),
-          child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('posts')
-                .doc(widget.postId)
-                .collection('replies')
-                .doc(widget.replyId)
-                .collection('subreplies')
-                .doc(widget.replyId)
-                .collection('subsubreplies')
-                .orderBy('timestamp', descending: false)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              final List<CustomSubReply> supsubreplies =
-                  snapshot.data!.docs.map((doc) {
-                final subreplyData = doc.data() as Map<String, dynamic>;
-                return CustomSubReply(
-                  postId: subreplyData['postId'],
-                  content: subreplyData['content'],
-                  userId: subreplyData['userId'],
-                  subreplyId: subreplyData['subreplyId'],
-                  replyId: subreplyData['replyId'],
-                  likesList: [],
-                  repliesList: [],
-                  timestamp: subreplyData['timestamp'],
-                );
-              }).toList();
-
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: supsubreplies.length,
-                itemBuilder: (context, index) {
-                  return supsubreplies[index];
-                },
-              );
-            },
-          ),
-        ),
         if (_showReplyField)
           Container(
-            margin: const EdgeInsets.only(bottom: 30, left: 30, right: 10),
+            margin: const EdgeInsets.only(bottom: 30, right: 10),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -477,7 +391,7 @@ class _CustomPostReplyState extends State<CustomPostReply> {
                 ),
                 const SizedBox(width: 10),
                 GestureDetector(
-                  onTap: () => addReplyComment(comment.text),
+                  onTap: () => addSubReplyComment(comment.text),
                   child: const Icon(
                     Icons.send,
                     color: Colors.blue,
