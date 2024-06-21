@@ -15,7 +15,7 @@ class _SearchMessageState extends State<SearchMessageScreen> {
   TextEditingController _textEditingController = TextEditingController();
   var searchName = "";
   final user = FirebaseAuth.instance.currentUser!;
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FocusNode _focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {

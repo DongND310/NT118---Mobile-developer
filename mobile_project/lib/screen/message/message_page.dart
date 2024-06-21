@@ -19,13 +19,6 @@ class MessagePage extends StatelessWidget {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             color: Colors.blue,
-            // gradient: LinearGradient(
-            //     begin: Alignment.topLeft,
-            //     end: Alignment.bottomRight,
-            // colors: <Color>[
-            //   Color.fromARGB(255, 19, 19, 243),
-            //   Color(0xff0BA9FF)
-            // ]),
           ),
         ),
         actions: [

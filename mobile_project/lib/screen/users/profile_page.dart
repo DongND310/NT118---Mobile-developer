@@ -1,16 +1,10 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/models/user_model.dart';
 import 'package:mobile_project/screen/Follow/follower_listview.dart';
 import 'package:mobile_project/services/database_services.dart';
-import 'package:mobile_project/services/folow_service.dart';
 import 'change_info/change_avt.dart';
 import 'profile_change.dart';
 import 'proflie_setting.dart';
@@ -22,8 +16,6 @@ import 'tab_video.dart';
 class ProfileScreen extends StatefulWidget {
   ProfileScreen(
       {super.key, required this.currentUserId, required this.visitedUserID});
-  // {super.key,
-  // required this.currentUserId});
   final String currentUserId;
   final String visitedUserID;
   @override
@@ -33,40 +25,42 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final user = FirebaseAuth.instance.currentUser!;
-  bool _isPressed = false;
   late bool _isVisited;
   bool _isFollowing = false;
   int _followersCount = 0;
   int _followingCount = 0;
-  final FollowService _followService = FollowService();
   getFollowersCount() async {
-    int followersCount =
-        await DatabaseServices.followersNum(widget.visitedUserID);
-    // await DatabaseServices.followersNum(widget.currentUserId);
+    QuerySnapshot snapshot = await followersRef
+    .doc(widget.visitedUserID)
+    .collection("userFollowers")
+    .get();
     if (mounted) {
       setState(() {
-        _followersCount = followersCount;
+        _followersCount = snapshot.docs.length;
       });
     }
   }
 
   getFollowingCount() async {
-    int followingCount =
-        await DatabaseServices.followingNum(widget.visitedUserID);
-    //await DatabaseServices.followingNum(widget.currentUserId);
+    QuerySnapshot snapshot = await followingsRef
+        .doc(widget.visitedUserID)
+        .collection("userFollowings")
+        .get();
     if (mounted) {
       setState(() {
-        _followingCount = followingCount;
+        _followingCount = snapshot.docs.length;
       });
     }
   }
 
   checkFollowing() async {
-    bool isFollowing = await DatabaseServices.isFollowing(
-        widget.visitedUserID, widget.currentUserId);
+    DocumentSnapshot doc = await followersRef
+    .doc(widget.visitedUserID)
+    .collection("userFollowers")
+    .doc(widget.currentUserId)
+    .get();
     setState(() {
-      _isFollowing = isFollowing;
+      _isFollowing = doc.exists;
     });
   }
 
@@ -74,10 +68,6 @@ class _ProfileScreenState extends State<ProfileScreen>
   void initState() {
     super.initState();
     _isVisited = widget.currentUserId != widget.visitedUserID;
-    // if(widget.currentUserId != widget.visitedUserID)
-    //   {
-    //     _isVisited = true;
-    //   }
     _tabController = TabController(length: !_isVisited ? 4 : 2, vsync: this);
     _tabController.addListener(_handleTabSelection);
     checkFollowing();
@@ -95,16 +85,16 @@ class _ProfileScreenState extends State<ProfileScreen>
     super.dispose();
   }
 
-  User? currentUser = FirebaseAuth.instance.currentUser;
+  //User? currentUser = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-          // future: usersRef.doc(widget.visitedUserID).get(),
-          future: usersRef.doc(widget.currentUserId).get(),
+          future: usersRef.doc(widget.visitedUserID).get(),
+          // future: usersRef.doc(widget.currentUserId).get(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation(Colors.blue),
                 ),
@@ -117,15 +107,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                   headerSliverBuilder: (context, index) {
                     return [
                       SliverAppBar(
-                        leading: IconButton(
+                        leading: Visibility(
+                          visible: _isVisited,
+                            child: IconButton(
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          icon: SvgPicture.asset(
-                            'assets/icons/ep_back.svg',
-                            width: 30,
-                            height: 30,
-                          ),
+                              icon: SvgPicture.asset(
+                                'assets/icons/ep_back.svg',
+                                width: 30,
+                                height: 30,
+                              ),
+                        )
                         ),
                         centerTitle: true,
                         automaticallyImplyLeading: false,
@@ -221,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ListFollowerScreen(), // update following
+                                                    ListFollowerScreen(currentUserId: widget.visitedUserID), // update following
                                               ),
                                             );
                                           },
@@ -258,7 +251,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ListFollowerScreen(),
+                                                    ListFollowerScreen(currentUserId: widget.visitedUserID,),
                                               ),
                                             );
                                           },
@@ -342,57 +335,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          // ElevatedButton(
-                                          //   onPressed: () {
-                                          //     if(_isPressed == true){
-                                          //       follow();
-                                          //     }
-                                          //     else
-                                          //       {
-                                          //         _followService.Unfollow(widget.currentUserId, widget.visitedUserID);
-                                          //       }
-                                          //     setState(() {
-                                          //       _isPressed = !_isPressed;
-                                          //     });
-                                          //   },
-                                          //   style: ButtonStyle(
-                                          //     side: MaterialStateProperty.all(
-                                          //         BorderSide(
-                                          //             width: 1, color: Colors.blue)),
-                                          //     minimumSize:
-                                          //     MaterialStateProperty.all<Size>(
-                                          //       Size(130, 55),
-                                          //     ),
-                                          //     backgroundColor:
-                                          //     MaterialStateProperty.all<Color>(
-                                          //         !_isPressed
-                                          //             ? Colors.blue
-                                          //             : Colors.white),
-                                          //     foregroundColor:
-                                          //     MaterialStateProperty.all<Color>(
-                                          //         !_isPressed
-                                          //             ? Colors.white
-                                          //             : Colors.blue),
-                                          //     shape: MaterialStateProperty.all<
-                                          //         RoundedRectangleBorder>(
-                                          //       RoundedRectangleBorder(
-                                          //         borderRadius:
-                                          //         BorderRadius.circular(10),
-                                          //       ),
-                                          //     ),
-                                          //   ),
-                                          //   child: Center(
-                                          //     child: Text(
-                                          //       !_isPressed
-                                          //           ? 'Theo dõi'
-                                          //           : 'Hủy theo dõi',
-                                          //       style: TextStyle(
-                                          //         fontSize: 20,
-                                          //         fontWeight: FontWeight.w600,
-                                          //       ),
-                                          //     ),
-                                          //   ),
-                                          // ),
                                           buildProfileButton(),
                                           const SizedBox(
                                             width: 30,
@@ -618,20 +560,39 @@ class _ProfileScreenState extends State<ProfileScreen>
       _isFollowing = false;
       _followersCount -= 1;
     });
-    QuerySnapshot querySnapshot = await followsRef
-        .where("followed_user_id", isEqualTo: widget.visitedUserID)
-        .where("following_user_id", isEqualTo: widget.currentUserId)
-        .get();
-    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
-      await followsRef.doc(doc.id).delete();
-    }
+
+    followersRef.doc(widget.visitedUserID)
+        .collection('userFollowers')
+        .doc(widget.currentUserId)
+        .get()
+        .then((doc) {
+          if(doc.exists)
+            {
+              doc.reference.delete();
+            }
+    });
+    followingsRef.doc(widget.currentUserId)
+        .collection('userFollowings')
+        .doc(widget.visitedUserID)
+        .get()
+        .then((doc) {
+      if(doc.exists)
+      {
+        doc.reference.delete();
+      }
+    });
   }
 
   handleFollowUser() {
-    followsRef.doc(widget.visitedUserID).set({
-      "followed_user_id": widget.visitedUserID, //người được follow
-      "following_user_id": widget.currentUserId
-    });
+    followersRef.doc(widget.visitedUserID)
+    .collection('userFollowers')
+    .doc(widget.currentUserId)
+    .set({});
+
+    followingsRef.doc(widget.currentUserId)
+        .collection('userFollowings')
+        .doc(widget.visitedUserID)
+        .set({});
     setState(() {
       _isFollowing = true;
       _followersCount += 1;
