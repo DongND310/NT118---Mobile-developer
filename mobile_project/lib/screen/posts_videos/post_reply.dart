@@ -33,6 +33,7 @@ class _PostReplyState extends State<PostReply> {
   void initState() {
     super.initState();
     getUserData();
+    getsumReplyCount();
     isLiked = false;
     FirebaseFirestore.instance
         .collection('posts')
@@ -91,6 +92,7 @@ class _PostReplyState extends State<PostReply> {
       setState(() {
         _showClearButton = false;
       });
+      getsumReplyCount();
     }
   }
 
@@ -116,6 +118,32 @@ class _PostReplyState extends State<PostReply> {
         'likesList': FieldValue.arrayRemove([user.uid])
       });
     }
+  }
+
+  void getsumReplyCount() async {
+    int totalReplies = 0;
+
+    QuerySnapshot repliesSnapshot = await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId)
+        .collection('replies')
+        .get();
+    totalReplies += repliesSnapshot.docs.length;
+
+    for (QueryDocumentSnapshot replyDoc in repliesSnapshot.docs) {
+      QuerySnapshot subrepliesSnapshot = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.postId)
+          .collection('replies')
+          .doc(replyDoc.id)
+          .collection('subreplies')
+          .get();
+      totalReplies += subrepliesSnapshot.docs.length;
+    }
+
+    setState(() {
+      replyCount = totalReplies;
+    });
   }
 
   String formatTimestamp(Timestamp timestamp) {

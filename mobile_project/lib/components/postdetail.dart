@@ -58,6 +58,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   @override
   void initState() {
     super.initState();
+
+    getsumReplyCount();
     isLiked = false;
     FirebaseFirestore.instance
         .collection('posts')
@@ -103,6 +105,32 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         'likesList': FieldValue.arrayRemove([currentUser.uid])
       });
     }
+  }
+
+  void getsumReplyCount() async {
+    int totalReplies = 0;
+
+    QuerySnapshot repliesSnapshot = await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId)
+        .collection('replies')
+        .get();
+    totalReplies += repliesSnapshot.docs.length;
+
+    for (QueryDocumentSnapshot replyDoc in repliesSnapshot.docs) {
+      QuerySnapshot subrepliesSnapshot = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.postId)
+          .collection('replies')
+          .doc(replyDoc.id)
+          .collection('subreplies')
+          .get();
+      totalReplies += subrepliesSnapshot.docs.length;
+    }
+
+    setState(() {
+      replyCount = totalReplies;
+    });
   }
 
   @override

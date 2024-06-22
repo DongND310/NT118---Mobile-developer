@@ -67,6 +67,7 @@ class _CustomPostReplyState extends State<CustomPostReply> {
   void initState() {
     super.initState();
     getUserData();
+    listenToReplyChanges();
 
     isLiked = false;
     FirebaseFirestore.instance
@@ -84,7 +85,7 @@ class _CustomPostReplyState extends State<CustomPostReply> {
           isLiked = likesList.contains(currentUser.uid);
 
           List<dynamic> repliesList = data?['repliesList'];
-          replyCount = repliesList.length;
+          // replyCount = repliesList.length;
         });
       }
     });
@@ -142,74 +143,53 @@ class _CustomPostReplyState extends State<CustomPostReply> {
         .collection('replies')
         .doc(widget.replyId);
 
-    if (!isSubReply) {
-      // Add subreply
-      String subsubreplyId = FirebaseFirestore.instance
-          .collection('posts')
-          .doc(widget.postId)
-          .collection('replies')
-          .doc(widget.replyId)
-          .collection('subreplies')
-          .doc(widget.replyId)
-          .collection('subsubreplies')
-          .doc()
-          .id;
-      postRef.update({
-        'repliesList': FieldValue.arrayUnion([subsubreplyId])
-      });
+    // Add subreply
+    String subreplyId = FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId)
+        .collection('replies')
+        .doc(widget.replyId)
+        .collection('subreplies')
+        .doc()
+        .id;
+    postRef.update({
+      'repliesList': FieldValue.arrayUnion([subreplyId])
+    });
 
-      FirebaseFirestore.instance
-          .collection('post')
-          .doc(widget.postId)
-          .collection('replies')
-          .doc(widget.replyId)
-          .collection('subreplies')
-          .doc(widget.replyId)
-          .collection('subsubreplies')
-          .doc(subsubreplyId)
-          .set({
-        "content": content,
-        "userId": user.uid,
-        "postId": widget.postId,
-        "replyId": widget.replyId,
-        // "subreplyId": widget.subreplyId,
-        "subsubreplyId": subsubreplyId,
-        "timestamp": Timestamp.now()
-      });
-    } else {
-      // Add subsubreply
-      String subsubreplyId = FirebaseFirestore.instance
-          .collection('posts')
-          .doc(widget.postId)
-          .collection('replies')
-          .doc(widget.replyId)
-          .collection('subreplies')
-          .doc()
-          .collection('subsubreplies')
-          .doc()
-          .id;
-
-      FirebaseFirestore.instance
-          .collection('posts')
-          .doc(widget.postId)
-          .collection('replies')
-          .doc(widget.replyId)
-          .collection('subreplies')
-          .doc(widget.replyId)
-          .collection('subsubreplies')
-          .doc(subsubreplyId)
-          .set({
-        "content": content,
-        "userId": currentUser.uid,
-        "postId": widget.postId,
-        "replyId": subsubreplyId,
-        "timestamp": Timestamp.now()
-      });
-    }
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId)
+        .collection('replies')
+        .doc(widget.replyId)
+        .collection('subreplies')
+        .doc(subreplyId)
+        .set({
+      "content": content,
+      "userId": user.uid,
+      "postId": widget.postId,
+      "replyId": widget.replyId,
+      "subreplyId": subreplyId,
+      "timestamp": Timestamp.now()
+    });
 
     comment.clear();
     setState(() {
       _showReplyField = false;
+    });
+  }
+
+  void listenToReplyChanges() {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId)
+        .collection('replies')
+        .doc(widget.replyId)
+        .collection('subreplies')
+        .snapshots()
+        .listen((snapshot) {
+      setState(() {
+        replyCount = snapshot.docs.length;
+      });
     });
   }
 
@@ -329,7 +309,7 @@ class _CustomPostReplyState extends State<CustomPostReply> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 40),
+          padding: const EdgeInsets.only(left: 40, bottom: 10),
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('posts')
@@ -346,14 +326,15 @@ class _CustomPostReplyState extends State<CustomPostReply> {
                 );
               }
 
-              final List<CustomPostReply> subreplies =
+              final List<CustomSubReply> subreplies =
                   snapshot.data!.docs.map((doc) {
                 final subreplyData = doc.data() as Map<String, dynamic>;
-                return CustomPostReply(
+                return CustomSubReply(
                   content: subreplyData['content'],
                   userId: subreplyData['userId'],
                   postId: subreplyData['postId'],
                   replyId: subreplyData['replyId'],
+                  subreplyId: subreplyData['subreplyId'],
                   likesList: [],
                   repliesList: [],
                   timestamp: subreplyData['timestamp'],
@@ -366,54 +347,6 @@ class _CustomPostReplyState extends State<CustomPostReply> {
                 itemCount: subreplies.length,
                 itemBuilder: (context, index) {
                   return subreplies[index];
-                },
-              );
-            },
-          ),
-        ),
-
-        // subsubreplies
-        Padding(
-          padding: const EdgeInsets.only(left: 60),
-          child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('posts')
-                .doc(widget.postId)
-                .collection('replies')
-                .doc(widget.replyId)
-                .collection('subreplies')
-                .doc(widget.replyId)
-                .collection('subsubreplies')
-                .orderBy('timestamp', descending: false)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              final List<CustomSubReply> supsubreplies =
-                  snapshot.data!.docs.map((doc) {
-                final subreplyData = doc.data() as Map<String, dynamic>;
-                return CustomSubReply(
-                  postId: subreplyData['postId'],
-                  content: subreplyData['content'],
-                  userId: subreplyData['userId'],
-                  subreplyId: subreplyData['subreplyId'],
-                  replyId: subreplyData['replyId'],
-                  likesList: [],
-                  repliesList: [],
-                  timestamp: subreplyData['timestamp'],
-                );
-              }).toList();
-
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: supsubreplies.length,
-                itemBuilder: (context, index) {
-                  return supsubreplies[index];
                 },
               );
             },

@@ -17,10 +17,10 @@ class CustomSubReply extends StatefulWidget {
   CustomSubReply(
       {super.key,
       required this.content,
-      required this.subreplyId,
       required this.userId,
       required this.postId,
       required this.replyId,
+      required this.subreplyId,
       required this.likesList,
       required this.repliesList,
       required this.timestamp});
@@ -68,12 +68,12 @@ class _CustomSubReplyState extends State<CustomSubReply> {
 
     isLiked = false;
     FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId)
         .collection('replies')
         .doc(widget.replyId)
         .collection('subreplies')
         .doc(widget.subreplyId)
-        // .collection('subsubreplies')
-        // .doc()
         .snapshots()
         .listen((DocumentSnapshot snapshot) {
       if (snapshot.exists) {
@@ -110,6 +110,8 @@ class _CustomSubReplyState extends State<CustomSubReply> {
     });
 
     DocumentReference postRef = FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId)
         .collection('replies')
         .doc(widget.replyId)
         .collection('subreplies')
@@ -137,43 +139,38 @@ class _CustomSubReplyState extends State<CustomSubReply> {
 
   void addSubReplyComment(String content) {
     DocumentReference postRef = FirebaseFirestore.instance
-        .collection('post')
+        .collection('posts')
         .doc(widget.postId)
         .collection('replies')
         .doc(widget.replyId)
         .collection('subreplies')
         .doc(widget.subreplyId);
 
-    String subsubreplyId = FirebaseFirestore.instance
-        .collection('post')
+    String subreplyId = FirebaseFirestore.instance
+        .collection('posts')
         .doc(widget.postId)
         .collection('replies')
         .doc(widget.replyId)
         .collection('subreplies')
-        .doc(widget.subreplyId)
-        .collection('subsubreplies')
         .doc()
         .id;
     postRef.update({
-      'repliesList': FieldValue.arrayUnion([subsubreplyId])
+      'repliesList': FieldValue.arrayUnion([subreplyId])
     });
 
     FirebaseFirestore.instance
-        .collection('post')
+        .collection('posts')
         .doc(widget.postId)
         .collection('replies')
         .doc(widget.replyId)
         .collection('subreplies')
-        .doc(widget.replyId)
-        .collection('subsubreplies')
-        .doc(subsubreplyId)
+        .doc(subreplyId)
         .set({
       "content": content,
       "userId": user.uid,
       "postId": widget.postId,
       "replyId": widget.replyId,
-      "subreplyId": widget.subreplyId,
-      "subsubreplyId": subsubreplyId,
+      "subreplyId": subreplyId,
       "timestamp": Timestamp.now()
     });
     comment.clear();
@@ -261,6 +258,11 @@ class _CustomSubReplyState extends State<CustomSubReply> {
                           children: [
                             // like button
                             LikeButton(isLiked: isLiked, onTap: toggleLike),
+                            Text(
+                              '  ${likeCount}',
+                              style: const TextStyle(
+                                  color: Colors.black54, fontSize: 14),
+                            ),
                             const SizedBox(width: 18),
                             GestureDetector(
                               onTap: showReplyField,
@@ -269,16 +271,6 @@ class _CustomSubReplyState extends State<CustomSubReply> {
                                 width: 20,
                                 color: Colors.blue,
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Text(
-                              '${likeCount} lượt thích',
-                              style: const TextStyle(
-                                  color: Colors.black54, fontSize: 14),
                             ),
                           ],
                         ),
