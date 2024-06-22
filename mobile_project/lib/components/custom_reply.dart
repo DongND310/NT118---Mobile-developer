@@ -66,6 +66,7 @@ class _CustomPostReplyState extends State<CustomPostReply> {
   @override
   void initState() {
     super.initState();
+    getCurrentUserData();
     getUserData();
     listenToReplyChanges();
 
@@ -88,6 +89,19 @@ class _CustomPostReplyState extends State<CustomPostReply> {
           // replyCount = repliesList.length;
         });
       }
+    });
+  }
+
+  String? _useravt;
+
+  void getCurrentUserData() async {
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+
+    setState(() {
+      _useravt = userDoc.get('Avt');
     });
   }
 
@@ -127,8 +141,6 @@ class _CustomPostReplyState extends State<CustomPostReply> {
     }
   }
 
-  final user = FirebaseAuth.instance.currentUser!;
-
   void showReplyField() {
     setState(() {
       _showReplyField = true;
@@ -165,7 +177,7 @@ class _CustomPostReplyState extends State<CustomPostReply> {
         .doc(subreplyId)
         .set({
       "content": content,
-      "userId": user.uid,
+      "userId": currentUser.uid,
       "postId": widget.postId,
       "replyId": widget.replyId,
       "subreplyId": subreplyId,
@@ -365,8 +377,8 @@ class _CustomPostReplyState extends State<CustomPostReply> {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundImage: _avt != null
-                      ? NetworkImage(_avt!)
+                  backgroundImage: _useravt != null
+                      ? NetworkImage(_useravt!)
                       : const AssetImage('assets/images/default_avt.png')
                           as ImageProvider,
                 ),
