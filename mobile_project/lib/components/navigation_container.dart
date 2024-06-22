@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/screen/homepage/add_video_page.dart';
@@ -8,6 +7,7 @@ import 'package:mobile_project/screen/message/message_page.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:mobile_project/screen/users/profile_page.dart';
+import 'package:provider/provider.dart';
 
 class NavigationContainer extends StatefulWidget {
   NavigationContainer({super.key, required this.currentUserID, this.pageIndex});
@@ -19,36 +19,72 @@ class NavigationContainer extends StatefulWidget {
 
 class _NavigationContainerState extends State<NavigationContainer> {
   int _selectedPageIndex = 0;
-  // int _selectedPageIndex = index;
-  // int _selectedPageIndex = indexPage;
-  final user = FirebaseAuth.instance.currentUser;
-  late final List<Widget> _pages = [
-    HomePage(currentUserId: widget.currentUserID),
-    MessagePage(),
-    const AddVideoPage(),
-    NotificationPage(),
-    ProfileScreen(
-      currentUserId: widget.currentUserID,
-      visitedUserID: widget.currentUserID,
-    ),
-  ];
-@override
+  late final List<GlobalKey<NavigatorState>> _navigatorKeys;
+
+  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _selectedPageIndex = widget.pageIndex!;
+    _selectedPageIndex =
+        widget.pageIndex ?? 0; // Default to the first page if not specified
+
+    // Initialize navigator keys for each page
+    _navigatorKeys = List.generate(5, (index) => GlobalKey<NavigatorState>());
   }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedPageIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+      case 1:
+      case 3:
+      case 4:
+        // Push to the new page using Navigator
+        _navigatorKeys[index].currentState?.pushReplacement(
+              MaterialPageRoute(builder: (context) => _buildPage(index)),
+            );
+        break;
+      case 2:
+        // Handle AddVideoPage navigation if needed
+        break;
+      default:
+        break;
+    }
+  }
+
+  Widget _buildPage(int index) {
+    switch (index) {
+      case 0:
+        return HomePage(currentUserId: widget.currentUserID);
+      case 1:
+        return MessagePage();
+      case 2:
+        return const AddVideoPage();
+      case 3:
+        return NotificationPage();
+      case 4:
+        return ProfileScreen(
+          currentUserId: widget.currentUserID,
+          visitedUserID: widget.currentUserID,
+        );
+      default:
+        return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedPageIndex,
-        children: _pages,
-        // child: _pages[_selectedPageIndex],
+      body: Stack(
+        children: List.generate(
+          5,
+          (index) => _buildOffstageNavigator(index),
+        ),
       ),
       bottomNavigationBar: CurvedNavigationBar(
         buttonBackgroundColor: Colors.white,
-        // color: _selectedPageIndex == 0 ? const Color(0xFF000141) : Colors.white,
         index: _selectedPageIndex,
         backgroundColor: const Color(0xFF107BFD),
         items: [
@@ -126,10 +162,20 @@ class _NavigationContainerState extends State<NavigationContainer> {
             ),
           ),
         ],
-        onTap: (index) {
-          setState(() {
-            _selectedPageIndex = index;
-          });
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+
+  Widget _buildOffstageNavigator(int index) {
+    return Offstage(
+      offstage: _selectedPageIndex != index,
+      child: Navigator(
+        key: _navigatorKeys[index],
+        onGenerateRoute: (settings) {
+          return MaterialPageRoute(
+            builder: (context) => _buildPage(index),
+          );
         },
       ),
     );
