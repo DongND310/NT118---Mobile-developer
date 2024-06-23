@@ -64,6 +64,15 @@ class _ProfileScreenState extends State<ProfileScreen>
     });
   }
 
+  UserModel? userModel;
+
+  Future<void> getUserData() async {
+    DocumentSnapshot doc = await usersRef.doc(widget.visitedUserID).get();
+    setState(() {
+      userModel = UserModel.fromDoc(doc);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -73,6 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     checkFollowing();
     getFollowersCount();
     getFollowingCount();
+    getUserData();
   }
 
   void _handleTabSelection() {
