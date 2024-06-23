@@ -34,8 +34,7 @@ class _VideoDetailState extends State<VideoDetail> {
                   MaterialPageRoute(
                       builder: (context) => ProfileScreen(
                           currentUserId: user.uid,
-                          // currentUserId: "9AqmSE86IgSYBNYO3eXRFVnyuGD2",
-                          visitedUserID: "TTrSvae73CVGtRtZmvohJqNlXOm2")));
+                          visitedUserID: "6vBu7yGZuAXssP2ogJYVbdTtczj2")));
             },
             child: Text(
               "${widget.video.postedBy.username} - Follow",

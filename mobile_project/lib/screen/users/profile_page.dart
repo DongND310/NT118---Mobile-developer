@@ -5,6 +5,7 @@ import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/models/user_model.dart';
 import 'package:mobile_project/screen/Follow/follower_listview.dart';
 import 'package:mobile_project/services/database_services.dart';
+import '../message/chat_page.dart';
 import 'change_info/change_avt.dart';
 import 'profile_change.dart';
 import 'proflie_setting.dart';
@@ -214,7 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ListFollowerScreen(currentUserId: widget.visitedUserID), // update following
+                                                    ListFollowerScreen(tabIndex: 1,currentUserId: widget.visitedUserID, followerNum: _followersCount, followingNum: _followingCount,), // update following
                                               ),
                                             );
                                           },
@@ -231,7 +232,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               ),
                                               const Text(
-                                                'Đang theo dõi',
+                                                'Following',
                                                 style: TextStyle(
                                                   color: Colors.black54,
                                                   fontSize: 14,
@@ -251,7 +252,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ListFollowerScreen(currentUserId: widget.visitedUserID,),
+                                                    ListFollowerScreen(tabIndex:0,currentUserId: widget.visitedUserID, followerNum: _followersCount, followingNum: _followingCount,),
                                               ),
                                             );
                                           },
@@ -268,7 +269,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               ),
                                               const Text(
-                                                'Người theo dõi',
+                                                'Follower',
                                                 style: TextStyle(
                                                   color: Colors.black54,
                                                   fontSize: 14,
@@ -344,8 +345,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProfileSettingPage(),
+                                                  builder: (context) => ChatPage(
+                                                    receiverId: widget.visitedUserID,
+                                                    receiverName: userModel.name,
+                                                    chatterImg: userModel.avt ?? 'assets/images/default_avt.png' ,
+                                                  ),
                                                 ),
                                               );
                                             },
