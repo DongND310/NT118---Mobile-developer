@@ -49,6 +49,7 @@ class _ProfileSettingPageState extends State<ProfileSettingPage> {
                 child: const Text('Đăng xuất',
                     style: TextStyle(color: Colors.red, fontSize: 17)),
                 onPressed: () {
+                  Navigator.pop(context);
                   signUserOut();
                 }),
             SizedBox(

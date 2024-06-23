@@ -5,7 +5,6 @@ import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/models/user_model.dart';
 import 'package:mobile_project/screen/Follow/follower_listview.dart';
 import 'package:mobile_project/services/database_services.dart';
-import '../message/chat_page.dart';
 import 'change_info/change_avt.dart';
 import 'profile_change.dart';
 import 'proflie_setting.dart';
@@ -32,9 +31,9 @@ class _ProfileScreenState extends State<ProfileScreen>
   int _followingCount = 0;
   getFollowersCount() async {
     QuerySnapshot snapshot = await followersRef
-    .doc(widget.visitedUserID)
-    .collection("userFollowers")
-    .get();
+        .doc(widget.visitedUserID)
+        .collection("userFollowers")
+        .get();
     if (mounted) {
       setState(() {
         _followersCount = snapshot.docs.length;
@@ -56,10 +55,10 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   checkFollowing() async {
     DocumentSnapshot doc = await followersRef
-    .doc(widget.visitedUserID)
-    .collection("userFollowers")
-    .doc(widget.currentUserId)
-    .get();
+        .doc(widget.visitedUserID)
+        .collection("userFollowers")
+        .doc(widget.currentUserId)
+        .get();
     setState(() {
       _isFollowing = doc.exists;
     });
@@ -109,18 +108,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                     return [
                       SliverAppBar(
                         leading: Visibility(
-                          visible: _isVisited,
+                            visible: _isVisited,
                             child: IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
                               icon: SvgPicture.asset(
                                 'assets/icons/ep_back.svg',
                                 width: 30,
                                 height: 30,
                               ),
-                        )
-                        ),
+                            )),
                         centerTitle: true,
                         automaticallyImplyLeading: false,
                         pinned: true,
@@ -215,7 +213,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ListFollowerScreen(tabIndex: 1,currentUserId: widget.visitedUserID, followerNum: _followersCount, followingNum: _followingCount,), // update following
+                                                    ListFollowerScreen(
+                                                  tabIndex: 1,
+                                                  currentUserId:
+                                                      widget.visitedUserID,
+                                                  followerNum: _followersCount,
+                                                  followingNum: _followingCount,
+                                                ), // update following
                                               ),
                                             );
                                           },
@@ -232,7 +236,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               ),
                                               const Text(
-                                                'Following',
+                                                'Đang theo dõi',
                                                 style: TextStyle(
                                                   color: Colors.black54,
                                                   fontSize: 14,
@@ -252,7 +256,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ListFollowerScreen(tabIndex:0,currentUserId: widget.visitedUserID, followerNum: _followersCount, followingNum: _followingCount,),
+                                                    ListFollowerScreen(
+                                                  tabIndex: 0,
+                                                  currentUserId:
+                                                      widget.visitedUserID,
+                                                  followerNum: _followersCount,
+                                                  followingNum: _followingCount,
+                                                ),
                                               ),
                                             );
                                           },
@@ -269,7 +279,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               ),
                                               const Text(
-                                                'Follower',
+                                                'Người theo dõi',
                                                 style: TextStyle(
                                                   color: Colors.black54,
                                                   fontSize: 14,
@@ -345,11 +355,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => ChatPage(
-                                                    receiverId: widget.visitedUserID,
-                                                    receiverName: userModel.name,
-                                                    chatterImg: userModel.avt ?? 'assets/images/default_avt.png' ,
-                                                  ),
+                                                  builder: (context) =>
+                                                      ProfileSettingPage(),
                                                 ),
                                               );
                                             },
@@ -565,35 +572,37 @@ class _ProfileScreenState extends State<ProfileScreen>
       _followersCount -= 1;
     });
 
-    followersRef.doc(widget.visitedUserID)
+    followersRef
+        .doc(widget.visitedUserID)
         .collection('userFollowers')
         .doc(widget.currentUserId)
         .get()
         .then((doc) {
-          if(doc.exists)
-            {
-              doc.reference.delete();
-            }
+      if (doc.exists) {
+        doc.reference.delete();
+      }
     });
-    followingsRef.doc(widget.currentUserId)
+    followingsRef
+        .doc(widget.currentUserId)
         .collection('userFollowings')
         .doc(widget.visitedUserID)
         .get()
         .then((doc) {
-      if(doc.exists)
-      {
+      if (doc.exists) {
         doc.reference.delete();
       }
     });
   }
 
   handleFollowUser() {
-    followersRef.doc(widget.visitedUserID)
-    .collection('userFollowers')
-    .doc(widget.currentUserId)
-    .set({});
+    followersRef
+        .doc(widget.visitedUserID)
+        .collection('userFollowers')
+        .doc(widget.currentUserId)
+        .set({});
 
-    followingsRef.doc(widget.currentUserId)
+    followingsRef
+        .doc(widget.currentUserId)
         .collection('userFollowings')
         .doc(widget.visitedUserID)
         .set({});
