@@ -10,10 +10,8 @@ class DatabaseServices {
     return followersRef.doc(userId).collection("userFollowers").snapshots();
   }
 
-  Future<QuerySnapshot> listFollowing(String userId) async {
-    Future<QuerySnapshot> listFollowings =
-        followingsRef.doc(userId).collection("userFollowings").get();
-    return listFollowings;
+  Stream<QuerySnapshot> listFollowing(String userId) {
+    return followingsRef.doc(userId).collection("userFollowings").snapshots();
   }
 
   static Future<QuerySnapshot> searchUsers(String name) async {
