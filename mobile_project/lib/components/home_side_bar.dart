@@ -47,11 +47,12 @@ class _HomeSideBarState extends State<HomeSideBar>
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _sideBarItem('heart', widget.video.likes, style),
-        _sideBarComment('comment', widget.video.comments, style),
-        _sideBarItem('bookmark', widget.video.bookmarks, style),
+        _sideBarItem('heart', widget.video.likes.length.toString(), style),
+        _sideBarComment('comment',widget.video.comments.toString(), style),
+        _sideBarItem('bookmark', widget.video.bookmarks.toString(), style),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(
+              top: 8.0, bottom: 16.0, left: 8.0, right: 8.0),
           child: AnimatedBuilder(
             animation: _animationController,
             child: Stack(
@@ -61,10 +62,6 @@ class _HomeSideBarState extends State<HomeSideBar>
                   height: 35,
                   width: 35,
                   child: Image.asset('assets/images/disc.png'),
-                ),
-                CircleAvatar(
-                  radius: 10,
-                  backgroundImage: NetworkImage(widget.video.audioImageUrl),
                 ),
               ],
             ),
