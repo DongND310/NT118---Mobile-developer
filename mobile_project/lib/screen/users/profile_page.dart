@@ -301,7 +301,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   currentUserId:
                                                       widget.visitedUserID,
                                                   followerNum: _followersCount,
-                                                  followingNum: _followingCount,
+                                                  followingNum: _userfollowingCount,
                                                 ),
                                               ),
                                             );
@@ -364,7 +364,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     .withOpacity(0.2),
                                                 spreadRadius: 0.5,
                                                 blurRadius: 8,
-                                                offset: Offset(0, 3),
+                                                offset: const Offset(0, 3),
                                               ),
                                             ],
                                           ),
@@ -415,7 +415,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         .withOpacity(0.2),
                                                     spreadRadius: 0.5,
                                                     blurRadius: 8,
-                                                    offset: Offset(0, 3),
+                                                    offset: const Offset(0, 3),
                                                   ),
                                                 ],
                                               ),
