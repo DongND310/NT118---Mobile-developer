@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/constants.dart';
@@ -29,6 +30,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool _isFollowing = false;
   int _followersCount = 0;
   int _followingCount = 0;
+  int _userfollowingCount = 0;
+
   getFollowersCount() async {
     QuerySnapshot snapshot = await followersRef
         .doc(widget.visitedUserID)
@@ -83,6 +86,20 @@ class _ProfileScreenState extends State<ProfileScreen>
     getFollowersCount();
     getFollowingCount();
     getUserData();
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.currentUserId)
+        .snapshots()
+        .listen((DocumentSnapshot snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+          List<dynamic> followingsList = data?['followingsList'];
+          _userfollowingCount = followingsList.length;
+        });
+      }
+    });
   }
 
   void _handleTabSelection() {
@@ -223,13 +240,25 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ListFollowerScreen(
-                                                  tabIndex: 1,
-                                                  currentUserId:
-                                                      widget.visitedUserID,
-                                                  followerNum: _followersCount,
-                                                  followingNum: _followingCount,
-                                                ), // update following
+                                                    !_isVisited
+                                                        ? ListFollowerScreen(
+                                                            tabIndex: 1,
+                                                            currentUserId: widget
+                                                                .visitedUserID,
+                                                            followerNum:
+                                                                _followersCount,
+                                                            followingNum:
+                                                                _userfollowingCount,
+                                                          )
+                                                        : ListFollowerScreen(
+                                                            tabIndex: 1,
+                                                            currentUserId: widget
+                                                                .visitedUserID,
+                                                            followerNum:
+                                                                _followersCount,
+                                                            followingNum:
+                                                                _followingCount,
+                                                          ), // update following
                                               ),
                                             );
                                           },
@@ -238,7 +267,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 CrossAxisAlignment.center,
                                             children: [
                                               Text(
-                                                '$_followingCount',
+                                                !_isVisited
+                                                    ? '$_userfollowingCount'
+                                                    : '$_followingCount',
                                                 style: const TextStyle(
                                                   color: Colors.blue,
                                                   fontSize: 20,
@@ -534,6 +565,8 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
+  final currentUser = FirebaseAuth.instance.currentUser!;
+
   Container buildButton(
       {required String text, required VoidCallback function}) {
     return Container(
@@ -602,6 +635,13 @@ class _ProfileScreenState extends State<ProfileScreen>
         doc.reference.delete();
       }
     });
+
+    DocumentReference userRef =
+        FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+
+    userRef.update({
+      'followingsList': FieldValue.arrayRemove([widget.visitedUserID])
+    });
   }
 
   handleFollowUser() {
@@ -619,6 +659,12 @@ class _ProfileScreenState extends State<ProfileScreen>
     setState(() {
       _isFollowing = true;
       _followersCount += 1;
+    });
+
+    DocumentReference userRef =
+        FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+    userRef.update({
+      'followingsList': FieldValue.arrayUnion([widget.visitedUserID])
     });
   }
 }

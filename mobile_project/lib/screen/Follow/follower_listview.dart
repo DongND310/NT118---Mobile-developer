@@ -3,6 +3,7 @@ import 'package:diacritic/diacritic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/screen/Follow/search_bar.dart';
 import 'package:mobile_project/services/database_services.dart';
@@ -11,7 +12,12 @@ import '../../models/user_model.dart';
 import '../Search/widget/account_detail.dart';
 
 class ListFollowerScreen extends StatefulWidget {
-  ListFollowerScreen({super.key, required this.currentUserId, required this.tabIndex, required this.followerNum, required this.followingNum});
+  ListFollowerScreen(
+      {super.key,
+      required this.currentUserId,
+      required this.tabIndex,
+      required this.followerNum,
+      required this.followingNum});
   final String currentUserId;
   final int tabIndex;
   final int followerNum;
@@ -23,9 +29,11 @@ class ListFollowerScreen extends StatefulWidget {
 class _ListFollowerState extends State<ListFollowerScreen> {
   bool _isPressed = false;
   String _searchQuery = '';
-  int _tabIndex=0;
-  int _followingNum=0;
-  int _followerNum=0;
+  int _tabIndex = 0;
+  int _followingNum = 0;
+  int _followerNum = 0;
+  int _friendNum = 0;
+
   final TextEditingController _textEditingController = TextEditingController();
   final DatabaseServices _databaseServices = DatabaseServices();
   String? _uid;
@@ -33,11 +41,12 @@ class _ListFollowerState extends State<ListFollowerScreen> {
   @override
   void initState() {
     super.initState();
-    _tabIndex =widget.tabIndex;
+    _tabIndex = widget.tabIndex;
     _uid = widget.currentUserId;
     _followerNum = widget.followerNum;
     _followingNum = widget.followingNum;
   }
+
   void _searchName(String query) {
     setState(() {
       _searchQuery = removeDiacritics(query).toLowerCase();
@@ -52,6 +61,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
         .get();
     return doc.exists;
   }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -73,7 +83,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
               tabs: [
                 Tab(text: 'Follower $_followerNum'),
                 Tab(text: "Following $_followingNum"),
-                Tab(text: "Bạn bè 11K"),
+                Tab(text: "Bạn bè $_friendNum"),
               ],
               unselectedLabelColor: Colors.black54,
               indicatorColor: Colors.blue,
@@ -87,39 +97,51 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(
                     children: [
-                      SearchFollowerBar(_searchName,_textEditingController),
+                      SearchFollowerBar(_searchName, _textEditingController),
                       StreamBuilder<QuerySnapshot>(
                           stream: _databaseServices.listFollower(_uid!),
-                          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (!snapshot.hasData ||
+                                snapshot.data!.docs.isEmpty) {
                               return const Text('Không có follower');
                             } else {
-                              List <String> listFollowerUids = snapshot.data!.docs.map((doc) => doc.id).toList();
+                              List<String> listFollowerUids = snapshot
+                                  .data!.docs
+                                  .map((doc) => doc.id)
+                                  .toList();
                               return ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: listFollowerUids.length,
                                 itemBuilder: (context, index) {
-                                  String uid =listFollowerUids[index];
-                                  return FutureBuilder(future: usersRef.doc(uid).get(),
-                                      builder: (BuildContext context, AsyncSnapshot snapshot)
-                                      {
+                                  String uid = listFollowerUids[index];
+                                  return FutureBuilder(
+                                      future: usersRef.doc(uid).get(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot snapshot) {
                                         if (!snapshot.hasData) {
                                           return Container();
                                         }
-                                        UserModel userModel = UserModel.fromDoc(snapshot.data);
-                                        String name = removeDiacritics(userModel.name).toLowerCase();
-                                        if(_searchQuery.isNotEmpty&& !name.contains(_textEditingController.text.toLowerCase()))
-                                        {
+                                        UserModel userModel =
+                                            UserModel.fromDoc(snapshot.data);
+                                        String name =
+                                            removeDiacritics(userModel.name)
+                                                .toLowerCase();
+                                        if (_searchQuery.isNotEmpty &&
+                                            !name.contains(
+                                                _textEditingController.text
+                                                    .toLowerCase())) {
                                           return Container();
                                         }
                                         return Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Expanded(
                                               child: AccountDetail(
                                                   userModel.name,
-                                                  userModel.bio??'',
+                                                  userModel.bio ?? '',
                                                   userModel.avt ?? ''),
                                             ),
                                             ElevatedButton(
@@ -129,19 +151,28 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                                 // });
                                               },
                                               style: ButtonStyle(
-                                                minimumSize: MaterialStateProperty.all<Size>(
+                                                minimumSize:
+                                                    MaterialStateProperty.all<
+                                                        Size>(
                                                   const Size(125, 35),
                                                 ),
-                                                backgroundColor: MaterialStateProperty.all<
-                                                    Color>(
-                                                    _isPressed ? Colors.grey : Colors.blue),
-                                                foregroundColor: MaterialStateProperty.all<
-                                                    Color>(
-                                                    _isPressed ? Colors.black : Colors.white),
-                                                shape: MaterialStateProperty.all<
-                                                    RoundedRectangleBorder>(
+                                                backgroundColor:
+                                                    MaterialStateProperty
+                                                        .all<Color>(_isPressed
+                                                            ? Colors.grey
+                                                            : Colors.blue),
+                                                foregroundColor:
+                                                    MaterialStateProperty
+                                                        .all<Color>(_isPressed
+                                                            ? Colors.black
+                                                            : Colors.white),
+                                                shape:
+                                                    MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
                                                   RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(5),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
                                                   ),
                                                 ),
                                               ),
@@ -149,13 +180,11 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                             ),
                                           ],
                                         );
-                                      }
-                                  );
+                                      });
                                 },
                               );
                             }
-                          }
-                      )
+                          })
                     ],
                   ),
                 ),
@@ -165,41 +194,54 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(
                     children: [
-                      SearchFollowerBar(_searchName,_textEditingController),
+                      SearchFollowerBar(_searchName, _textEditingController),
                       StreamBuilder<QuerySnapshot>(
                           stream: _databaseServices.listFollowing(_uid!),
-                          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const CircularProgressIndicator();
-                            } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                            } else if (!snapshot.hasData ||
+                                snapshot.data!.docs.isEmpty) {
                               return const Text('Bạn đang không theo dõi ai!');
                             } else {
-                              List <String> listFollowingUids = snapshot.data!.docs.map((doc) => doc.id).toList();
+                              List<String> listFollowingUids = snapshot
+                                  .data!.docs
+                                  .map((doc) => doc.id)
+                                  .toList();
                               return ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: listFollowingUids.length,
                                 itemBuilder: (context, index) {
-                                  String uid =listFollowingUids[index];
-                                  return FutureBuilder(future: usersRef.doc(uid).get(),
-                                      builder: (BuildContext context, AsyncSnapshot snapshot)
-                                      {
+                                  String uid = listFollowingUids[index];
+                                  return FutureBuilder(
+                                      future: usersRef.doc(uid).get(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot snapshot) {
                                         if (!snapshot.hasData) {
                                           return Container();
                                         }
-                                        UserModel userModel = UserModel.fromDoc(snapshot.data);
-                                        String name = removeDiacritics(userModel.name).toLowerCase();
-                                        if(_searchQuery.isNotEmpty&& !name.contains(_textEditingController.text.toLowerCase()))
-                                          {
-                                            return Container();
-                                          }
+                                        UserModel userModel =
+                                            UserModel.fromDoc(snapshot.data);
+                                        String name =
+                                            removeDiacritics(userModel.name)
+                                                .toLowerCase();
+                                        if (_searchQuery.isNotEmpty &&
+                                            !name.contains(
+                                                _textEditingController.text
+                                                    .toLowerCase())) {
+                                          return Container();
+                                        }
                                         return Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Expanded(
                                               child: AccountDetail(
                                                   userModel.name,
-                                                  userModel.bio??'',
+                                                  userModel.bio ?? '',
                                                   userModel.avt ?? ''),
                                             ),
 
@@ -230,174 +272,228 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                             // ),
                                           ],
                                         );
-                                      }
-                                  );
+                                      });
                                 },
                               );
                             }
-                          }
-                      )
+                          })
                     ],
                   ),
                 ),
               ),
               SingleChildScrollView(
-                child: widget.currentUserId == user.uid?
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    children: [
-                      SearchFollowerBar(_searchName,_textEditingController),
-                      StreamBuilder<QuerySnapshot>(
-                        stream: _databaseServices.listFollower(_uid!),
-                        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                            return const Text('Không có bạn');
-                          } else {
-                            List<String> listFollowerUids = snapshot.data!.docs.map((doc) => doc.id).toList();
-                            return ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: listFollowerUids.length,
-                              itemBuilder: (context, index) {
-                                String uid = listFollowerUids[index];
-                                return FutureBuilder<DocumentSnapshot>(
-                                  future: followingsRef
-                                      .doc(widget.currentUserId)
-                                      .collection("userFollowings")
-                                      .doc(uid)
-                                      .get(),
-                                  builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> followingSnapshot) {
-                                    if (followingSnapshot.connectionState == ConnectionState.waiting) {
-                                      return Container();
-                                    }
-                                    else if (!followingSnapshot.hasData || !followingSnapshot.data!.exists) {
-                                      return Container();
-                                    }
-                                    else {
-                                      return FutureBuilder<DocumentSnapshot>(
-                                        future: usersRef.doc(uid).get(),
-                                        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> userSnapshot) {
-                                          if (userSnapshot.connectionState == ConnectionState.waiting) {
-                                            return Container();
-                                          }
-                                          else if (!userSnapshot.hasData) {
-                                            return Container();
-                                          }
-                                          else {
-                                            UserModel userModel = UserModel.fromDoc(userSnapshot.data!);
-                                            bool _isFollow= true;
-                                            String name = removeDiacritics(userModel.name).toLowerCase();
-                                            if (_searchQuery.isNotEmpty && !name.contains(_textEditingController.text.toLowerCase())) {
+                  child: widget.currentUserId == user.uid
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            children: [
+                              SearchFollowerBar(
+                                  _searchName, _textEditingController),
+                              StreamBuilder<QuerySnapshot>(
+                                stream: _databaseServices.listFollower(_uid!),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else if (!snapshot.hasData ||
+                                      snapshot.data!.docs.isEmpty) {
+                                    return const Text('Không có bạn');
+                                  } else {
+                                    List<String> listFollowerUids = snapshot
+                                        .data!.docs
+                                        .map((doc) => doc.id)
+                                        .toList();
+                                    return ListView.builder(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: listFollowerUids.length,
+                                      itemBuilder: (context, index) {
+                                        String uid = listFollowerUids[index];
+                                        return FutureBuilder<DocumentSnapshot>(
+                                          future: followingsRef
+                                              .doc(widget.currentUserId)
+                                              .collection("userFollowings")
+                                              .doc(uid)
+                                              .get(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<DocumentSnapshot>
+                                                  followingSnapshot) {
+                                            if (followingSnapshot
+                                                    .connectionState ==
+                                                ConnectionState.waiting) {
                                               return Container();
+                                            } else if (!followingSnapshot
+                                                    .hasData ||
+                                                !followingSnapshot
+                                                    .data!.exists) {
+                                              return Container();
+                                            } else {
+                                              return FutureBuilder<
+                                                  DocumentSnapshot>(
+                                                future: usersRef.doc(uid).get(),
+                                                builder: (BuildContext context,
+                                                    AsyncSnapshot<
+                                                            DocumentSnapshot>
+                                                        userSnapshot) {
+                                                  if (userSnapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return Container();
+                                                  } else if (!userSnapshot
+                                                      .hasData) {
+                                                    return Container();
+                                                  } else {
+                                                    UserModel userModel =
+                                                        UserModel.fromDoc(
+                                                            userSnapshot.data!);
+                                                    bool _isFollow = true;
+                                                    String name =
+                                                        removeDiacritics(
+                                                                userModel.name)
+                                                            .toLowerCase();
+                                                    if (_searchQuery
+                                                            .isNotEmpty &&
+                                                        !name.contains(
+                                                            _textEditingController
+                                                                .text
+                                                                .toLowerCase())) {
+                                                      return Container();
+                                                    }
+                                                    return Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Expanded(
+                                                          child: AccountDetail(
+                                                            userModel.name,
+                                                            userModel.bio ?? '',
+                                                            userModel.avt ?? '',
+                                                          ),
+                                                        ),
+                                                        buildProfileButton(
+                                                            _isFollow, uid),
+                                                      ],
+                                                    );
+                                                  }
+                                                },
+                                              );
                                             }
-                                            return Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Expanded(
-                                                  child: AccountDetail(
-                                                    userModel.name,
-                                                    userModel.bio ?? '',
-                                                    userModel.avt ?? '',
-                                                  ),
-                                                ),
-                                                buildProfileButton(_isFollow, uid),
-                                              ],
-                                            );
-                                          }
-                                        },
-                                      );
-                                    }
-                                  },
-                                );
-                              },
-                            );
-                          }
-                        },
-                      )
-                    ],
-                  ),
-                ):
-                const Padding(
-                  padding: EdgeInsets.only(top: 50),
-                  child: Text("Bạn không có quyền xem danh sách này!",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              ),
+                                          },
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                              )
+                            ],
+                          ),
+                        )
+                      : const Padding(
+                          padding: EdgeInsets.only(top: 50),
+                          child: Text(
+                            "Bạn không có quyền xem danh sách này!",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                            textAlign: TextAlign.center,
+                          ),
+                        )),
             ],
           ),
         ));
   }
+
+  final currentUser = FirebaseAuth.instance.currentUser!;
+
   handleUnfollowUser(String userId) async {
-    followersRef.doc(widget.currentUserId)
+    followersRef
+        .doc(widget.currentUserId)
         .collection('userFollowers')
         .doc(userId)
         .get()
         .then((doc) {
-      if(doc.exists)
-      {
+      if (doc.exists) {
         doc.reference.delete();
       }
     });
-    followingsRef.doc(userId)
+    followingsRef
+        .doc(userId)
         .collection('userFollowings')
         .doc(widget.currentUserId)
         .get()
         .then((doc) {
-      if(doc.exists)
-      {
+      if (doc.exists) {
         doc.reference.delete();
       }
+    });
+
+    DocumentReference userRef =
+        FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+
+    userRef.update({
+      'followingsList': FieldValue.arrayRemove([widget.currentUserId])
     });
   }
 
   handleFollowUser(String userId) {
-    followersRef.doc(userId)
+    followersRef
+        .doc(userId)
         .collection('userFollowers')
         .doc(widget.currentUserId)
         .set({});
 
-    followingsRef.doc(widget.currentUserId)
+    followingsRef
+        .doc(widget.currentUserId)
         .collection('userFollowings')
         .doc(userId)
         .set({});
 
+    DocumentReference userRef =
+        FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+    userRef.update({
+      'followingsList': FieldValue.arrayUnion([widget.currentUserId])
+    });
   }
+
   buildProfileButton(bool isFollowing, String userId) {
     if (isFollowing) {
-      return buildButton(text: "Unfollow",isFollowing: isFollowing, function: handleUnfollowUser(userId));
+      return buildButton(
+          text: "Unfollow",
+          isFollowing: isFollowing,
+          function: handleUnfollowUser(userId));
     } else {
-      return buildButton(text: "Follow", isFollowing: isFollowing,function: handleFollowUser(userId));
+      return buildButton(
+          text: "Follow",
+          isFollowing: isFollowing,
+          function: handleFollowUser(userId));
     }
   }
+
   Container buildButton(
-      {required String text,required bool isFollowing, required VoidCallback function}) {
+      {required String text,
+      required bool isFollowing,
+      required VoidCallback function}) {
     return Container(
-        child: ElevatedButton(
-          onPressed: function,
-          style: ButtonStyle(
-            minimumSize: MaterialStateProperty.all<Size>(
-              const Size(125, 35),
-            ),
-            backgroundColor: MaterialStateProperty.all<
-                Color>(
-                isFollowing ? Colors.grey : Colors.blue),
-            foregroundColor: MaterialStateProperty.all<
-                Color>(
-                isFollowing ? Colors.black : Colors.white),
-            shape: MaterialStateProperty.all<
-                RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
+      child: ElevatedButton(
+        onPressed: function,
+        style: ButtonStyle(
+          minimumSize: MaterialStateProperty.all<Size>(
+            const Size(125, 35),
+          ),
+          backgroundColor: MaterialStateProperty.all<Color>(
+              isFollowing ? Colors.grey : Colors.blue),
+          foregroundColor: MaterialStateProperty.all<Color>(
+              isFollowing ? Colors.black : Colors.white),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
             ),
           ),
-          child: const Text('Follow'),
         ),
+        child: const Text('Follow'),
+      ),
     );
   }
 }

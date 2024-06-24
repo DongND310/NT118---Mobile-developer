@@ -51,7 +51,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   String? selectedDay;
   String? selectedYear;
   String? selectedGender;
-  String? selectedNation;
+  // String? selectedNation;
 
   @override
   void initState() {
@@ -64,7 +64,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
     String year = selectedYear.toString();
     String dob = '$month $day, $year';
     String gender = selectedGender.toString();
-    String nation = selectedNation.toString();
+    // String nation = selectedNation.toString();
 
     Future<void> MissingInfoDialog() async {
       return showDialog<void>(
@@ -108,7 +108,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       dob,
       user.email!,
       gender,
-      nation,
+      // nation,
       null,
       'https://i.pinimg.com/564x/47/09/80/470980b112a44064cd88290ac0edf6a6.jpg',
     );
@@ -122,7 +122,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       String dob,
       String email,
       String gender,
-      String nation,
+      // String nation,
       String? bio,
       String? img) async {
     // DocumentReference userRef =
@@ -134,7 +134,7 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       'DOB': dob,
       'Email': email,
       'Gender': gender,
-      'Nation': nation,
+      // 'Nation': nation,
       'Bio': bio,
       'Avt': img,
     });
