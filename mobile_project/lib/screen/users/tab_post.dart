@@ -12,14 +12,14 @@ import '../../models/post_model.dart';
 import '../posts_videos/list_post.dart';
 
 class PostTab extends StatefulWidget {
-  const PostTab({super.key});
-
+  const PostTab({super.key, required this.visitedUserID});
+  final String visitedUserID;
   @override
   State<PostTab> createState() => _PostTabState();
 }
 
 class _PostTabState extends State<PostTab> {
-  final user = FirebaseAuth.instance.currentUser!;
+  // final user = FirebaseAuth.instance.currentUser!;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? _uid;
   String? _name;
@@ -35,8 +35,9 @@ class _PostTabState extends State<PostTab> {
   }
 
   void getUserData() async {
-    User currentUser = _auth.currentUser!;
-    _uid = currentUser.uid;
+     //User currentUser = _auth.currentUser!;
+    _uid = widget.visitedUserID;
+    //_uid = currentUser.uid;
     final DocumentSnapshot userDoc =
         await FirebaseFirestore.instance.collection('users').doc(_uid).get();
     _id = userDoc.get('ID');
@@ -50,7 +51,8 @@ class _PostTabState extends State<PostTab> {
     return StreamProvider<List<PostModel>>(
       initialData: [], // Initial data can be an empty list
       create: (context) =>
-          PostService().getPostsByUser(FirebaseAuth.instance.currentUser?.uid),
+          PostService().getPostsByUser(widget.visitedUserID),
+      //PostService().getPostsByUser(FirebaseAuth.instance.currentUser?.uid),
       child: Scaffold(
         body: Container(
           child: ListPosts(),

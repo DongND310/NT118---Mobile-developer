@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/models/user_model.dart';
 import 'package:mobile_project/screen/Follow/follower_listview.dart';
-import 'package:mobile_project/services/database_services.dart';
 import 'change_info/change_avt.dart';
 import 'profile_change.dart';
 import 'proflie_setting.dart';
@@ -257,7 +256,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             followerNum:
                                                                 _followersCount,
                                                             followingNum:
-                                                                _followingCount,
+                                                            _userfollowingCount,
                                                           ), // update following
                                               ),
                                             );
@@ -277,7 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               ),
                                               const Text(
-                                                'Đang theo dõi',
+                                                'Following',
                                                 style: TextStyle(
                                                   color: Colors.black54,
                                                   fontSize: 14,
@@ -302,7 +301,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   currentUserId:
                                                       widget.visitedUserID,
                                                   followerNum: _followersCount,
-                                                  followingNum: _followingCount,
+                                                  followingNum: _userfollowingCount,
                                                 ),
                                               ),
                                             );
@@ -320,7 +319,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               ),
                                               const Text(
-                                                'Người theo dõi',
+                                                'Follower',
                                                 style: TextStyle(
                                                   color: Colors.black54,
                                                   fontSize: 14,
@@ -365,7 +364,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     .withOpacity(0.2),
                                                 spreadRadius: 0.5,
                                                 blurRadius: 8,
-                                                offset: Offset(0, 3),
+                                                offset: const Offset(0, 3),
                                               ),
                                             ],
                                           ),
@@ -416,7 +415,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         .withOpacity(0.2),
                                                     spreadRadius: 0.5,
                                                     blurRadius: 8,
-                                                    offset: Offset(0, 3),
+                                                    offset: const Offset(0, 3),
                                                   ),
                                                 ],
                                               ),
@@ -546,18 +545,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                   body: !_isVisited
                       ? TabBarView(
                           controller: _tabController,
-                          children: const [
-                            VideoTab(),
-                            Expanded(child: PostTab()),
-                            SaveTab(),
-                            LikeTab(),
+                          children:[
+                            const VideoTab(),
+                            Expanded(child: PostTab(visitedUserID: widget.visitedUserID)),
+                            const SaveTab(),
+                            const LikeTab(),
                           ],
                         )
                       : TabBarView(
                           controller: _tabController,
-                          children: const [
+                          children: [
                             VideoTab(),
-                            PostTab(),
+                            PostTab(visitedUserID: widget.visitedUserID),
                           ],
                         )),
             );
