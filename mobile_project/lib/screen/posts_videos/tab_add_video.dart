@@ -1,7 +1,4 @@
 import 'dart:io';
-
-<<<<<<< Updated upstream
-=======
 import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +9,7 @@ import 'package:mobile_project/screen/posts_videos/confirm_screen.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:mobile_project/components/navigation_container.dart';
->>>>>>> Stashed changes
+
 
 class AddVideoScreen extends StatefulWidget {
   const AddVideoScreen({super.key});
@@ -31,35 +28,6 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
   late String videoPath;
 
   @override
-<<<<<<< Updated upstream
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 107, 242, 217),
-      appBar: AppBar(
-        centerTitle: true,
-        shadowColor: Colors.black,
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        elevation: 0.5,
-        leading: IconButton(
-          onPressed: () {
-            // Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NavigationContainer(
-                  currentUserID: user!.uid,
-                  pageIndex: 0,
-                ),
-              ),
-            );
-          },
-          icon: SvgPicture.asset(
-            'assets/icons/ep_back.svg',
-            width: 30,
-            height: 30,
-=======
   void initState() {
     super.initState();
     _initCameras();
@@ -107,7 +75,6 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
               videoFile: File(video.path),
               videoPath: video.path,
             ),
->>>>>>> Stashed changes
           ),
         );
       }
@@ -186,12 +153,12 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
       alignment: Alignment.centerRight,
       child: TextButton.icon(
         onPressed: () => pickVideo(ImageSource.gallery,context),
-        icon: Icon(
+        icon: const Icon(
           Icons.photo_library,
           color: Colors.white,
           size: 24,
         ),
-        label: Text(
+        label: const Text(
           'Thư viện',
           style: TextStyle(
             color: Colors.white,
