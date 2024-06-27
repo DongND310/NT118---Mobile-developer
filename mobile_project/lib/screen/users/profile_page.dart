@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/models/user_model.dart';
 import 'package:mobile_project/screen/Follow/follower_listview.dart';
+import '../message/chat_page.dart';
 import 'change_info/change_avt.dart';
 import 'profile_change.dart';
 import 'proflie_setting.dart';
@@ -30,7 +31,6 @@ class _ProfileScreenState extends State<ProfileScreen>
   int _followersCount = 0;
   int _followingCount = 0;
   int _userfollowingCount = 0;
-
   getFollowersCount() async {
     QuerySnapshot snapshot = await followersRef
         .doc(widget.visitedUserID)
@@ -65,7 +65,6 @@ class _ProfileScreenState extends State<ProfileScreen>
       _isFollowing = doc.exists;
     });
   }
-
   UserModel? userModel;
 
   Future<void> getUserData() async {
@@ -344,9 +343,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ChangeProfilePage(),
-                                            ),
+                                              builder: (context) => ChatPage(
+                                            receiverId: widget.visitedUserID,
+                                            receiverName: userModel.name,
+                                            chatterImg: userModel.avt ?? 'assets/images/default_avt.png' ,
+                                          ),)
                                           );
                                         },
                                         child: Container(

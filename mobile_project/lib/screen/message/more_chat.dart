@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/screen/users/profile_page.dart';
 
 class MoreScreen extends StatefulWidget {
   final String receiverId;
@@ -17,6 +19,7 @@ class MoreScreen extends StatefulWidget {
 }
 
 class _MoreState extends State<MoreScreen> {
+  final user = FirebaseAuth.instance.currentUser;
   bool _isPressed = false;
   @override
   Widget build(BuildContext context) {
@@ -44,17 +47,17 @@ class _MoreState extends State<MoreScreen> {
                     ? NetworkImage(widget.chatterImg)
                     : Image.asset('assets/images/default_avt.png').image,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 35,
               ),
               Text(
                 widget.receiverName,
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.blue),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Row(
@@ -63,13 +66,17 @@ class _MoreState extends State<MoreScreen> {
                   Column(
                     children: [
                       IconButton(
-                          onPressed: () {},
-                          icon: Icon(
+                          onPressed: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) =>
+                                    ProfileScreen(currentUserId: user!.uid, visitedUserID: widget.receiverId)));
+                          },
+                          icon: const Icon(
                             Icons.account_circle_outlined,
                             color: Color(0xFF107BFD),
                             size: 40,
                           )),
-                      Text(
+                      const Text(
                         "Trang cá nhân",
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
@@ -90,19 +97,19 @@ class _MoreState extends State<MoreScreen> {
                             });
                           },
                           icon: _isPressed
-                              ? Icon(
+                              ? const Icon(
                                   Icons.notifications_none_outlined,
                                   color: Color(0xFF107BFD),
                                   size: 40,
                                 )
-                              : Icon(
+                              : const Icon(
                                   Icons.notifications_off_outlined,
                                   color: Color(0xFF107BFD),
                                   size: 40,
                                 )),
                       Text(
                         _isPressed ? "Tắt thông báo" : "Bật thông báo",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 18,
                             color: Colors.blue),

@@ -10,6 +10,8 @@ import '../../models/user_model.dart';
 import 'chat_page.dart';
 
 class RecentChats extends StatefulWidget {
+  const RecentChats({super.key});
+
   @override
   State<StatefulWidget> createState() => _RecentChatState();
 }
@@ -89,7 +91,7 @@ class _RecentChatState extends State<RecentChats> {
           stream: _chatService.getLastMessage(chatRoomId),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Text('Có lỗi xảy ra.');
+              return const Text('Có lỗi xảy ra.');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Container();
@@ -111,7 +113,7 @@ class _RecentChatState extends State<RecentChats> {
                   }
                   UserModel userModel = UserModel.fromDoc(snapshot.data);
                   return Padding(
-                    padding: EdgeInsets.only(left: 15, top: 15, bottom: 15),
+                    padding: const EdgeInsets.only(left: 15, top: 15, bottom: 15),
                     child: InkWell(
                       onTap: () {
                         Navigator.push(
@@ -133,7 +135,7 @@ class _RecentChatState extends State<RecentChats> {
                                 backgroundImage:
                                     NetworkImage(userModel.avt ?? '')),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -151,7 +153,7 @@ class _RecentChatState extends State<RecentChats> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Container(
+                                      SizedBox(
                                         width:
                                             (MediaQuery.of(context).size.width +
                                                     20) /
@@ -160,7 +162,7 @@ class _RecentChatState extends State<RecentChats> {
                                           isSender
                                               ? "Bạn: ${datamessage['message'] ?? ''}"
                                               : datamessage['message'] ?? '',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             color: Colors.black54,
                                           ),
@@ -169,13 +171,13 @@ class _RecentChatState extends State<RecentChats> {
                                           softWrap: false,
                                         ),
                                       ),
-                                      SizedBox(width: 30),
+                                      const SizedBox(width: 30),
                                       Align(
                                         alignment: Alignment.bottomRight,
                                         child: Text(
                                           formatTimestamp(
                                               datamessage['timestamp']),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 15,
                                               color: Colors.black54),
                                         ),

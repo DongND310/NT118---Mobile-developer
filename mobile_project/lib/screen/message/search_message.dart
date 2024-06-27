@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diacritic/diacritic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/screen/message/chat_page.dart';
 
+import '../../constants.dart';
+import '../../models/user_model.dart';
+import '../../services/database_services.dart';
 import '../Search/widget/account_detail.dart';
 
 class SearchMessageScreen extends StatefulWidget {
@@ -12,11 +16,17 @@ class SearchMessageScreen extends StatefulWidget {
 }
 
 class _SearchMessageState extends State<SearchMessageScreen> {
-  TextEditingController _textEditingController = TextEditingController();
-  var searchName = "";
+  final DatabaseServices _databaseServices = DatabaseServices();
+  final TextEditingController _textEditingController = TextEditingController();
+  String _searchQuery = '';
   final user = FirebaseAuth.instance.currentUser!;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FocusNode _focusNode = FocusNode();
+  void _searchName(String query) {
+    setState(() {
+      _searchQuery = removeDiacritics(query).toLowerCase();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,11 +46,6 @@ class _SearchMessageState extends State<SearchMessageScreen> {
           child: TextField(
             controller: _textEditingController,
             focusNode: _focusNode,
-            onChanged: (value) {
-              setState(() {
-                searchName = value;
-              });
-            },
             style: const TextStyle(fontSize: 18),
             decoration: InputDecoration(
               prefixIcon: Padding(
@@ -75,47 +80,137 @@ class _SearchMessageState extends State<SearchMessageScreen> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .orderBy('Name')
-              .startAt([searchName])
-              .endAt([searchName + "\uf8ff"])
-              .where('Name', isNotEqualTo: _auth.currentUser!.displayName)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text('Có lỗi xảy ra.');
-            }
-
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text("Loading");
-            }
+        stream: _databaseServices.listFollower(user.uid),
+        builder: (BuildContext context,
+            AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState ==
+              ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (!snapshot.hasData ||
+              snapshot.data!.docs.isEmpty) {
+            return const Text('Không có dự liệu');
+          } else {
+            List<String> listFollowerUids = snapshot
+                .data!.docs
+                .map((doc) => doc.id)
+                .toList();
             return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
+              physics:
+              const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: listFollowerUids.length,
               itemBuilder: (context, index) {
-                var data = snapshot.data!.docs[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatPage(
-                          receiverId: data.id,
-                          receiverName: data['Name'],
-                          chatterImg: data['Avt'] ?? 'assets/images/default_avt.png' ,
-                        ),
-                      ),
-                    );
+                String uid = listFollowerUids[index];
+                return FutureBuilder<DocumentSnapshot>(
+                  future: followingsRef
+                      .doc(user.uid)
+                      .collection("userFollowings")
+                      .doc(uid)
+                      .get(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<DocumentSnapshot>
+                      followingSnapshot) {
+                    if (followingSnapshot
+                        .connectionState ==
+                        ConnectionState.waiting) {
+                      return Container();
+                    } else if (!followingSnapshot
+                        .hasData ||
+                        !followingSnapshot
+                            .data!.exists) {
+                      return Container();
+                    } else {
+                      return FutureBuilder<
+                          DocumentSnapshot>(
+                        future: usersRef.doc(uid).get(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<
+                                DocumentSnapshot>
+                            userSnapshot) {
+                          if (userSnapshot
+                              .connectionState ==
+                              ConnectionState.waiting) {
+                            return Container();
+                          } else if (!userSnapshot
+                              .hasData) {
+                            return Container();
+                          } else {
+                            UserModel userModel =
+                            UserModel.fromDoc(
+                                userSnapshot.data!);
+                            String name =
+                            removeDiacritics(
+                                userModel.name)
+                                .toLowerCase();
+                            if (_searchQuery
+                                .isNotEmpty &&
+                                !name.contains(
+                                    _textEditingController
+                                        .text
+                                        .toLowerCase())) {
+                              return Container();
+                            }
+                            return Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                child: AccountDetail(
+                                  userModel.name,
+                                  userModel.bio ?? '',
+                                  userModel.avt ?? '',
+                                )
+                            );
+                          }
+                        },
+                      );
+                    }
                   },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    child: AccountDetail(data['Name'], "",
-                        data['Avt'] ?? 'assets/images/default_avt.png'),
-                  ),
                 );
               },
             );
-          }),
+          }
+        },
+      ),
+      // body: StreamBuilder<QuerySnapshot>(
+      //     stream: FirebaseFirestore.instance
+      //         .collection('users')
+      //         .orderBy('Name')
+      //         .startAt([searchName])
+      //         .endAt([searchName + "\uf8ff"])
+      //         .where('Name', isNotEqualTo: _auth.currentUser!.displayName)
+      //         .snapshots(),
+      //     builder: (context, snapshot) {
+      //       if (snapshot.hasError) {
+      //         return const Text('Có lỗi xảy ra.');
+      //       }
+      //
+      //       if (snapshot.connectionState == ConnectionState.waiting) {
+      //         return const Text("Loading");
+      //       }
+      //       return ListView.builder(
+      //         itemCount: snapshot.data!.docs.length,
+      //         itemBuilder: (context, index) {
+      //           var data = snapshot.data!.docs[index];
+      //           return GestureDetector(
+      //             onTap: () {
+      //               Navigator.push(
+      //                 context,
+      //                 MaterialPageRoute(
+      //                   builder: (context) => ChatPage(
+      //                     receiverId: data.id,
+      //                     receiverName: data['Name'],
+      //                     chatterImg: data['Avt'] ?? 'assets/images/default_avt.png' ,
+      //                   ),
+      //                 ),
+      //               );
+      //             },
+      //             child: Padding(
+      //               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      //               child: AccountDetail(data['Name'], "",
+      //                   data['Avt'] ?? 'assets/images/default_avt.png'),
+      //             ),
+      //           );
+      //         },
+      //       );
+      //     }),
     );
   }
   // Widget _buildUserList(){
@@ -158,3 +253,5 @@ class _SearchMessageState extends State<SearchMessageScreen> {
   //   else return Container();
   // }
 }
+
+

@@ -11,9 +11,10 @@ import 'package:mobile_project/services/database_services.dart';
 import 'package:intl/intl.dart';
 import '../../models/user_model.dart';
 import '../Search/widget/account_detail.dart';
+import '../message/chat_page.dart';
 
 class ListFollowerScreen extends StatefulWidget {
-  ListFollowerScreen(
+  const ListFollowerScreen(
       {super.key,
       required this.currentUserId,
       required this.tabIndex,
@@ -28,12 +29,11 @@ class ListFollowerScreen extends StatefulWidget {
 }
 
 class _ListFollowerState extends State<ListFollowerScreen> {
-  bool _isPressed = false;
   String _searchQuery = '';
   int _tabIndex = 0;
   int _followingNum = 0;
   int _followerNum = 0;
-  int _friendNum = 0;
+  int _friendNum =0;
 
   final TextEditingController _textEditingController = TextEditingController();
   final DatabaseServices _databaseServices = DatabaseServices();
@@ -46,6 +46,31 @@ class _ListFollowerState extends State<ListFollowerScreen> {
     _uid = widget.currentUserId;
     _followerNum = widget.followerNum;
     _followingNum = widget.followingNum;
+
+    getFriendCount();
+  }
+  void getFriendCount() {
+    followersRef
+        .doc(widget.currentUserId)
+        .collection("userFollowers")
+        .get()
+        .then((followersSnapshot) {
+      List<String> followersList = followersSnapshot.docs.map((doc) => doc.id).toList();
+
+      followingsRef
+          .doc(widget.currentUserId)
+          .collection("userFollowings")
+          .get()
+          .then((followingSnapshot) {
+        List<String> followingList = followingSnapshot.docs.map((doc) => doc.id).toList();
+        Set<String> followersSet = Set<String>.from(followersList);
+        Set<String> followingSet = Set<String>.from(followingList);
+        Set<String> friendsSet = followersSet.intersection(followingSet);
+        setState(() {
+          _friendNum = friendsSet.length;
+        });
+      });
+    });
   }
 
   void _searchName(String query) {
@@ -54,7 +79,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
     });
   }
 
-  checkFollowing(String uerId) async {
+  Future<bool> checkFollowing(String uerId) async {
     DocumentSnapshot doc = await followingsRef
         .doc(widget.currentUserId)
         .collection("userFollowings")
@@ -93,199 +118,152 @@ class _ListFollowerState extends State<ListFollowerScreen> {
           ),
           body: TabBarView(
             children: [
-              _buildTabContent(_databaseServices.listFollower(_uid!),false),
-              // SingleChildScrollView(
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              //     child: Column(
-              //       children: [
-              //         SearchFollowerBar(_searchName, _textEditingController),
-              //         StreamBuilder<QuerySnapshot>(
-              //             stream: _databaseServices.listFollower(_uid!),
-              //             builder: (BuildContext context,
-              //                 AsyncSnapshot<QuerySnapshot> snapshot) {
-              //               if (!snapshot.hasData ||
-              //                   snapshot.data!.docs.isEmpty) {
-              //                 return const Text('Không có follower');
-              //               } else {
-              //                 List<String> listFollowerUids = snapshot
-              //                     .data!.docs
-              //                     .map((doc) => doc.id)
-              //                     .toList();
-              //                 return ListView.builder(
-              //                   physics: const NeverScrollableScrollPhysics(),
-              //                   shrinkWrap: true,
-              //                   itemCount: listFollowerUids.length,
-              //                   itemBuilder: (context, index) {
-              //                     String uid = listFollowerUids[index];
-              //                     return FutureBuilder(
-              //                         future: usersRef.doc(uid).get(),
-              //                         builder: (BuildContext context,
-              //                             AsyncSnapshot snapshot) {
-              //                           if (!snapshot.hasData) {
-              //                             return Container();
-              //                           }
-              //                           UserModel userModel =
-              //                               UserModel.fromDoc(snapshot.data);
-              //                           String name =
-              //                               removeDiacritics(userModel.name)
-              //                                   .toLowerCase();
-              //                           if (_searchQuery.isNotEmpty &&
-              //                               !name.contains(
-              //                                   _textEditingController.text
-              //                                       .toLowerCase())) {
-              //                             return Container();
-              //                           }
-              //                           return Row(
-              //                             crossAxisAlignment:
-              //                                 CrossAxisAlignment.center,
-              //                             children: [
-              //                               Expanded(
-              //                                 child: AccountDetail(
-              //                                     userModel.name,
-              //                                     userModel.bio ?? '',
-              //                                     userModel.avt ?? ''),
-              //                               ),
-              //                               // ElevatedButton(
-              //                               //   onPressed: () {
-              //                               //     // setState(() {
-              //                               //     //   _isPressed = !_isPressed;
-              //                               //     // });
-              //                               //   },
-              //                               //   style: ButtonStyle(
-              //                               //     minimumSize:
-              //                               //         MaterialStateProperty.all<
-              //                               //             Size>(
-              //                               //       const Size(125, 35),
-              //                               //     ),
-              //                               //     backgroundColor:
-              //                               //         MaterialStateProperty
-              //                               //             .all<Color>(_isPressed
-              //                               //                 ? Colors.grey
-              //                               //                 : Colors.blue),
-              //                               //     foregroundColor:
-              //                               //         MaterialStateProperty
-              //                               //             .all<Color>(_isPressed
-              //                               //                 ? Colors.black
-              //                               //                 : Colors.white),
-              //                               //     shape:
-              //                               //         MaterialStateProperty.all<
-              //                               //             RoundedRectangleBorder>(
-              //                               //       RoundedRectangleBorder(
-              //                               //         borderRadius:
-              //                               //             BorderRadius.circular(
-              //                               //                 5),
-              //                               //       ),
-              //                               //     ),
-              //                               //   ),
-              //                               //   child: const Text('Follow'),
-              //                               // ),
-              //                               buildProfileButton(false, uid)
-              //                             ],
-              //                           );
-              //                         });
-              //                   },
-              //                 );
-              //               }
-              //             })
-              //       ],
-              //     ),
-              //   ),
-              // ),
-              // SingleChildScrollView(
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              //     child: Column(
-              //       children: [
-              //         SearchFollowerBar(_searchName, _textEditingController),
-              //         StreamBuilder<QuerySnapshot>(
-              //             stream: _databaseServices.listFollowing(_uid!),
-              //             builder: (BuildContext context,
-              //                 AsyncSnapshot<QuerySnapshot> snapshot) {
-              //               if (snapshot.connectionState ==
-              //                   ConnectionState.waiting) {
-              //                 return const CircularProgressIndicator();
-              //               } else if (!snapshot.hasData ||
-              //                   snapshot.data!.docs.isEmpty) {
-              //                 return const Text('Bạn đang không theo dõi ai!');
-              //               } else {
-              //                 List<String> listFollowingUids = snapshot
-              //                     .data!.docs
-              //                     .map((doc) => doc.id)
-              //                     .toList();
-              //                 return ListView.builder(
-              //                   physics: const NeverScrollableScrollPhysics(),
-              //                   shrinkWrap: true,
-              //                   itemCount: listFollowingUids.length,
-              //                   itemBuilder: (context, index) {
-              //                     String uid = listFollowingUids[index];
-              //                     return FutureBuilder(
-              //                         future: usersRef.doc(uid).get(),
-              //                         builder: (BuildContext context,
-              //                             AsyncSnapshot snapshot) {
-              //                           if (!snapshot.hasData) {
-              //                             return Container();
-              //                           }
-              //                           UserModel userModel =
-              //                               UserModel.fromDoc(snapshot.data);
-              //
-              //                           String name =
-              //                               removeDiacritics(userModel.name)
-              //                                   .toLowerCase();
-              //                           if (_searchQuery.isNotEmpty &&
-              //                               !name.contains(
-              //                                   _textEditingController.text
-              //                                       .toLowerCase())) {
-              //                             return Container();
-              //                           }
-              //                           return Row(
-              //                             crossAxisAlignment:
-              //                                 CrossAxisAlignment.center,
-              //                             children: [
-              //                               Expanded(
-              //                                 child: AccountDetail(
-              //                                     userModel.name,
-              //                                     userModel.bio ?? '',
-              //                                     userModel.avt ?? ''),
-              //                               ),
-              //                               buildProfileButton(true, uid)
-              //                               // ElevatedButton(
-              //                               //   onPressed: () {
-              //                               //     // setState(() {
-              //                               //     //   _isPressed = !_isPressed;
-              //                               //     // });
-              //                               //   },
-              //                               //   style: ButtonStyle(
-              //                               //     minimumSize: MaterialStateProperty.all<Size>(
-              //                               //       const Size(125, 35),
-              //                               //     ),
-              //                               //     backgroundColor: MaterialStateProperty.all<
-              //                               //         Color>(
-              //                               //         _isPressed ? Colors.grey : Colors.blue),
-              //                               //     foregroundColor: MaterialStateProperty.all<
-              //                               //         Color>(
-              //                               //         _isPressed ? Colors.black : Colors.white),
-              //                               //     shape: MaterialStateProperty.all<
-              //                               //         RoundedRectangleBorder>(
-              //                               //       RoundedRectangleBorder(
-              //                               //         borderRadius: BorderRadius.circular(5),
-              //                               //       ),
-              //                               //     ),
-              //                               //   ),
-              //                               //   child: const Text('Follow'),
-              //                               // ),
-              //                             ],
-              //                           );
-              //                         });
-              //                   },
-              //                 );
-              //               }
-              //             })
-              //       ],
-              //     ),
-              //   ),
-              // ),
-              _buildTabContent(_databaseServices.listFollowing(_uid!),true),
+              //_buildTabContent(_databaseServices.listFollower(_uid!),false),
+              SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    children: [
+                      SearchFollowerBar(_searchName, _textEditingController),
+                      StreamBuilder<QuerySnapshot>(
+                          stream: _databaseServices.listFollower(_uid!),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (!snapshot.hasData ||
+                                snapshot.data!.docs.isEmpty) {
+                              return const Text('Không có follower');
+                            } else {
+                              List<String> listFollowerUids = snapshot
+                                  .data!.docs
+                                  .map((doc) => doc.id)
+                                  .toList();
+                              return ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: listFollowerUids.length,
+                                itemBuilder: (context, index) {
+                                  String uid = listFollowerUids[index];
+                                  return FutureBuilder<bool>(
+                                    future: checkFollowing(uid),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<bool> followingSnapshot) {
+                                      if (followingSnapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Container();
+                                      } else if (followingSnapshot.hasError) {
+                                        return Text('Error: ${followingSnapshot.error}');
+                                      } else {
+                                        bool isFollow = followingSnapshot.data ?? false;
+                                        return FutureBuilder(
+                                            future: usersRef.doc(uid).get(),
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot snapshot) {
+                                              if (!snapshot.hasData) {
+                                                return Container();
+                                              }
+                                              UserModel userModel =
+                                              UserModel.fromDoc(snapshot.data);
+                                              String name =
+                                              removeDiacritics(userModel.name)
+                                                  .toLowerCase();
+                                              if (_searchQuery.isNotEmpty &&
+                                                  !name.contains(
+                                                      _textEditingController.text
+                                                          .toLowerCase())) {
+                                                return Container();
+                                              }
+                                              return Row(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                                children: [
+                                                  Expanded(
+                                                    child: AccountDetail(
+                                                        userModel.name,
+                                                        userModel.bio ?? '',
+                                                        userModel.avt ?? ''),
+                                                  ),
+                                                  buildProfileButton(isFollow, uid)
+                                                ],
+                                              );
+                                            });
+                                      }
+                                    });
+                                },
+                              );
+                            }
+                          })
+                    ],
+                  ),
+                ),
+              ),
+              SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    children: [
+                      SearchFollowerBar(_searchName, _textEditingController),
+                      StreamBuilder<QuerySnapshot>(
+                          stream: _databaseServices.listFollowing(_uid!),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (!snapshot.hasData ||
+                                snapshot.data!.docs.isEmpty) {
+                              return const Text('Bạn đang không theo dõi ai!');
+                            } else {
+                              List<String> listFollowingUids = snapshot
+                                  .data!.docs
+                                  .map((doc) => doc.id)
+                                  .toList();
+                              return ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: listFollowingUids.length,
+                                itemBuilder: (context, index) {
+                                  String uid = listFollowingUids[index];
+                                  return FutureBuilder(
+                                      future: usersRef.doc(uid).get(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return Container();
+                                        }
+                                        UserModel userModel =
+                                            UserModel.fromDoc(snapshot.data);
+
+                                        String name =
+                                            removeDiacritics(userModel.name)
+                                                .toLowerCase();
+                                        if (_searchQuery.isNotEmpty &&
+                                            !name.contains(
+                                                _textEditingController.text
+                                                    .toLowerCase())) {
+                                          return Container();
+                                        }
+                                        return Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              child: AccountDetail(
+                                                  userModel.name,
+                                                  userModel.bio ?? '',
+                                                  userModel.avt ?? ''),
+                                            ),
+                                            buildProfileButton(true, uid)
+                                          ],
+                                        );
+                                      });
+                                },
+                              );
+                            }
+                          })
+                    ],
+                  ),
+                ),
+              ),
               SingleChildScrollView(
                   child: widget.currentUserId == user.uid
                       ? Padding(
@@ -303,7 +281,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                     return const CircularProgressIndicator();
                                   } else if (!snapshot.hasData ||
                                       snapshot.data!.docs.isEmpty) {
-                                    return const Text('Không có bạn');
+                                    return const Text('Không có dự liệu');
                                   } else {
                                     List<String> listFollowerUids = snapshot
                                         .data!.docs
@@ -353,7 +331,6 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                                     UserModel userModel =
                                                         UserModel.fromDoc(
                                                             userSnapshot.data!);
-                                                    bool _isFollow = true;
                                                     String name =
                                                         removeDiacritics(
                                                                 userModel.name)
@@ -378,8 +355,31 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                                             userModel.avt ?? '',
                                                           ),
                                                         ),
-                                                        buildProfileButton(
-                                                            _isFollow, uid),
+                                                        ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.push(context,
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => ChatPage(
+                                                                    receiverId: uid,
+                                                                    receiverName: userModel.name,
+                                                                    chatterImg: userModel.avt ?? 'assets/images/default_avt.png' ,
+                                                                  ),
+                                                                ));
+                                                          },
+                                                          style: ButtonStyle(
+                                                            minimumSize: MaterialStateProperty.all<Size>(
+                                                              const Size(125, 35),
+                                                            ),
+                                                            backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                                                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                              RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(5),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          child: const Text('Nhắn tin',),
+                                                        )
                                                       ],
                                                     );
                                                   }
@@ -409,210 +409,111 @@ class _ListFollowerState extends State<ListFollowerScreen> {
           ),
         ));
   }
-  Widget _buildTabContent(Stream<QuerySnapshot> x, bool isFollowing)
-  {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          children: [
-            SearchFollowerBar(_searchName, _textEditingController),
-            StreamBuilder<QuerySnapshot>(
-                stream: x,
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData ||
-                      snapshot.data!.docs.isEmpty) {
-                    return const Text('Danh sách trống!');
-                  } else {
-                    List<String> listUids = snapshot
-                        .data!.docs
-                        .map((doc) => doc.id)
-                        .toList();
-                    return ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: listUids.length,
-                      itemBuilder: (context, index) {
-                        String uid = listUids[index];
-                        return FutureBuilder(
-                            future: usersRef.doc(uid).get(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot snapshot) {
-                              if (!snapshot.hasData) {
-                                return Container();
-                              }
-                              UserModel userModel =
-                              UserModel.fromDoc(snapshot.data);
-                              String name =
-                              removeDiacritics(userModel.name)
-                                  .toLowerCase();
-                              if (_searchQuery.isNotEmpty &&
-                                  !name.contains(
-                                      _textEditingController.text
-                                          .toLowerCase())) {
-                                return Container();
-                              }
-                              return Row(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: AccountDetail(
-                                        userModel.name,
-                                        userModel.bio ?? '',
-                                        userModel.avt ?? ''),
-                                  ),
-                                  // ElevatedButton(
-                                  //   onPressed: () {
-                                  //     // setState(() {
-                                  //     //   _isPressed = !_isPressed;
-                                  //     // });
-                                  //   },
-                                  //   style: ButtonStyle(
-                                  //     minimumSize:
-                                  //         MaterialStateProperty.all<
-                                  //             Size>(
-                                  //       const Size(125, 35),
-                                  //     ),
-                                  //     backgroundColor:
-                                  //         MaterialStateProperty
-                                  //             .all<Color>(_isPressed
-                                  //                 ? Colors.grey
-                                  //                 : Colors.blue),
-                                  //     foregroundColor:
-                                  //         MaterialStateProperty
-                                  //             .all<Color>(_isPressed
-                                  //                 ? Colors.black
-                                  //                 : Colors.white),
-                                  //     shape:
-                                  //         MaterialStateProperty.all<
-                                  //             RoundedRectangleBorder>(
-                                  //       RoundedRectangleBorder(
-                                  //         borderRadius:
-                                  //             BorderRadius.circular(
-                                  //                 5),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  //   child: const Text('Follow'),
-                                  // ),
-                                  buildProfileButton(isFollowing, uid)
-                                ],
-                              );
-                            });
-                      },
-                    );
-                  }
-                })
-          ],
-        ),
-      ),
-    );
-  }
   //final currentUser = FirebaseAuth.instance.currentUser!;
 
-  VoidCallback handleUnfollowUser(String userId) {
-    return () {
-      followersRef
-          .doc(userId)
-          .collection('userFollowers')
-          .doc(widget.currentUserId)
-          .get()
-          .then((doc) {
-        if (doc.exists) {
-          print("User found in followers, deleting...");
-          doc.reference.delete();
-        }
-      });
-      followingsRef
-          .doc(widget.currentUserId)
-          .collection('userFollowings')
-          .doc(userId)
-          .get()
-          .then((doc) {
-        if (doc.exists) {
-          doc.reference.delete();
-          print("User found in followings, deleting...");
-        }
-      });
-      DocumentReference userRef =
-      FirebaseFirestore.instance.collection('users').doc(widget.currentUserId);
+   handleUnfollowUser(String userId) {
+     followersRef
+         .doc(userId)
+         .collection('userFollowers')
+         .doc(widget.currentUserId)
+         .get()
+         .then((doc) {
+       if (doc.exists) {
+         doc.reference.delete();
+       }
+     });
+     followingsRef
+         .doc(widget.currentUserId)
+         .collection('userFollowings')
+         .doc(userId)
+         .get()
+         .then((doc) {
+       if (doc.exists) {
+         doc.reference.delete();
+       }
+     });
+     DocumentReference userRef =
+     FirebaseFirestore.instance.collection('users').doc(widget.currentUserId);
 
-      userRef.update({
-        'followingsList': FieldValue.arrayRemove([userId])
-      }).then((_) {
-        print("Unfollowed user successfully.");
-      }).catchError((error) {
-        print("Failed to unfollow user: $error");
-      });
-      setState(() {
-        _followingNum -=1;
-      });
-    };
+     userRef.update({
+       'followingsList': FieldValue.arrayRemove([userId])
+     }).then((_) {
+       setState(() {
+         _followingNum -= 1;
+         getFriendCount();
+       });
+       });
   }
 
-  VoidCallback handleFollowUser(String userId, bool isFollowing) {
-    return () {
-      followersRef
-          .doc(userId)
-          .collection('userFollowers')
-          .doc(widget.currentUserId)
-          .set({});
+  handleFollowUser(String userId, bool isFollowing) {
+    followersRef
+        .doc(userId)
+        .collection('userFollowers')
+        .doc(widget.currentUserId)
+        .set({});
 
-      followingsRef
-          .doc(widget.currentUserId)
-          .collection('userFollowings')
-          .doc(userId)
-          .set({});
-      DocumentReference userRef =
-      FirebaseFirestore.instance.collection('users').doc(widget.currentUserId);
-      userRef.update({
-        'followingsList': FieldValue.arrayUnion([userId])
-      });
-      isFollowing = !isFollowing;
+    followingsRef
+        .doc(widget.currentUserId)
+        .collection('userFollowings')
+        .doc(userId)
+        .set({});
+    DocumentReference userRef =
+    FirebaseFirestore.instance.collection('users').doc(widget.currentUserId);
+    userRef.update({
+      'followingsList': FieldValue.arrayUnion([userId])
+    }).then((_) {
       setState(() {
-        _followingNum +=1;
+        _followingNum += 1;
+        getFriendCount();
       });
-    };
+    });
   }
   buildProfileButton(bool isFollowing, String userId) {
     if (isFollowing) {
       return buildButton(
           text: "Unfollow",
           isFollowing: isFollowing,
-          function:  handleUnfollowUser(userId));
+          function: () {
+            handleUnfollowUser(userId);
+            setState(() {
+              isFollowing = false;
+            });
+          });
+
     } else {
       return buildButton(
           text: "Follow",
           isFollowing: isFollowing,
-          function: handleFollowUser(userId,isFollowing));
+          function: () {
+            handleFollowUser(userId, isFollowing);
+            setState(() {
+              isFollowing = true;
+            });
+          });
     }
   }
 
-  Container buildButton(
+  ElevatedButton buildButton(
       {required String text,
       required bool isFollowing,
       required VoidCallback function}) {
-    return Container(
-      child: ElevatedButton(
-        onPressed: function,
-        style: ButtonStyle(
-          minimumSize: MaterialStateProperty.all<Size>(
-            const Size(125, 35),
-          ),
-          backgroundColor: MaterialStateProperty.all<Color>(
-              isFollowing ? Colors.grey : Colors.blue),
-          foregroundColor: MaterialStateProperty.all<Color>(
-              isFollowing ? Colors.black : Colors.white),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
+    return ElevatedButton(
+      onPressed: function,
+      style: ButtonStyle(
+        minimumSize: MaterialStateProperty.all<Size>(
+          const Size(125, 35),
+        ),
+        backgroundColor: MaterialStateProperty.all<Color>(
+            isFollowing ? Colors.grey : Colors.blue),
+        foregroundColor: MaterialStateProperty.all<Color>(
+            isFollowing ? Colors.black : Colors.white),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
           ),
         ),
-        child: Text(text,),
       ),
+      child: Text(text,),
     );
   }
 }
