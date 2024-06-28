@@ -222,6 +222,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       children: [
                         // like button
                         LikeButton(isLiked: isLiked, onTap: toggleLike),
+                        Text('  ${likeCount} '),
                         const SizedBox(width: 18),
                         GestureDetector(
                           onTap: () {
@@ -239,27 +240,13 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                             color: Colors.blue,
                           ),
                         ),
+
+                        Text('  ${replyCount} '),
                         const SizedBox(width: 18),
                         SvgPicture.asset(
                           'assets/icons/post_repost.svg',
                           width: 20,
                           color: Colors.blue,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Text(
-                          '${likeCount} lượt thích',
-                          style: const TextStyle(
-                              color: Colors.black54, fontSize: 14),
-                        ),
-                        const SizedBox(width: 15),
-                        Text(
-                          '${replyCount} lượt phản hồi',
-                          style: const TextStyle(
-                              color: Colors.black54, fontSize: 14),
                         ),
                       ],
                     ),

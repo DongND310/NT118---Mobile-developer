@@ -284,6 +284,7 @@ class _CustomPostReplyState extends State<CustomPostReply> {
                           children: [
                             // like button
                             LikeButton(isLiked: isLiked, onTap: toggleLike),
+                            Text('  ${likeCount} '),
                             const SizedBox(width: 18),
                             GestureDetector(
                               onTap: showReplyField,
@@ -293,22 +294,7 @@ class _CustomPostReplyState extends State<CustomPostReply> {
                                 color: Colors.blue,
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Text(
-                              '${likeCount} lượt thích',
-                              style: const TextStyle(
-                                  color: Colors.black54, fontSize: 14),
-                            ),
-                            const SizedBox(width: 15),
-                            Text(
-                              '${replyCount} lượt phản hồi',
-                              style: const TextStyle(
-                                  color: Colors.black54, fontSize: 14),
-                            ),
+                            Text('  ${replyCount} '),
                           ],
                         ),
                         const SizedBox(height: 20),

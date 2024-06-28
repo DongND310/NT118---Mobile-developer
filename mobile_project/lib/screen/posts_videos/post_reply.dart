@@ -281,7 +281,7 @@ class _PostReplyState extends State<PostReply> {
                         ),
                         subtitle: Padding(
                           padding: const EdgeInsets.only(
-                              left: 10, top: 15, bottom: 20, right: 5),
+                              left: 10, top: 15, bottom: 10, right: 5),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -294,6 +294,7 @@ class _PostReplyState extends State<PostReply> {
                                   // like button
                                   LikeButton(
                                       isLiked: isLiked, onTap: toggleLike),
+                                  Text('  ${likeCount} '),
                                   const SizedBox(width: 18),
                                   GestureDetector(
                                     onTap: () {
@@ -311,6 +312,7 @@ class _PostReplyState extends State<PostReply> {
                                       color: Colors.blue,
                                     ),
                                   ),
+                                  Text('  ${replyCount} '),
                                   const SizedBox(width: 18),
                                   SvgPicture.asset(
                                     'assets/icons/post_repost.svg',
@@ -319,22 +321,8 @@ class _PostReplyState extends State<PostReply> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Text(
-                                    '${likeCount} lượt thích',
-                                    style: const TextStyle(
-                                        color: Colors.black54, fontSize: 14),
-                                  ),
-                                  const SizedBox(width: 15),
-                                  Text(
-                                    '${replyCount} lượt phản hồi',
-                                    style: const TextStyle(
-                                        color: Colors.black54, fontSize: 14),
-                                  ),
-                                ],
-                              ),
+                              const SizedBox(height: 20),
+                              Divider(),
                             ],
                           ),
                         ),
