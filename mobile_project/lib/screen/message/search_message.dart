@@ -45,7 +45,11 @@ class _SearchMessageState extends State<SearchMessageScreen> {
           height: 35,
           child: TextField(
             controller: _textEditingController,
-            focusNode: _focusNode,
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = removeDiacritics(_textEditingController.text).toLowerCase();
+              });
+            },
             style: const TextStyle(fontSize: 18),
             decoration: InputDecoration(
               prefixIcon: Padding(
@@ -65,7 +69,6 @@ class _SearchMessageState extends State<SearchMessageScreen> {
                   onPressed: () {
                     setState(() {
                       _textEditingController.clear();
-                      _focusNode.unfocus();
                     });
                   },
                   icon: SvgPicture.asset(
@@ -83,10 +86,7 @@ class _SearchMessageState extends State<SearchMessageScreen> {
         stream: _databaseServices.listFollower(user.uid),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState ==
-              ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          } else if (!snapshot.hasData ||
+           if (!snapshot.hasData ||
               snapshot.data!.docs.isEmpty) {
             return const Text('Không có dự liệu');
           } else {
@@ -142,12 +142,7 @@ class _SearchMessageState extends State<SearchMessageScreen> {
                             removeDiacritics(
                                 userModel.name)
                                 .toLowerCase();
-                            if (_searchQuery
-                                .isNotEmpty &&
-                                !name.contains(
-                                    _textEditingController
-                                        .text
-                                        .toLowerCase())) {
+                            if (_searchQuery.isNotEmpty && !name.contains(_textEditingController.text.toLowerCase())) {
                               return Container();
                             }
                             return Padding(

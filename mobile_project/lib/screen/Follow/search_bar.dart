@@ -46,22 +46,6 @@ class _SearchBarState extends State<SearchFollowerBar> {
               borderRadius: BorderRadius.circular(18.0),
               borderSide: BorderSide.none,
             ),
-            suffixIcon: Visibility(
-              visible: _textEditingController.text.isNotEmpty,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 0.0),
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _textEditingController.clear();
-                    });
-                  },
-                  icon: SvgPicture.asset(
-                    'assets/icons/cancel.svg',
-                  ),
-                ),
-              ),
-            ),
             filled: true,
             fillColor: Colors.grey[200],
           ),

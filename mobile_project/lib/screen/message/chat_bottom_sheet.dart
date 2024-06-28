@@ -30,60 +30,75 @@ class ChatBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 10,
-            offset: const Offset(0, 3))
-      ]),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.emoji_emotions_outlined,
-                  size: 30,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minHeight: 60,
+        maxHeight: 200,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.emoji_emotions_outlined,
+                      size: 30,
+                    ),
+                    color: Colors.blue,
+                    onPressed: () {},
+                  ),
                 ),
-                color: Colors.blue,
-                onPressed: () {},
-              )),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Container(
-              alignment: Alignment.centerRight,
-              width: 250,
-              child: TextFormField(
-                cursorColor: Colors.blue,
-                controller: _controller,
-                maxLines: 10,
-                minLines: 1,
-                decoration: const InputDecoration(
-                    hintText: "Hãy nhắn gì đi...", border: InputBorder.none),
-              ),
+                const SizedBox(width: 20),
+                Flexible(
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    child: TextField(
+                      cursorColor: Colors.blue,
+                      controller: _controller,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      minLines: 1,
+                      decoration: const InputDecoration(
+                        hintText: "Hãy nhắn gì đi...",
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 0.0, left: 10, right: 10),
+                  child: IconButton(
+                    onPressed: () {
+                      onSendMessage();
+                    },
+                    icon: const Icon(
+                      Icons.send,
+                      color: Colors.blue,
+                      size: 30,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 0.0, left: 10, right: 10),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(
-                onPressed: () {
-                  onSendMessage();
-                },
-                icon: const Icon(
-                  Icons.send,
-                  color: Colors.blue,
-                  size: 30,
-                ),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

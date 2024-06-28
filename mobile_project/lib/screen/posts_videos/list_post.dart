@@ -45,8 +45,8 @@ class _ListPostsState extends State<ListPosts> {
     }
   }
 
-  UserService _userService = UserService();
-  PostService _postService = PostService();
+  final UserService _userService = UserService();
+  final PostService _postService = PostService();
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class _ListPostsState extends State<ListPosts> {
             builder:
                 (BuildContext context, AsyncSnapshot<UserModel> snapshotUser) {
               if (!snapshotUser.hasData) {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
@@ -76,7 +76,7 @@ class _ListPostsState extends State<ListPosts> {
                         .doc(post.postId);
 
                     if (!snapshotLike.hasData) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     }
                     return Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),

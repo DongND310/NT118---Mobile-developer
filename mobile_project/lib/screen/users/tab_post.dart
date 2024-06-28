@@ -19,7 +19,6 @@ class PostTab extends StatefulWidget {
 }
 
 class _PostTabState extends State<PostTab> {
-  // final user = FirebaseAuth.instance.currentUser!;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? _uid;
   String? _name;
@@ -55,7 +54,7 @@ class _PostTabState extends State<PostTab> {
       //PostService().getPostsByUser(FirebaseAuth.instance.currentUser?.uid),
       child: Scaffold(
         body: Container(
-          child: ListPosts(),
+          child: const ListPosts(),
         ),
       ),
     );
