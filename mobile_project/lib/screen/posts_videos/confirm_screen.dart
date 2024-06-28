@@ -5,17 +5,17 @@ import 'package:mobile_project/screen/Search/widget/text_input_field.dart';
 import 'package:mobile_project/screen/posts_videos/upload_video_controller.dart';
 import 'package:video_player/video_player.dart';
 
-class ComfirmScreen extends StatefulWidget {
+class ConfirmScreen extends StatefulWidget {
   final File videoFile;
   final String videoPath;
-  const ComfirmScreen(
+  const ConfirmScreen(
       {super.key, required this.videoFile, required this.videoPath});
 
   @override
-  State<ComfirmScreen> createState() => _ComfirmScreenState();
+  State<ConfirmScreen> createState() => _ConfirmScreenState();
 }
 
-class _ComfirmScreenState extends State<ComfirmScreen> {
+class _ConfirmScreenState extends State<ConfirmScreen> {
   late VideoPlayerController controller;
   TextEditingController _songController = TextEditingController();
   TextEditingController _captionController = TextEditingController();

@@ -61,16 +61,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
           elevation: 0.5,
           leading: IconButton(
             onPressed: () {
-              // Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NavigationContainer(
-                    currentUserID: user!.uid,
-                    pageIndex: 0,
-                  ),
-                ),
-              );
+              Navigator.pop(context);
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => NavigationContainer(
+              //       currentUserID: user!.uid,
+              //       pageIndex: 0,
+              //     ),
+              //   ),
+              // );
             },
             icon: SvgPicture.asset(
               'assets/icons/ep_back.svg',

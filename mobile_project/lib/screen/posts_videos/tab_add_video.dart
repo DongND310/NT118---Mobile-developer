@@ -10,13 +10,11 @@ import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:mobile_project/components/navigation_container.dart';
 
-
 class AddVideoScreen extends StatefulWidget {
   const AddVideoScreen({super.key});
 
   @override
   _AddVideoScreenState createState() => _AddVideoScreenState();
- 
 }
 
 class _AddVideoScreenState extends State<AddVideoScreen> {
@@ -65,20 +63,22 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
       setState(() {});
     }
   }
+
   //Pick video from the gallery
   pickVideo(ImageSource src, BuildContext context) async {
-      final video = await ImagePicker().pickVideo(source: src);
-      if (video != null) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => ComfirmScreen(
-              videoFile: File(video.path),
-              videoPath: video.path,
-            ),
+    final video = await ImagePicker().pickVideo(source: src);
+    if (video != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ConfirmScreen(
+            videoFile: File(video.path),
+            videoPath: video.path,
           ),
-        );
-      }
+        ),
+      );
     }
+  }
+
   // Display camera preview
   Widget _cameraPreviewWidget() {
     if (cameraController == null || !cameraController.value.isInitialized) {
@@ -87,15 +87,25 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
         style: TextStyle(
           color: Colors.white,
           fontSize: 20.0,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w600,
         ),
+        textAlign: TextAlign.center,
       );
     }
 
-    return AspectRatio(
-      aspectRatio: cameraController.value.aspectRatio,
-      child: CameraPreview(cameraController),
+    return FittedBox(
+      fit: BoxFit.cover,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        child: CameraPreview(cameraController),
+      ),
     );
+
+    // AspectRatio(
+    //   aspectRatio: 16 / 9,
+    //   // aspectRatio: cameraController.value.aspectRatio,
+    //   child: CameraPreview(cameraController),
+    // );
   }
 
   // Display the control bar with buttons to record video
@@ -108,7 +118,7 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
           mainAxisSize: MainAxisSize.max,
           children: [
             IconButton(
-              icon: Icon(Icons.radio_button_on, color: Colors.white, size: 80),
+              icon: Icon(Icons.radio_button_on, color: Colors.white, size: 70),
               onPressed: () {
                 _onCapturePressed(context);
               },
@@ -152,7 +162,7 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
         child: Align(
       alignment: Alignment.centerRight,
       child: TextButton.icon(
-        onPressed: () => pickVideo(ImageSource.gallery,context),
+        onPressed: () => pickVideo(ImageSource.gallery, context),
         icon: const Icon(
           Icons.photo_library,
           color: Colors.white,
@@ -182,13 +192,14 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
           elevation: 0.5,
           leading: IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      NavigationContainer(currentUserID: user!.uid),
-                ),
-              );
+              Navigator.pop(context);
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) =>
+              //         NavigationContainer(currentUserID: user!.uid),
+              //   ),
+              // );
             },
             icon: SvgPicture.asset(
               'assets/icons/ep_back.svg',
@@ -214,9 +225,10 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: 120,
+                    color: Colors.black.withOpacity(1),
+                    height: 90,
                     width: double.infinity,
-                    padding: EdgeInsets.all(15),
+                    padding: EdgeInsets.all(5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
@@ -270,6 +282,4 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
         return Icons.device_unknown;
     }
   }
-  
-   
 }

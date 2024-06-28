@@ -1,4 +1,4 @@
-import 'dart:ffi';
+// import 'dart:ffi';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
@@ -34,7 +34,7 @@ class _PostTabState extends State<PostTab> {
   }
 
   void getUserData() async {
-     //User currentUser = _auth.currentUser!;
+    //User currentUser = _auth.currentUser!;
     _uid = widget.visitedUserID;
     //_uid = currentUser.uid;
     final DocumentSnapshot userDoc =
@@ -49,8 +49,7 @@ class _PostTabState extends State<PostTab> {
   Widget build(BuildContext context) {
     return StreamProvider<List<PostModel>>(
       initialData: [], // Initial data can be an empty list
-      create: (context) =>
-          PostService().getPostsByUser(widget.visitedUserID),
+      create: (context) => PostService().getPostsByUser(widget.visitedUserID),
       //PostService().getPostsByUser(FirebaseAuth.instance.currentUser?.uid),
       child: Scaffold(
         body: Container(

@@ -31,10 +31,18 @@ class _NavigationContainerState extends State<NavigationContainer> {
       visitedUserID: widget.currentUserID,
     ),
   ];
+
   @override
   void initState() {
     super.initState();
-    _selectedPageIndex = widget.pageIndex!;
+    _selectedPageIndex = widget.pageIndex ?? 0;
+  }
+
+  void _onAddButtonPressed() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AddVideoPage()),
+    );
   }
 
   @override
@@ -43,11 +51,9 @@ class _NavigationContainerState extends State<NavigationContainer> {
       body: IndexedStack(
         index: _selectedPageIndex,
         children: _pages,
-        // child: _pages[_selectedPageIndex],
       ),
       bottomNavigationBar: CurvedNavigationBar(
         buttonBackgroundColor: Colors.white,
-        // color: _selectedPageIndex == 0 ? const Color(0xFF000141) : Colors.white,
         index: _selectedPageIndex,
         backgroundColor: const Color(0xFF107BFD),
         items: [
@@ -126,9 +132,13 @@ class _NavigationContainerState extends State<NavigationContainer> {
           ),
         ],
         onTap: (index) {
-          setState(() {
-            _selectedPageIndex = index;
-          });
+          if (index == 2) {
+            _onAddButtonPressed();
+          } else {
+            setState(() {
+              _selectedPageIndex = index;
+            });
+          }
         },
       ),
     );
