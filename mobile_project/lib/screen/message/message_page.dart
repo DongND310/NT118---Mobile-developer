@@ -23,7 +23,7 @@ class MessagePage extends StatelessWidget {
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 15),
+            padding: const EdgeInsets.only(right: 15),
             child: IconButton(
                 onPressed: () {
                   Navigator.push(
@@ -39,7 +39,7 @@ class MessagePage extends StatelessWidget {
           )
         ],
       ),
-      body: RecentChats(),
+      body: const RecentChats(),
     );
   }
 }

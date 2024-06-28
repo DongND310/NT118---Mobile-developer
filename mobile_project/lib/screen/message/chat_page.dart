@@ -40,8 +40,8 @@ class _ChatPageState extends State<ChatPage> {
             icon: SvgPicture.asset(
               'assets/icons/ep_back.svg',
               color: Colors.white,
-              // width: 30,
-              // height: 30,
+              width: 30,
+              height: 30,
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -56,14 +56,14 @@ class _ChatPageState extends State<ChatPage> {
                 radius: 20,
                 backgroundImage: NetworkImage(widget.chatterImg)
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 15),
               Expanded(
                 child: Text(
                   widget.receiverName,
                   style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 18),
+                      fontSize: 20),
                   overflow: TextOverflow.ellipsis,
                 ),
               )
@@ -86,7 +86,7 @@ class _ChatPageState extends State<ChatPage> {
             icon: const Icon(
               Icons.info_outline_rounded,
               color: Colors.white,
-              size: 20,
+              size: 30,
             ),
           )
         ],
@@ -103,7 +103,7 @@ class _ChatPageState extends State<ChatPage> {
               controller: _controller,
               //shrinkWrap: true,
               padding:
-                  EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 80),
+                  const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 80),
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 Map<String, dynamic> map =
