@@ -14,12 +14,10 @@ class DatabaseServices {
     return followingsRef.doc(userId).collection("userFollowings").snapshots();
   }
 
-  static Future<QuerySnapshot> searchUsers(String name) async {
-    Future<QuerySnapshot> users = usersRef
+   Future<QuerySnapshot> searchUsers(String name) async {
+   return usersRef
         .where('name', isGreaterThanOrEqualTo: name)
         .where('name', isLessThan: name + 'z')
         .get();
-
-    return users;
   }
 }
