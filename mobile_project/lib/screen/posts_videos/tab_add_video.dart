@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_project/screen/posts_videos/confirm_screen.dart';
+import 'package:mobile_project/screen/posts_videos/videoview.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:mobile_project/components/navigation_container.dart';
@@ -24,6 +25,7 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
   late List<CameraDescription> cameras;
   late int selectedCameraIndex;
   late String videoPath;
+  bool isRecording = false;
 
   @override
   void initState() {
@@ -100,12 +102,6 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
         child: CameraPreview(cameraController),
       ),
     );
-
-    // AspectRatio(
-    //   aspectRatio: 16 / 9,
-    //   // aspectRatio: cameraController.value.aspectRatio,
-    //   child: CameraPreview(cameraController),
-    // );
   }
 
   // Display the control bar with buttons to record video
@@ -117,11 +113,43 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisSize: MainAxisSize.max,
           children: [
-            IconButton(
-              icon: Icon(Icons.radio_button_on, color: Colors.white, size: 70),
-              onPressed: () {
-                _onCapturePressed(context);
+            // IconButton(
+            //   icon: Icon(Icons.radio_button_on, color: Colors.white, size: 70),
+            //   onPressed: () {
+            //     // _onCapturePressed(context);
+            //   },
+            // ),
+            GestureDetector(
+              onTap: () async {
+                final path = join((await getTemporaryDirectory()).path,
+                    "${DateTime.now()}.mp4");
+                if (isRecording) {
+                  // XFile video = await cameraController.stopVideoRecording();
+                  await cameraController.stopVideoRecording();
+
+                  print('Video recorded to: ${path}');
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (builder) => VideoView(path: path)));
+                } else {
+                  await cameraController.startVideoRecording();
+                }
+                setState(() {
+                  isRecording = !isRecording;
+                });
               },
+              child: isRecording
+                  ? const Icon(
+                      Icons.radio_button_on,
+                      color: Colors.red,
+                      size: 70,
+                    )
+                  : const Icon(
+                      Icons.panorama_fish_eye,
+                      color: Colors.white,
+                      size: 70,
+                    ),
             ),
           ],
         ),
@@ -254,13 +282,16 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
     if (cameraController.value.isRecordingVideo) {
       XFile video = await cameraController.stopVideoRecording();
       print('Video recorded to: ${video.path}');
+      // Add your navigation or further processing code here
     } else {
-      final path = join((await getApplicationDocumentsDirectory()).path,
-          '${DateTime.now()}.mp4');
-      await cameraController.startVideoRecording();
+      final path =
+          join((await getTemporaryDirectory()).path, "${DateTime.now()}.mp4");
+      await cameraController.startVideoRecording(); // Remove the path argument
       print('Recording video to: $path');
     }
-    setState(() {});
+    setState(() {
+      isRecording = !isRecording;
+    });
   }
 
   void _onSwitchCamera() {
