@@ -63,23 +63,23 @@ class VideoDetail extends StatelessWidget {
             linkColor: Colors.grey,
           ),
         ),
-        ListTile(
-          dense: true,
-          minLeadingWidth: 0,
-          horizontalTitleGap: 5,
-          title: Text(
-            video.songName,
-            style: const TextStyle(
-                color: Color(0xffF1FCFD),
-                fontWeight: FontWeight.w500,
-                fontSize: 12),
-          ),
-          leading: const Icon(
-            CupertinoIcons.music_note_2,
-            size: 15,
-            color: Colors.white,
-          ),
-        ),
+        // ListTile(
+        //   dense: true,
+        //   minLeadingWidth: 0,
+        //   horizontalTitleGap: 5,
+        //   title: Text(
+        //     video.songName,
+        //     style: const TextStyle(
+        //         color: Color(0xffF1FCFD),
+        //         fontWeight: FontWeight.w500,
+        //         fontSize: 12),
+        //   ),
+        //   leading: const Icon(
+        //     CupertinoIcons.music_note_2,
+        //     size: 15,
+        //     color: Colors.white,
+        //   ),
+        // ),
         const SizedBox(height: 10),
       ],
     );

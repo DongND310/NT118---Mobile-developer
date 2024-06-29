@@ -60,7 +60,7 @@ class StoreData {
     String resp = " Có lỗi xảy ra.";
     try {
       String imageUrl =
-          await uploadImageToStorage('${user.uid}_profileImage', file);
+          await uploadImageToStorage('profileImage/${user.uid}', file);
 
       await _firestore
           .collection('users')

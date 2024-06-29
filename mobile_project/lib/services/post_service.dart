@@ -33,8 +33,8 @@ class PostService {
     _avt = userDoc.get('Avt');
   }
 
-  Future<void> createPost(String postId, String creatorId, String creatorName,
-      String creatorImg, String content) async {
+  Future<void> createPost(
+      String postId, String creatorId, String content) async {
     final Timestamp timestamp = Timestamp.now();
     await getUserData();
 

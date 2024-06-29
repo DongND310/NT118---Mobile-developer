@@ -89,7 +89,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
               child: GestureDetector(
                 onTap: () {
                   if (content != "") {
-                    _postService.createPost('', _uid!, _name!, _avt!, content);
+                    _postService.createPost('', _uid!, content);
 
                     Navigator.push(
                       context,

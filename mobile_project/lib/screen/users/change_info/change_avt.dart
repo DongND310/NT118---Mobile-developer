@@ -22,7 +22,6 @@ class AvtChangeScreen extends StatefulWidget {
 
 class _AvtChangeScreenState extends State<AvtChangeScreen> {
   final TextEditingController _textEditingController = TextEditingController();
-  //final usersCollection = FirebaseFirestore.instance.collection('users');
   final user = FirebaseAuth.instance.currentUser!;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? _uid;
@@ -39,8 +38,6 @@ class _AvtChangeScreenState extends State<AvtChangeScreen> {
     _uid = currentUser.uid;
     final DocumentSnapshot userDoc =
         await FirebaseFirestore.instance.collection('users').doc(_uid).get();
-    // _avt = userDoc.get('Avt');
-    // setState(() {});
     if (mounted) {
       setState(() {
         _avt = userDoc.get('Avt');
