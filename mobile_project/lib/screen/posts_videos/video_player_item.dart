@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:chewie/chewie.dart';
 
 class VideoPlayerItem extends StatefulWidget {
   final String videoUrl;
@@ -14,44 +15,40 @@ class VideoPlayerItem extends StatefulWidget {
 
 class _VideoPlayerItemState extends State<VideoPlayerItem> {
   late VideoPlayerController _videoPlayerController;
-  late Future<void> _initializeVideoPlayerFuture;
+  ChewieController? _chewieController;
+  bool _isInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
-    _initializeVideoPlayerFuture = _videoPlayerController.initialize();
-    _initializeVideoPlayerFuture.then((_) {
-      _videoPlayerController.play();
-      _videoPlayerController.setVolume(1);
-    });
+    print("link video: ${widget.videoUrl}");
+    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+      ..initialize().then((_) {
+        setState(() {
+          _isInitialized = true;
+          _chewieController = ChewieController(
+            videoPlayerController: _videoPlayerController,
+            aspectRatio: _videoPlayerController.value.aspectRatio,
+            autoPlay: true,
+            looping: true,
+          );
+        });
+      }).catchError((error) {
+        print("Error initializing video player: $error");
+      });
   }
 
   @override
   void dispose() {
     _videoPlayerController.dispose();
+    _chewieController?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return Container(
-      width: size.width,
-      height: size.height,
-      child: FutureBuilder(
-        future: _initializeVideoPlayerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return VideoPlayer(_videoPlayerController);
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
-    );
+    return _isInitialized
+        ? Chewie(controller: _chewieController!)
+        : const Center(child: CircularProgressIndicator(color: Colors.blue));
   }
 }
