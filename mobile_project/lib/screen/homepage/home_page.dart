@@ -10,6 +10,7 @@ class HomePage extends StatefulWidget {
   HomePage({super.key, required this.currentUserId});
   final String currentUserId;
   final VideoController controller = Get.put(VideoController());
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -22,98 +23,102 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.search),
-            color: const Color(0xffF1FCFD),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SearchScreen()));
-            },
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _isFollowingSelected = true;
-                  });
-                },
-                child: Text(
-                  "Đang theo dõi",
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.search),
+          color: const Color(0xffF1FCFD),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchScreen()),
+            );
+          },
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isFollowingSelected = true;
+                });
+              },
+              child: Text(
+                "Đang theo dõi",
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       fontSize: 15,
                       fontWeight: _isFollowingSelected
                           ? FontWeight.w600
                           : FontWeight.normal,
                       color: _isFollowingSelected
                           ? const Color(0xffF1FCFD)
-                          : Colors.grey),
-                ),
+                          : Colors.grey,
+                    ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
-              GestureDetector(
-                onTap: () => {
-                  setState(() {
-                    _isFollowingSelected = false;
-                  })
-                },
-                child: Text(
-                  "Dành cho bạn",
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            ),
+            const SizedBox(width: 10),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isFollowingSelected = false;
+                });
+              },
+              child: Text(
+                "Dành cho bạn",
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       fontSize: 15,
                       fontWeight: _isFollowingSelected
                           ? FontWeight.normal
                           : FontWeight.w600,
                       color: !_isFollowingSelected
                           ? const Color(0xffF1FCFD)
-                          : Colors.grey),
-                ),
+                          : Colors.grey,
+                    ),
               ),
-              const SizedBox(width: 50),
-            ],
-          ),
+            ),
+            const SizedBox(width: 50),
+          ],
         ),
-        body: Obx(() {
-          if (widget.controller.videos.isEmpty) {
-            return Center(child: CircularProgressIndicator());
-          }
-          return PageView.builder(
-              onPageChanged: (int page) {
-                setState(() {
-                  _snappedPageIndex = page;
-                });
-              },
-              scrollDirection: Axis.vertical,
-              itemCount: widget.controller.videos.length,
-              itemBuilder: (context, index) {
-                final video = widget.controller.videos[index];
-                return Stack(
-                  alignment: Alignment.bottomCenter,
+      ),
+      body: Obx(() {
+        if (widget.controller.videos.isEmpty) {
+          return Center(child: CircularProgressIndicator());
+        }
+        return PageView.builder(
+          onPageChanged: (int page) {
+            setState(() {
+              _snappedPageIndex = page;
+            });
+          },
+          scrollDirection: Axis.vertical,
+          itemCount: widget.controller.videos.length,
+          itemBuilder: (context, index) {
+            final video = widget.controller.videos[index];
+            return Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                VideoPlayerItem(videoUrl: video.videoUrl),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    VideoPlayerItem(videoUrl: video.videoUrl),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            alignment: Alignment.centerRight,
-                            height: MediaQuery.of(context).size.height / 3,
-                            child: HomeSideBar(video: video),
-                          ),
-                        ),
-                      ],
-                    )
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        height: MediaQuery.of(context).size.height / 3,
+                        child: HomeSideBar(video: video),
+                      ),
+                    ),
                   ],
-                );
-              });
-        }));
+                ),
+              ],
+            );
+          },
+        );
+      }),
+    );
   }
 }

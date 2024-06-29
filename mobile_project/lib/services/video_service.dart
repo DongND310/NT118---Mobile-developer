@@ -92,4 +92,19 @@ class VideoService {
       'createdAt': DateTime.now(),
     });
   }
+
+  Future<List<VideoModel>> getVideos() async {
+    List<VideoModel> videos = [];
+
+    try {
+      QuerySnapshot querySnapshot = await _firestore.collection('videos').get();
+      querySnapshot.docs.forEach((doc) {
+        videos.add(VideoModel.fromJson(doc.data() as Map<String, dynamic>));
+      });
+    } catch (e) {
+      print('Error fetching videos: $e');
+    }
+
+    return videos;
+  }
 }

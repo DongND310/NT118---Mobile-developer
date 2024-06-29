@@ -31,27 +31,23 @@ class VideoModel {
     required this.videoUrl,
     required this.timestamp,
     this.ref,
-    // required this.postByName,
-    // required this.postByAvt,
-    // required this.songName,
-    // required this.thumbnail,
-    // required this.likes,
-    // required this.comments,
-    // required this.bookmarks,
   });
+
+  factory VideoModel.fromJson(Map<String, dynamic> json) {
+    return VideoModel(
+      videoId: json['videoId'],
+      postedById: json['postedById'],
+      caption: json['content'],
+      timestamp: json['timestamp'],
+      videoUrl: json['videoUrl'],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "videoId": videoId,
         "postedById": postedById,
         "caption": caption,
         "videoUrl": videoUrl,
-        // "postByName": postByName,
-        // "postByAvt": postByAvt,
-        // "songName": songName,
-        // "thumbnail": thumbnail,
-        // "likes": likes,
-        // "comments": comments,
-        // "bookmarks": bookmarks,
       };
   static VideoModel fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
@@ -61,14 +57,6 @@ class VideoModel {
         caption: snapshot['caption'],
         videoUrl: snapshot['videoUrl'],
         timestamp: snapshot['timestamp']
-        // postedById: snapshot['postedById'],
-        // postByName: snapshot['postByName'],
-        // postByAvt: snapshot['postByAvt'],
-        // songName: snapshot['songName'],
-        // thumbnail: snapshot['thumbnail'],
-        // likes: snapshot['likes'],
-        // comments: snapshot['comments'],
-        // bookmarks: snapshot['bookmarks'],
         );
   }
 

@@ -4,17 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/models/user_model.dart';
 import 'package:mobile_project/models/video_model.dart';
-import 'package:mobile_project/screen/posts_videos/video_controller.dart';
 import 'package:mobile_project/screen/posts_videos/video_player_item.dart';
 import '../screen/users/profile_page.dart';
 
 class VideoDetail extends StatelessWidget {
-  VideoDetail({super.key, required this.video, required this.user, required videoUrl});
+  VideoDetail(
+      {super.key, required this.video, required this.user, required videoUrl});
   final VideoModel video;
   final UserModel user;
   @override
   Widget build(BuildContext context) {
-    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.end,
@@ -42,12 +41,12 @@ class VideoDetail extends StatelessWidget {
             ),
           ),
           leading: CircleAvatar(
-              radius: 14, 
-              //backgroundImage: NetworkImage(user.profileImageUrl!)
-              backgroundImage: user.avt != null?NetworkImage(user.avt!)
-                   : Image.asset(
-                'assets/images/default_avt.png').image,
-              ),
+            radius: 14,
+            //backgroundImage: NetworkImage(user.profileImageUrl!)
+            backgroundImage: user.avt != null
+                ? NetworkImage(user.avt!)
+                : Image.asset('assets/images/default_avt.png').image,
+          ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
