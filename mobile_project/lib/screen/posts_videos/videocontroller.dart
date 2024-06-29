@@ -5,7 +5,6 @@ import 'package:mobile_project/models/video_model.dart';
 class VideoController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   var videos = <VideoModel>[].obs;
-  // RxList<Video> videos = <Video>[].obs;
 
   @override
   void onInit() {

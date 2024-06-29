@@ -1,12 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobile_project/_mock_data/mock.dart';
-import 'package:mobile_project/_mock_data/mock_copy.dart';
 import 'package:mobile_project/components/home_side_bar.dart';
-import 'package:mobile_project/components/video_detail.dart';
-// import 'package:mobile_project/components/video_tile.dart';
-// import 'package:mobile_project/components/video_tile_followed.dart';
 import 'package:mobile_project/screen/Search/search.dart';
 import 'package:mobile_project/screen/posts_videos/video_controller.dart';
 import 'package:mobile_project/screen/posts_videos/video_player_item.dart';
@@ -23,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   bool _isFollowingSelected = false;
   final user = FirebaseAuth.instance.currentUser;
   int _snappedPageIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,6 +82,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         body: Obx(() {
+          if (widget.controller.videos.isEmpty) {
+            return Center(child: CircularProgressIndicator());
+          }
           return PageView.builder(
               onPageChanged: (int page) {
                 setState(() {
@@ -93,47 +92,21 @@ class _HomePageState extends State<HomePage> {
                 });
               },
               scrollDirection: Axis.vertical,
-              itemCount:
-                  _isFollowingSelected ? videos.length : copyvideos.length,
+              itemCount: widget.controller.videos.length,
               itemBuilder: (context, index) {
+                final video = widget.controller.videos[index];
                 return Stack(
                   alignment: Alignment.bottomCenter,
                   children: [
-                    VideoPlayerItem(videoUrl: videos[index].videoUrl),
-                    // _isFollowingSelected
-                    //     ? VideoTileIsFollowed(
-                    //         video: copyvideos[index],
-                    //         snappedPageIndex: _snappedPageIndex,
-                    //         currentIndex: index,
-                    //       )
-                    //     : VideoTile(
-                    //         video: videos[index],
-                    //         snappedPageIndex: _snappedPageIndex,
-                    //         currentIndex: index,
-                    //       ),
+                    VideoPlayerItem(videoUrl: video.videoUrl),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        //Expanded(
-                        //flex: 6,
-                        //child: //VideoDetail(
-                        // video: _isFollowingSelected
-                        //     ? videos[index]
-                        //     : copyvideos[index],
-                        // user: _isFollowingSelected
-                        //     ? users[index]
-                        //     : copyusers[index], videoUrl: null,
-                        //),
-                        //),
                         Expanded(
                           child: Container(
                             alignment: Alignment.centerRight,
                             height: MediaQuery.of(context).size.height / 3,
-                            child: HomeSideBar(
-                              video: _isFollowingSelected
-                                  ? videos[index]
-                                  : copyvideos[index],
-                            ),
+                            child: HomeSideBar(video: video),
                           ),
                         ),
                       ],

@@ -2,12 +2,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/components/comment_page.dart';
-import 'package:mobile_project/models/video.dart';
+import 'package:mobile_project/models/video_model.dart'; // Thay đổi này
 
 class HomeSideBar extends StatefulWidget {
   const HomeSideBar({super.key, required this.video});
 
-  final Video video;
+  final VideoModel video; 
 
   @override
   State<HomeSideBar> createState() => _HomeSideBarState();
@@ -47,9 +47,12 @@ class _HomeSideBarState extends State<HomeSideBar>
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _sideBarItem('heart', widget.video.likes.length.toString(), style),
-        _sideBarComment('comment',widget.video.comments.toString(), style),
-        _sideBarItem('bookmark', widget.video.bookmarks.toString(), style),
+        // _sideBarItem('heart', widget.video.likes.toString(), style), // Điều chỉnh này
+        // _sideBarComment('comment', widget.video.comments.toString(), style), // Điều chỉnh này
+        // _sideBarItem('bookmark', widget.video.bookmarks.toString(), style), // Điều chỉnh này
+        _sideBarItem('heart', "0", style),
+        _sideBarComment('comment', '0', style), 
+        _sideBarItem('bookmark', '0', style), 
         Padding(
           padding: const EdgeInsets.only(
               top: 8.0, bottom: 16.0, left: 8.0, right: 8.0),

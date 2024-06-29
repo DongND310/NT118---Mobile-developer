@@ -13,22 +13,24 @@ class VideoPlayerItem extends StatefulWidget {
 }
 
 class _VideoPlayerItemState extends State<VideoPlayerItem> {
-  late VideoPlayerController videoPlayerController;
+  late VideoPlayerController _videoPlayerController;
+  late Future<void> _initializeVideoPlayerFuture;
 
   @override
   void initState() {
     super.initState();
-    videoPlayerController = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((value) {
-        videoPlayerController.play();
-        videoPlayerController.setVolume(1);
-      });
+    _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
+    _initializeVideoPlayerFuture = _videoPlayerController.initialize();
+    _initializeVideoPlayerFuture.then((_) {
+      _videoPlayerController.play();
+      _videoPlayerController.setVolume(1);
+    });
   }
 
   @override
   void dispose() {
+    _videoPlayerController.dispose();
     super.dispose();
-    videoPlayerController.dispose();
   }
 
   @override
@@ -38,7 +40,18 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
     return Container(
       width: size.width,
       height: size.height,
-      child: VideoPlayer(videoPlayerController),
+      child: FutureBuilder(
+        future: _initializeVideoPlayerFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return VideoPlayer(_videoPlayerController);
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
     );
   }
 }
