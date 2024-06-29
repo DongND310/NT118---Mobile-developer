@@ -27,13 +27,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   final OTP6Controller = TextEditingController();
 
   void sendemailOTP() async {
-    myauth.setConfig(
+    EmailOTP.config(
         appEmail: "21521956@gm.uit.edu.vn",
         appName: "Email OTP",
-        userEmail: user.email,
+        // userEmail: user.email,
         otpLength: 6,
-        otpType: OTPType.digitsOnly);
-    if (await myauth.sendOTP() == true) {
+        otpType: OTPType.numeric);
+    if (await EmailOTP.sendOTP(email: user.email!) == true) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("OTP has been sent"),
       ));
@@ -50,7 +50,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
           ));
         });
     try {
-      if (await myauth.verifyOTP(
+      if (await EmailOTP.verifyOTP(
               otp: OTP1Controller.text +
                   OTP2Controller.text +
                   OTP3Controller.text +
@@ -58,10 +58,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                   OTP5Controller.text +
                   OTP6Controller.text) ==
           true) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => InputInfoScreen()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => InputInfoScreen()));
       } else {
         Navigator.pop(context);
         ErrorMessageg();

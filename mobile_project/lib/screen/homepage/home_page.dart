@@ -107,6 +107,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Expanded(
                       child: Container(
+                        color: const Color.fromARGB(255, 99, 159, 208),
                         alignment: Alignment.centerRight,
                         height: MediaQuery.of(context).size.height / 3,
                         child: HomeSideBar(video: video),
