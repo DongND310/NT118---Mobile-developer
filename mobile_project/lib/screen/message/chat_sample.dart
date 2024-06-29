@@ -13,7 +13,7 @@ class ChatSample extends StatelessWidget{
         ? Container(
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: EdgeInsets.only(top: 10, right: 80),
+          padding: const EdgeInsets.only(top: 10, right: 80),
           child: ClipPath(
             clipper: UpperNipMessageClipper(
               MessageType.receive,
@@ -49,7 +49,7 @@ class ChatSample extends StatelessWidget{
             ),
             child: Text(
               map['message'],
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              style: const TextStyle(fontSize: 16, color: Colors.white),
             ),
           ),
         ),

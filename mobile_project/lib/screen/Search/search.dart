@@ -5,45 +5,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/screen/Search/widget/account_detail.dart';
 import 'package:mobile_project/screen/Search/widget/hashtag.dart';
 import 'package:mobile_project/screen/Search/widget/search_history_detail.dart';
+import 'package:mobile_project/screen/Search/widget/search_result.dart';
 import 'package:mobile_project/screen/Search/widget/suggest_detail.dart';
 import 'package:mobile_project/screen/Search/widget/video_search.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'hashtagview.dart';
 
 class SearchScreen extends StatefulWidget {
-  late final String currentUserId;
 
-  final List<String> searchhistory = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9"
-  ];
-  final bool showmore = false;
-  final bool showresult = false;
   final List<String> account = [
     "Account1",
     "Account1",
@@ -87,12 +56,6 @@ class SearchScreen extends StatefulWidget {
     "#hashtag1",
     "#hashtag2",
     "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
     "#hashtag2"
   ];
   final String title = "Title";
@@ -103,180 +66,60 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-
   late bool _showresult;
   List<String> _search = [];
+  List<String> searchHistory = [];
   final TextEditingController _textEditingController = TextEditingController();
-
   String? _avt;
   String? _uid;
+  String? name;
+  String query='';
   final user = FirebaseAuth.instance.currentUser!;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
-    _showresult = widget.showresult;
+    _showresult = false;
     super.initState();
-
     getUserData();
+    loadSearchHistory();
   }
 
   void _searchButtonPressed() {
+    final searchText = _textEditingController.text.trim();
+    if (searchText.isNotEmpty) {
+      setState(() {
+        _showresult = true;
+        if (!searchHistory.contains(searchText)) {
+          searchHistory.add(searchText);
+          saveSearchHistory(searchHistory);
+          query = searchText;
+        }
+      });
+    }
+  }
+  Future<void> loadSearchHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final history = prefs.getStringList('search_history') ?? [];
     setState(() {
-      _showresult = true;
+      searchHistory = history;
     });
+  }
+
+  Future<void> saveSearchHistory(List<String> history) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('search_history', history);
   }
 
   void getUserData() async {
     User currentUser = _auth.currentUser!;
     _uid = currentUser.uid;
     final DocumentSnapshot userDoc =
-        await FirebaseFirestore.instance.collection('users').doc(_uid).get();
+    await FirebaseFirestore.instance.collection('users').doc(_uid).get();
 
     _avt = userDoc.get('Avt');
+    name = userDoc.get("Name");
     setState(() {});
-  }
-
-  Widget _buildResultSection() {
-    return TabBarView(children: [
-      SingleChildScrollView(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Tài khoản",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Row(
-                  children: [
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        "Xem thêm",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                          color: Color.fromARGB(195, 0, 0, 0),
-                        ),
-                      ),
-                    ),
-                    SvgPicture.asset(
-                      "assets/icons/more.svg",
-                      width: 30,
-                      height: 30,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            AccountDetail(widget.account[1], widget.descript, _avt ?? ''),
-            const SizedBox(height: 15),
-            const Text(
-              "Video",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisExtent: 220,
-              ),
-              itemCount: 3,
-              itemBuilder: (BuildContext context, int index) {
-                return VideoSearch(
-                  widget.title,
-                  widget.numLike,
-                  widget.account[1],
-                );
-              },
-            ),
-          ],
-        ),
-      )),
-      SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemExtent: 100,
-                      itemCount: widget.account.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return AccountDetail(
-                            widget.account[index], widget.descript, _avt ?? '');
-                      })),
-            ]),
-      ),
-      Container(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: GridView.builder(
-          physics: const PageScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisExtent: 218,
-          ),
-          itemCount: 20,
-          itemBuilder: (BuildContext context, int index) {
-            return VideoSearch(
-              widget.title,
-              widget.numLike,
-              widget.account[1],
-            );
-          },
-        ),
-      )),
-      SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: SizedBox(
-                  height: 50 * widget.hashtag.length.toDouble(),
-                  child: ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemExtent: 70,
-                      itemCount: widget.hashtag.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HashTagScreen(
-                                          widget.hashtag[index])));
-                            },
-                            child: Hashtag(widget.hashtag[index]));
-                      }),
-                )),
-          ],
-        ),
-      )
-    ]);
   }
 
   Widget _searchListView() {
@@ -333,14 +176,6 @@ class _SearchScreenState extends State<SearchScreen> {
               child: TextField(
                 controller: _textEditingController,
                 cursorColor: Colors.blue,
-                onChanged: (value) {
-                  setState(() {
-                    _search = widget.account
-                        .where((element) => element.toLowerCase().contains(
-                            _textEditingController.text.toLowerCase()))
-                        .toList();
-                  });
-                },
                 style: const TextStyle(fontSize: 18),
                 decoration: InputDecoration(
                   hintText: 'Tìm kiếm',
@@ -361,8 +196,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     borderRadius: BorderRadius.circular(18.0),
                     borderSide: BorderSide.none,
                   ),
-                  suffixIcon: _textEditingController==null ?null:
-                  Padding(
+                  suffixIcon: _textEditingController.text.isEmpty
+                      ? null
+                      : Padding(
                     padding: const EdgeInsets.only(right: 0.0),
                     child: IconButton(
                       onPressed: () {
@@ -401,48 +237,47 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
             bottom: _showresult
                 ? const TabBar(
-                    tabs: [
-                      Tab(text: "Thịnh hành"),
-                      Tab(text: "Tài khoản"),
-                      Tab(text: "Video"),
-                      Tab(text: "Hashtag"),
-                    ],
-                    unselectedLabelColor: Colors.black54,
-                    indicatorColor: Colors.blue,
-                    labelColor: Colors.blue,
-                  )
+              tabs: [
+                  Tab(text: "Thịnh hành"),
+                  Tab(text: "Tài khoản"),
+                  Tab(text: "Video"),
+                  Tab(text: "Hashtag"),
+              ],
+              unselectedLabelColor: Colors.black54,
+              indicatorColor: Colors.blue,
+              labelColor: Colors.blue,
+            )
                 : PreferredSize(
-                    preferredSize: const Size.fromHeight(0.0),
-                    child: Container(),
-                  ),
+                preferredSize: const Size.fromHeight(0.0),
+                child: Container(),
+            ),
           ),
           body: _showresult
-              ? _buildResultSection()
-              : _textEditingController.text.isNotEmpty
-                  ? _searchListView()
-                  : SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SearchHistoryDetail(
-                              widget.searchhistory, widget.showmore),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 15),
-                            child: Text(
-                              "Khám phá",
-                              style: TextStyle(
-                                color: Color(0xFF107BFD),
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          SuggestDetail(widget.hashtag)
-                        ],
-                      ),
+              ? SearchResult(query: query,name: name??'', currentId: _uid??'',)
+              : _textEditingController.text.isNotEmpty ? _searchListView()
+              : SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SearchHistoryDetail(
+                    searchHistory, false),
+                const Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Text(
+                    "Khám phá",
+                    style: TextStyle(
+                      color: Color(0xFF107BFD),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
+                ),
+                SuggestDetail(widget.hashtag)
+              ],
+            ),
+          ),
         ));
   }
 }
