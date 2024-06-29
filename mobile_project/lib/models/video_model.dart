@@ -81,4 +81,20 @@ class VideoModel {
       ref: ref,
     );
   }
+
+  factory VideoModel.fromDocument(DocumentSnapshot doc) {
+    return VideoModel(
+      videoId: doc['videoId'],
+      postedById: doc['postedById'],
+      caption: doc['caption'],
+      videoUrl: doc['videoUrl'],
+      timestamp: doc['timestamp'],
+    );
+  }
+}
+
+Future<List<VideoModel>> fetchVideos() async {
+  QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('videos').get();
+  return snapshot.docs.map((doc) => VideoModel.fromDocument(doc)).toList();
+
 }

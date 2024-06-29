@@ -7,7 +7,7 @@ import 'package:mobile_project/models/video_model.dart'; // Thay đổi này
 class HomeSideBar extends StatefulWidget {
   const HomeSideBar({super.key, required this.video});
 
-  final VideoModel video; 
+  final VideoModel video;
 
   @override
   State<HomeSideBar> createState() => _HomeSideBarState();
@@ -50,9 +50,9 @@ class _HomeSideBarState extends State<HomeSideBar>
         // _sideBarItem('heart', widget.video.likes.toString(), style), // Điều chỉnh này
         // _sideBarComment('comment', widget.video.comments.toString(), style), // Điều chỉnh này
         // _sideBarItem('bookmark', widget.video.bookmarks.toString(), style), // Điều chỉnh này
-        _sideBarItem('heart', "0", style),
-        _sideBarComment('comment', '0', style), 
-        _sideBarItem('bookmark', '0', style), 
+        _sideBarItem('heart', "100", style),
+        _sideBarComment('comment', '20', style),
+        _sideBarItem('bookmark', '10', style),
         Padding(
           padding: const EdgeInsets.only(
               top: 8.0, bottom: 16.0, left: 8.0, right: 8.0),

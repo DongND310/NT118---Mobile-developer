@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/components/navigation_container.dart';
@@ -7,10 +9,18 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    name: "Reels Replay",
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  Platform.isAndroid
+      ? await Firebase.initializeApp(
+          options: const FirebaseOptions(
+              apiKey: 'AIzaSyBDryibj-98tAmkyJcC7J0qjyqwIoL60-I',
+              appId: '1:402679655358:android:360da8ee3356bd94ce27ef',
+              messagingSenderId: '402679655358',
+              projectId: 'nt118-reelreplay'))
+      : await Firebase.initializeApp(
+          name: "Reels Replay",
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+
   runApp(const MainApp());
 }
 
