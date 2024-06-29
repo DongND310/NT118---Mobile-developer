@@ -238,25 +238,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    !_isVisited
-                                                        ? ListFollowerScreen(
+                                                        ListFollowerScreen(
                                                             tabIndex: 1,
                                                             currentUserId: widget
                                                                 .visitedUserID,
                                                             followerNum:
                                                                 _followersCount,
-                                                            followingNum:
-                                                                _userfollowingCount,
+                                                            followingNum:!_isVisited?
+                                                            _userfollowingCount:
+                                                                _followingCount
                                                           )
-                                                        : ListFollowerScreen(
-                                                            tabIndex: 1,
-                                                            currentUserId: widget
-                                                                .visitedUserID,
-                                                            followerNum:
-                                                                _followersCount,
-                                                            followingNum:
-                                                            _userfollowingCount,
-                                                          ), // update following
+                                                        // update following
                                               ),
                                             );
                                           },
@@ -300,7 +292,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   currentUserId:
                                                       widget.visitedUserID,
                                                   followerNum: _followersCount,
-                                                  followingNum: _userfollowingCount,
+                                                  followingNum: _isVisited
+                                                      ?_followingCount:
+                                                  _userfollowingCount,
                                                 ),
                                               ),
                                             );

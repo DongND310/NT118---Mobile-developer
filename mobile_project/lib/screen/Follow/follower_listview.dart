@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/screen/Follow/search_bar.dart';
+import 'package:mobile_project/screen/users/profile_page.dart';
 import 'package:mobile_project/services/database_services.dart';
 import 'package:intl/intl.dart';
 import '../../models/user_model.dart';
@@ -118,7 +119,6 @@ class _ListFollowerState extends State<ListFollowerScreen> {
           ),
           body: TabBarView(
             children: [
-              //_buildTabContent(_databaseServices.listFollower(_uid!),false),
               SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -177,10 +177,22 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                                 CrossAxisAlignment.center,
                                                 children: [
                                                   Expanded(
-                                                    child: AccountDetail(
-                                                        userModel.name,
-                                                        userModel.bio ?? '',
-                                                        userModel.avt ?? ''),
+                                                    child:
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ( ProfileScreen(visitedUserID:userModel.uid ,currentUserId: widget.currentUserId,)
+                                                          ),
+                                                        ));
+                                                      },
+                                                      child: AccountDetail(
+                                                          userModel.name,
+                                                          userModel.bio ?? '',
+                                                          userModel.avt ?? ''),
+                                                    )
                                                   ),
                                                   buildProfileButton(isFollow, uid)
                                                 ],
@@ -247,10 +259,21 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Expanded(
-                                              child: AccountDetail(
-                                                  userModel.name,
-                                                  userModel.bio ?? '',
-                                                  userModel.avt ?? ''),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                        ( ProfileScreen(visitedUserID:userModel.uid ,currentUserId: widget.currentUserId,)
+                                                        ),
+                                                      ));
+                                                },
+                                                child: AccountDetail(
+                                                    userModel.name,
+                                                    userModel.bio ?? '',
+                                                    userModel.avt ?? ''),
+                                              ),
                                             ),
                                             buildProfileButton(true, uid)
                                           ],
@@ -349,11 +372,21 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                                               .center,
                                                       children: [
                                                         Expanded(
-                                                          child: AccountDetail(
-                                                            userModel.name,
-                                                            userModel.bio ?? '',
-                                                            userModel.avt ?? '',
-                                                          ),
+                                                          child: GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) =>
+                                                                    ( ProfileScreen(visitedUserID:userModel.uid ,currentUserId: widget.currentUserId,)
+                                                                    ),
+                                                                  ));
+                                                            },
+                                                            child: AccountDetail(
+                                                                userModel.name,
+                                                                userModel.bio ?? '',
+                                                                userModel.avt ?? ''),
+                                                          )
                                                         ),
                                                         ElevatedButton(
                                                           onPressed: () {
