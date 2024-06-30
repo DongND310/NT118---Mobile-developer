@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/components/button.dart';
 import 'package:flutter/material.dart';

@@ -9,7 +9,6 @@ import 'package:mobile_project/screen/posts_videos/confirm_screen.dart';
 import 'package:mobile_project/screen/posts_videos/videoview.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
-import 'package:mobile_project/components/navigation_container.dart';
 
 class AddVideoScreen extends StatefulWidget {
   const AddVideoScreen({super.key});

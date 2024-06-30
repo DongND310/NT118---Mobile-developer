@@ -78,7 +78,6 @@ import 'package:video_compress/video_compress.dart';
 //     }
 //   }
 // }
-import 'package:get/get.dart';
 import 'package:mobile_project/services/video_service.dart';
 
 class UploadVideoController extends GetxController {

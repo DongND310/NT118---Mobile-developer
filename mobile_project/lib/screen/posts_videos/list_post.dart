@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/models/post_model.dart';
 import 'package:mobile_project/services/post_service.dart';
 import 'package:mobile_project/services/user_service.dart';
@@ -22,7 +20,6 @@ class _ListPostsState extends State<ListPosts> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? _uid;
   String? _name;
-  String? _id;
   String? _avt;
 
   @override
@@ -38,7 +35,6 @@ class _ListPostsState extends State<ListPosts> {
       final DocumentSnapshot userDoc =
           await FirebaseFirestore.instance.collection('users').doc(_uid).get();
       setState(() {
-        _id = userDoc.get('ID');
         _name = userDoc.get('Name');
         _avt = userDoc.get('Avt');
       });

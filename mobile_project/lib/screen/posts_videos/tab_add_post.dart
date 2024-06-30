@@ -23,7 +23,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   String? _uid;
   String? _name;
-  String? _id;
   String? _avt;
   @override
   void initState() {
@@ -36,7 +35,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
     _uid = currentUser.uid;
     final DocumentSnapshot userDoc =
         await FirebaseFirestore.instance.collection('users').doc(_uid).get();
-    _id = userDoc.get('ID');
     _name = userDoc.get('Name');
     _avt = userDoc.get('Avt');
     setState(() {});
@@ -95,7 +93,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => NavigationContainer(
-                          currentUserID: user!.uid,
+                          currentUserID: user.uid,
                           pageIndex: 0,
                         ),
                       ),

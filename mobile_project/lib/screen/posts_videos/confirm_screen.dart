@@ -21,8 +21,6 @@ class ConfirmScreen extends StatefulWidget {
 class _ConfirmScreenState extends State<ConfirmScreen> {
   VideoPlayerController? controller;
   final user = FirebaseAuth.instance.currentUser!;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   TextEditingController _captionController = TextEditingController();
   bool _showClearButton = false;
   final VideoService _videoService = VideoService();

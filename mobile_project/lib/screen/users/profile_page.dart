@@ -570,16 +570,16 @@ class _ProfileScreenState extends State<ProfileScreen>
     return ElevatedButton(
       onPressed: function,
       style: ButtonStyle(
-        side: WidgetStateProperty.all(
+        side: MaterialStateProperty.all(
             const BorderSide(width: 1, color: Colors.blue)),
-        minimumSize: WidgetStateProperty.all<Size>(
+        minimumSize: MaterialStateProperty.all<Size>(
           const Size(150, 55),
         ),
-        backgroundColor: WidgetStateProperty.all<Color>(
+        backgroundColor: MaterialStateProperty.all<Color>(
             _isFollowing ? Colors.white : Colors.blue),
-        foregroundColor: WidgetStateProperty.all<Color>(
+        foregroundColor: MaterialStateProperty.all<Color>(
             _isFollowing ? Colors.blue : Colors.white),
-        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/models/user_model.dart';
 import 'package:mobile_project/screen/Search/widget/video_search.dart';
@@ -73,7 +70,6 @@ class _SearchResultState extends State<SearchResult> {
     });
     DocumentReference userRef =
     FirebaseFirestore.instance.collection('users').doc(widget.currentId);
-
     userRef.update({
       'followingsList': FieldValue.arrayRemove([userId])
     }).then((_) {
@@ -150,267 +146,260 @@ class _SearchResultState extends State<SearchResult> {
   }
   @override
   Widget build(BuildContext context) {
-    return TabBarView(children: [
-      SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                StreamBuilder<QuerySnapshot>(
-                  stream: usersRef
-                      .orderBy('Name')
-                      .startAt([_query])
-                      .endAt(["$_query\uf8ff"])
-                      .where('Name', isNotEqualTo: _name)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if(snapshot.connectionState==ConnectionState.waiting){
-                      return Container();
-                    }else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return const Text("Không có gì để tìm");
-                    }
-                    else {
-                      UserModel user = UserModel.fromDoc(snapshot.data!.docs[0]);
-                      return FutureBuilder<bool>(
-                        future: checkFollowing(user.uid),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<bool> followingSnapshot) {
-                          if (followingSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Container();
-                          } else if (followingSnapshot.hasError) {
-                            return Text('Error: ${followingSnapshot.error}');
-                          } else {
-                            bool isFollow = followingSnapshot.data ?? false;
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(padding: EdgeInsets.only(top: 10, bottom: 10),
-                                    child:Text(
-                                      "Tài khoản",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
-                                ),
-                                // Row(
-                                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //   children: [
-                                //     ,
-                                //     // Row(
-                                //     //   children: [
-                                //     //     TextButton(
-                                //     //       onPressed: () {
-                                //     //
-                                //     //       },
-                                //     //       child: const Text(
-                                //     //         "Xem thêm",
-                                //     //         style: TextStyle(
-                                //     //           fontWeight: FontWeight.normal,
-                                //     //           fontSize: 16,
-                                //     //           color: Color.fromARGB(195, 0, 0, 0),
-                                //     //         ),
-                                //     //       ),
-                                //     //     ),
-                                //     //     SvgPicture.asset(
-                                //     //       "assets/icons/more.svg",
-                                //     //       width: 30,
-                                //     //       height: 30,
-                                //     //     ),
-                                //     //   ],
-                                //     // ),
-                                //   ],
-                                // ),
-                                Row(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.center,
-                                    children: [
-                                     Expanded(child:
-                                     GestureDetector(
-                                         onTap: () {
-                                           Navigator.push(
-                                               context,
-                                               MaterialPageRoute(
-                                                 builder: (context) =>
-                                                 ( ProfileScreen(visitedUserID:user.uid ,currentUserId: _uid)
-                                                 ),
-                                               ));
-                                         },
-                                         child:AccountDetail(user.name, user.bio??'', user.avt ?? '')
-                                     ),),
-                                      buildProfileButton(isFollow, user.uid)
-                                    ]
-                                )
-                              ],
-                            );
-                          }
-                        },
-                      );
-                    }}),
-                const SizedBox(height: 15),
-                const Text(
-                  "Video",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisExtent: 220,
-                  ),
-                  itemCount: 3,
-                  itemBuilder: (BuildContext context, int index) {
-                    return VideoSearch(
-                      "hihi",
-                      "30",
-                      "hihiihi",
-                    );
-                  },
-                ),
-              ],
-            ),
-          )),
-      SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        physics: const AlwaysScrollableScrollPhysics(),
+    return  DefaultTabController(
+        initialIndex: 0,
+        length: 4,
         child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: StreamBuilder<QuerySnapshot>(
-                      stream: usersRef
-                          .orderBy('Name')
-                          .startAt([_query])
-                          .endAt(["$_query\uf8ff"])
-                          .where('Name', isNotEqualTo: _name)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if(snapshot.connectionState==ConnectionState.waiting){
-                          return Container();
-                        }else if(!snapshot.hasData){
-                          return Container();
-                        }
-                        else
-                        {
-                          List<String> listUids = snapshot
-                              .data!.docs
-                              .map((doc) => doc.id)
-                              .toList();
-                          return  ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: listUids.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                UserModel user = UserModel.fromDoc(snapshot.data!.docs[index]);
-                                return FutureBuilder<bool>(
-                                  future: checkFollowing(user.uid),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<bool> followingSnapshot) {
-                                    if (followingSnapshot.connectionState ==
-                                        ConnectionState.waiting) {
+              const TabBar(
+                tabs: [
+                  Tab(text: "Thịnh hành"),
+                  Tab(text: "Tài khoản"),
+                  Tab(text: "Video"),
+                  Tab(text: "Hashtag"),
+                ],
+                unselectedLabelColor: Colors.black54,
+                indicatorColor: Colors.blue,
+                labelColor: Colors.blue,
+              ),
+              Expanded(
+                  child:TabBarView(children: [
+                    SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              StreamBuilder<QuerySnapshot>(
+                                  stream: usersRef
+                                      .orderBy('Name')
+                                      .startAt([_query])
+                                      .endAt(["$_query\uf8ff"])
+                                      .where('Name', isNotEqualTo: _name)
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if(snapshot.connectionState==ConnectionState.waiting){
                                       return Container();
-                                    } else if (followingSnapshot.hasError) {
-                                      return Text('Error: ${followingSnapshot.error}');
-                                    } else {
-                                      bool isFollow = followingSnapshot.data ?? false;
-                                      return Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                              children: [
-                                                Expanded(child:
-                                                GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                            ( ProfileScreen(visitedUserID:user.uid ,currentUserId: _uid)
-                                                            ),
-                                                          ));
-                                                    },
-                                                    child:AccountDetail(user.name, user.bio??'', user.avt ?? '')
-                                                ),),
-                                                buildProfileButton(isFollow, user.uid)
-                                              ]
-                                          )
-                                        ],
-                                      );
+                                    }else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                                      return const Text("Không có gì để tìm");
                                     }
-                                  },
-                                );
+                                    else {
+                                      UserModel user = UserModel.fromDoc(snapshot.data!.docs[0]);
+                                      return FutureBuilder<bool>(
+                                        future: checkFollowing(user.uid),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<bool> followingSnapshot) {
+                                          if (followingSnapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return Container();
+                                          } else if (followingSnapshot.hasError) {
+                                            return Text('Error: ${followingSnapshot.error}');
+                                          } else {
+                                            bool isFollow = followingSnapshot.data ?? false;
+                                            return Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                const Padding(padding: EdgeInsets.only(top: 10, bottom: 10),
+                                                    child:Text(
+                                                      "Tài khoản",
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    )
+                                                ),
+                                                Row(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                    children: [
+                                                      Expanded(child:
+                                                      GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                  ( ProfileScreen(visitedUserID:user.uid ,currentUserId: _uid)
+                                                                  ),
+                                                                ));
+                                                          },
+                                                          child:AccountDetail(user.name, user.bio??'', user.avt ?? '')
+                                                      ),),
+                                                      buildProfileButton(isFollow, user.uid)
+                                                    ]
+                                                )
+                                              ],
+                                            );
+                                          }
+                                        },
+                                      );
+                                    }}),
+                              const SizedBox(height: 15),
+                              const Text(
+                                "Video",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              GridView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10,
+                                  mainAxisExtent: 220,
+                                ),
+                                itemCount: 3,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return VideoSearch(
+                                    "hihi",
+                                    "30",
+                                    "hihiihi",
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        )),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                child: StreamBuilder<QuerySnapshot>(
+                                    stream: usersRef
+                                        .orderBy('Name')
+                                        .startAt([_query])
+                                        .endAt(["$_query\uf8ff"])
+                                        .where('Name', isNotEqualTo: _name)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if(snapshot.connectionState==ConnectionState.waiting){
+                                        return Container();
+                                      }else if(!snapshot.hasData){
+                                        return Container();
+                                      }
+                                      else
+                                      {
+                                        List<String> listUids = snapshot
+                                            .data!.docs
+                                            .map((doc) => doc.id)
+                                            .toList();
+                                        return  ListView.builder(
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            itemCount: listUids.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              UserModel user = UserModel.fromDoc(snapshot.data!.docs[index]);
+                                              return FutureBuilder<bool>(
+                                                future: checkFollowing(user.uid),
+                                                builder: (BuildContext context,
+                                                    AsyncSnapshot<bool> followingSnapshot) {
+                                                  if (followingSnapshot.connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return Container();
+                                                  } else if (followingSnapshot.hasError) {
+                                                    return Text('Error: ${followingSnapshot.error}');
+                                                  } else {
+                                                    bool isFollow = followingSnapshot.data ?? false;
+                                                    return Column(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Row(
+                                                            crossAxisAlignment:
+                                                            CrossAxisAlignment.center,
+                                                            children: [
+                                                              Expanded(child:
+                                                              GestureDetector(
+                                                                  onTap: () {
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                          ( ProfileScreen(visitedUserID:user.uid ,currentUserId: _uid)
+                                                                          ),
+                                                                        ));
+                                                                  },
+                                                                  child:AccountDetail(user.name, user.bio??'', user.avt ?? '')
+                                                              ),),
+                                                              buildProfileButton(isFollow, user.uid)
+                                                            ]
+                                                        )
+                                                      ],
+                                                    );
+                                                  }
+                                                },
+                                              );
 
-                              });
-                        }
-                      }
+                                            });
+                                      }
+                                    }
+                                )
+                            )
+                          ]),
+                    ),
+                    Container(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: GridView.builder(
+                            physics: const PageScrollPhysics(),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisExtent: 218,
+                            ),
+                            itemCount: 20,
+                            itemBuilder: (BuildContext context, int index) {
+                              return VideoSearch(
+                                "widget.title",
+                                "10",
+                                "account",
+                              );
+                            },
+                          ),
+                        )),
+                    SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: SizedBox(
+                                height: 50 ,
+                                child: ListView.builder(
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemExtent: 70,
+                                    itemCount: 20,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => const HashTagScreen(
+                                                        "hashtag nè")));
+                                          },
+                                          child: Hashtag("hashtag nè"));
+                                    }),
+                              )),
+                        ],
+                      ),
+                    )
+                  ]
                   )
               )
-            ]),
-      ),
-      Container(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: GridView.builder(
-              physics: const PageScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisExtent: 218,
-              ),
-              itemCount: 20,
-              itemBuilder: (BuildContext context, int index) {
-                return VideoSearch(
-                  "widget.title",
-                  "10",
-                  "account",
-                );
-              },
-            ),
-          )),
-      SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: SizedBox(
-                  height: 50 ,
-                  child: ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemExtent: 70,
-                      itemCount: 20,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const HashTagScreen(
-                                          "hashtag nè")));
-                            },
-                            child: Hashtag("hashtag nè"));
-                      }),
-                )),
-          ],
-        ),
-      )
-    ]);
+            ])
+    );
   }
   // Widget buildVideo()
   // {

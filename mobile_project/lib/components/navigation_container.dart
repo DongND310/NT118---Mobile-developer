@@ -8,7 +8,6 @@ import 'package:mobile_project/screen/message/message_page.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:mobile_project/screen/users/profile_page.dart';
-import 'package:provider/provider.dart';
 
 class NavigationContainer extends StatefulWidget {
   NavigationContainer({super.key, required this.currentUserID, this.pageIndex});

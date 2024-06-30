@@ -1,16 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/components/detail_profile.dart';
-import 'package:mobile_project/components/inputtext.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobile_project/components/navigation_container.dart';
 
 import 'change_info/change_avt.dart';
-import 'profile_page.dart';
-
 class ChangeProfilePage extends StatefulWidget {
   ChangeProfilePage({super.key});
 

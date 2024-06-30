@@ -1,9 +1,7 @@
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobile_project/services/auth_service.dart';
 import 'login.dart';
-import 'verifyemail.dart';
 import 'welcome.dart';
 import 'inputinfo.dart';
 import 'package:mobile_project/components/inputtext.dart';

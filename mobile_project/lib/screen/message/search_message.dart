@@ -3,7 +3,6 @@ import 'package:diacritic/diacritic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mobile_project/screen/message/chat_page.dart';
 
 import '../../constants.dart';
 import '../../models/user_model.dart';
@@ -20,13 +19,6 @@ class _SearchMessageState extends State<SearchMessageScreen> {
   final TextEditingController _textEditingController = TextEditingController();
   String _searchQuery = '';
   final user = FirebaseAuth.instance.currentUser!;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FocusNode _focusNode = FocusNode();
-  void _searchName(String query) {
-    setState(() {
-      _searchQuery = removeDiacritics(query).toLowerCase();
-    });
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

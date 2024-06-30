@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/screen/Follow/search_bar.dart';
 import 'package:mobile_project/screen/users/profile_page.dart';
 import 'package:mobile_project/services/database_services.dart';
-import 'package:intl/intl.dart';
 import '../../models/user_model.dart';
 import '../Search/widget/account_detail.dart';
 import '../message/chat_page.dart';

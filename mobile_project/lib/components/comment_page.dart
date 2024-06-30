@@ -19,8 +19,6 @@ class _CommentPageState extends State<CommentPage> {
 
   bool _showClearButton = false;
   String? _uid;
-  String? _name;
-  String? _id;
   String? _avt;
   @override
   void initState() {
@@ -33,8 +31,6 @@ class _CommentPageState extends State<CommentPage> {
     _uid = currentUser.uid;
     final DocumentSnapshot userDoc =
         await FirebaseFirestore.instance.collection('users').doc(_uid).get();
-    _id = userDoc.get('ID');
-    _name = userDoc.get('Name');
     _avt = userDoc.get('Avt');
     setState(() {});
   }

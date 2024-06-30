@@ -72,7 +72,7 @@ class _CustomCommentState extends State<CustomComment> {
               children: [
                 // account name
                 Text(
-                  widget.name ?? '',
+                  widget.name,
                   style: const TextStyle(
                       color: Colors.blue,
                       fontSize: 16,
