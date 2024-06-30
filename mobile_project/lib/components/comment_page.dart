@@ -2,28 +2,34 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mobile_project/components/custom_comment.dart';
+import 'package:mobile_project/models/video_model.dart';
 
 class CommentPage extends StatefulWidget {
-  const CommentPage({super.key});
+  CommentPage({super.key, required this.video});
+  final VideoModel video;
 
   @override
   State<CommentPage> createState() => _CommentPageState();
 }
 
 class _CommentPageState extends State<CommentPage> {
-  final comment = TextEditingController();
+  TextEditingController comment = TextEditingController();
   final user = FirebaseAuth.instance.currentUser!;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  String? replyUserId; // Lưu userId của người dùng cần trả lời
+  String? replyUserName; // Lưu tên của người dùng cần trả lời
   bool _showClearButton = false;
   String? _uid;
   String? _avt;
+  int replyCount = 0;
+
   @override
   void initState() {
     super.initState();
     getUserData();
+    getCurrentUserData();
+    getsumReplyCount();
   }
 
   void getUserData() async {
@@ -31,8 +37,121 @@ class _CommentPageState extends State<CommentPage> {
     _uid = currentUser.uid;
     final DocumentSnapshot userDoc =
         await FirebaseFirestore.instance.collection('users').doc(_uid).get();
-    _avt = userDoc.get('Avt');
+    _avt = userDoc.get('avt');
     setState(() {});
+  }
+
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  String? _useravt;
+
+  void getCurrentUserData() async {
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+
+    setState(() {
+      _useravt = userDoc.get('Avt');
+    });
+  }
+
+  String replyId = FirebaseFirestore.instance.collection('videos').doc().id;
+  void addCommentVideo(String content) {
+    if (content.trim().isNotEmpty) {
+      DocumentReference videoRef = FirebaseFirestore.instance
+          .collection('videos')
+          .doc(widget.video.videoId);
+      videoRef.update({
+        'repliesList': FieldValue.arrayUnion([replyId])
+      });
+
+      FirebaseFirestore.instance
+          .collection('videos')
+          .doc(widget.video.videoId)
+          .collection('replies')
+          .doc(replyId)
+          .set({
+        "content": content,
+        "userId": user.uid,
+        "videoId": widget.video.videoId,
+        "replyId": replyId,
+        "timestamp": Timestamp.now()
+      });
+      comment.clear();
+      setState(() {
+        _showClearButton = false;
+      });
+      getsumReplyCount();
+    }
+    print("content cmt: $content");
+  }
+
+  void addReplyComment(String content) {
+    DocumentReference videoRef = FirebaseFirestore.instance
+        .collection('videos')
+        .doc(widget.video.videoId)
+        .collection('replies')
+        .doc(widget.video.videoId);
+
+    // Add subreply
+    String subreplyId = FirebaseFirestore.instance
+        .collection('videos')
+        .doc(widget.video.videoId)
+        .collection('replies')
+        .doc(widget.video.videoId)
+        .collection('subreplies')
+        .doc()
+        .id;
+    videoRef.update({
+      'repliesList': FieldValue.arrayUnion([subreplyId])
+    });
+
+    FirebaseFirestore.instance
+        .collection('videos')
+        .doc(widget.video.videoId)
+        .collection('replies')
+        .doc(replyId)
+        .collection('subreplies')
+        .doc(subreplyId)
+        .set({
+      "content": content,
+      "userId": replyUserId,
+      "videoId": widget.video.videoId,
+      "replyId": replyId,
+      "subreplyId": subreplyId,
+      "timestamp": Timestamp.now()
+    });
+
+    comment.clear();
+    setState(() {
+      // _showReplyField = false;
+    });
+  }
+
+  void getsumReplyCount() async {
+    int totalReplies = 0;
+
+    QuerySnapshot repliesSnapshot = await FirebaseFirestore.instance
+        .collection('videos')
+        .doc(widget.video.videoId)
+        .collection('replies')
+        .get();
+    totalReplies += repliesSnapshot.docs.length;
+
+    for (QueryDocumentSnapshot replyDoc in repliesSnapshot.docs) {
+      QuerySnapshot subrepliesSnapshot = await FirebaseFirestore.instance
+          .collection('videos')
+          .doc(widget.video.videoId)
+          .collection('replies')
+          .doc(replyDoc.id)
+          .collection('subreplies')
+          .get();
+      totalReplies += subrepliesSnapshot.docs.length;
+    }
+
+    setState(() {
+      replyCount = totalReplies;
+    });
   }
 
   @override
@@ -52,49 +171,50 @@ class _CommentPageState extends State<CommentPage> {
                 child: Container(width: 90, height: 2, color: Colors.grey),
               ),
             ),
-
-            //
-            ListView(
+            Padding(
               padding: const EdgeInsets.only(
-                  top: 20, left: 15, right: 25, bottom: 50),
-              children: [
-                CustomComment(
-                    name: "user1",
-                    img: '',
-                    content: "Thật bổ x",
-                    like: 10,
-                    reply: 5,
-                    time: Timestamp.fromDate(DateTime(2024, 05, 07))),
-                CustomComment(
-                    name: "user2",
-                    img: '',
-                    content: "Thấy cũng bình thường",
-                    like: 99,
-                    reply: 45,
-                    time: Timestamp.fromDate(DateTime(2024, 05, 21))),
-                CustomComment(
-                    name: "user3",
-                    img: '',
-                    content: "Nhiêu đó cũng khoe",
-                    like: 456,
-                    reply: 123,
-                    time: Timestamp.fromDate(DateTime(2024, 05, 23))),
-                CustomComment(
-                    name: "user4",
-                    img: '',
-                    content:
-                        "Thay vì dành thời gian làm mấy cái này thì tui đi ngủ còn hơn",
-                    like: 999,
-                    reply: 999,
-                    time: Timestamp.fromDate(DateTime(2024, 05, 22))),
-                CustomComment(
-                    name: "user5",
-                    img: '',
-                    content: "Đi ngủ đi",
-                    like: 102,
-                    reply: 15,
-                    time: Timestamp.fromDate(DateTime(2024, 05, 15)))
-              ],
+                  top: 30, bottom: 50, left: 15, right: 20),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('videos')
+                    .doc(widget.video.videoId)
+                    .collection('replies')
+                    .orderBy('timestamp', descending: false)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  final List<CustomComment> replies =
+                      snapshot.data!.docs.map((doc) {
+                    final replyData = doc.data() as Map<String, dynamic>;
+                    return CustomComment(
+                      content: replyData['content'],
+                      userId: replyData['userId'],
+                      videoId: replyData['videoId'],
+                      replyId: replyData['replyId'],
+                      likesList: [],
+                      repliesList: [],
+                      timestamp: replyData['timestamp'],
+                      replyCallback: (String userId, String userName) {
+                        replyToUser(userId, userName);
+                      },
+                    );
+                  }).toList();
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: replies.length,
+                    itemBuilder: (context, index) {
+                      return replies[index];
+                    },
+                  );
+                },
+              ),
             ),
             Positioned(
               bottom: 0,
@@ -111,29 +231,31 @@ class _CommentPageState extends State<CommentPage> {
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       child: CircleAvatar(
                         radius: 20,
-                        backgroundImage: _avt != null
-                            ? NetworkImage(_avt!)
+                        backgroundImage: _useravt != null
+                            ? NetworkImage(_useravt!)
                             : Image.asset('assets/images/default_avt.png')
                                 .image,
                       ),
                     ),
                     Expanded(
                       child: SizedBox(
-                        height: 50,
+                        height: 100,
                         width: 270,
                         child: Stack(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(right: 30),
+                              padding: const EdgeInsets.only(right: 50),
                               child: TextField(
                                 controller: comment,
                                 autofocus: false,
-                                maxLines: 10,
+                                maxLines: 8,
                                 minLines: 1,
                                 cursorColor: Colors.blue,
-                                decoration: const InputDecoration(
-                                  hintText: "Thêm bình luận",
-                                  hintStyle: TextStyle(
+                                decoration: InputDecoration(
+                                  hintText: replyUserName != null
+                                      ? "Trả lời @$replyUserName"
+                                      : "Thêm bình luận",
+                                  hintStyle: const TextStyle(
                                     color: Colors.grey,
                                   ),
                                   border: InputBorder.none,
@@ -147,7 +269,7 @@ class _CommentPageState extends State<CommentPage> {
                             ),
                             if (_showClearButton)
                               Positioned(
-                                right: 0,
+                                right: 10,
                                 top: 0,
                                 bottom: 0,
                                 child: IconButton(
@@ -167,11 +289,16 @@ class _CommentPageState extends State<CommentPage> {
                         ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: const Icon(
-                        Icons.send,
-                        color: Colors.blue,
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: GestureDetector(
+                        onTap: () => replyUserName != null
+                            ? addReplyComment(comment.text)
+                            : addCommentVideo(comment.text),
+                        child: const Icon(
+                          Icons.send,
+                          color: Colors.blue,
+                        ),
                       ),
                     ),
                   ],
@@ -182,5 +309,12 @@ class _CommentPageState extends State<CommentPage> {
         ),
       ),
     );
+  }
+
+  void replyToUser(String userId, String userName) {
+    setState(() {
+      replyUserId = userId;
+      replyUserName = userName;
+    });
   }
 }

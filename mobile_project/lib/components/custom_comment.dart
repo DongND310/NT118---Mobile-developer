@@ -1,23 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/components/custom_comment_reply.dart';
 
 class CustomComment extends StatefulWidget {
-  final String name;
-  final String? img;
+  final String userId;
   final String content;
-  final int like;
-  final int reply;
-  final Timestamp time;
+  final String videoId;
+  final String replyId;
+  final List<String> likesList;
+  final List<String> repliesList;
+  final Timestamp timestamp;
+  final Function(String, String) replyCallback;
 
-  const CustomComment(
-      {super.key,
-      required this.name,
-      this.img,
-      required this.content,
-      required this.like,
-      required this.reply,
-      required this.time});
+  const CustomComment({
+    super.key,
+    required this.content,
+    required this.videoId,
+    required this.userId,
+    required this.replyId,
+    required this.likesList,
+    required this.repliesList,
+    required this.timestamp,
+    required this.replyCallback,
+  });
 
   @override
   State<CustomComment> createState() => _CustomCommentState();
@@ -45,6 +52,75 @@ class _CustomCommentState extends State<CustomComment> {
     }
   }
 
+  late bool isLiked;
+
+  int likeCount = 0;
+  int replyCount = 0;
+  void initState() {
+    super.initState();
+    getUserData();
+
+    isLiked = false;
+    FirebaseFirestore.instance
+        .collection('videos')
+        .doc(widget.videoId)
+        .collection('replies')
+        .doc(widget.replyId)
+        .snapshots()
+        .listen((DocumentSnapshot snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+          List<dynamic> likesList = data?['likesList'];
+          likeCount = likesList.length;
+          isLiked = likesList.contains(currentUser.uid);
+
+          List<dynamic> repliesList = data?['repliesList'];
+          // replyCount = repliesList.length;
+        });
+      }
+    });
+  }
+
+  String? _name;
+  String? _avt;
+
+  void getUserData() async {
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userId)
+        .get();
+
+    setState(() {
+      _name = userDoc.get('Name');
+      _avt = userDoc.get('Avt');
+    });
+  }
+
+  final currentUser = FirebaseAuth.instance.currentUser!;
+
+  void toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+    });
+
+    DocumentReference videoRef = FirebaseFirestore.instance
+        .collection('videos')
+        .doc(widget.videoId)
+        .collection('replies')
+        .doc(widget.replyId);
+
+    if (isLiked) {
+      videoRef.update({
+        'likesList': FieldValue.arrayUnion([currentUser.uid])
+      });
+    } else {
+      videoRef.update({
+        'likesList': FieldValue.arrayRemove([currentUser.uid])
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,15 +129,13 @@ class _CustomCommentState extends State<CustomComment> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           // avt
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: CircleAvatar(
-              radius: 20,
-              backgroundImage: widget.img != null
-                  ? NetworkImage(widget.img!)
-                  : Image.asset('assets/images/default_avt.png').image,
-            ),
+          CircleAvatar(
+            radius: 20,
+            backgroundImage: _avt != null
+                ? NetworkImage(_avt!)
+                : Image.asset('assets/images/default_avt.png').image,
           ),
+
           const SizedBox(
             width: 15,
           ),
@@ -70,19 +144,15 @@ class _CustomCommentState extends State<CustomComment> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // account name
                 Text(
-                  widget.name,
+                  _name ?? '',
                   style: const TextStyle(
                       color: Colors.blue,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       overflow: TextOverflow.ellipsis),
                 ),
-
                 const SizedBox(height: 5),
-
-                // post content
                 SizedBox(
                   width: 320,
                   child: Text(
@@ -93,14 +163,14 @@ class _CustomCommentState extends State<CustomComment> {
                     textAlign: TextAlign.start,
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 10),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
                           Text(
-                            formatTimestamp(widget.time),
+                            formatTimestamp(widget.timestamp),
                             style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 12,
@@ -109,7 +179,9 @@ class _CustomCommentState extends State<CustomComment> {
                           ),
                           const SizedBox(width: 10),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              widget.replyCallback(widget.userId, _name ?? '');
+                            },
                             child: const Text("Trả lời",
                                 style: TextStyle(
                                   color: Colors.grey,
@@ -121,13 +193,9 @@ class _CustomCommentState extends State<CustomComment> {
                       ),
                       Row(
                         children: [
-                          SvgPicture.asset(
-                            'assets/icons/heart.svg',
-                            width: 15,
-                            color: Colors.grey,
-                          ),
+                          _likeComment(() => toggleLike(), isLiked),
                           Text(
-                            " ${widget.like}",
+                            "   ${likeCount}",
                             style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 12,
@@ -137,28 +205,81 @@ class _CustomCommentState extends State<CustomComment> {
                         ],
                       ),
                     ]),
-                const SizedBox(height: 10),
+                // const SizedBox(height: 10),
 
-                // like, reply
-                Row(
-                  children: [
-                    const Text(
-                      '----',
-                      style: TextStyle(color: Colors.black54, fontSize: 14),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Xem ${widget.reply} câu trả lời',
-                      style: const TextStyle(color: Colors.black54, fontSize: 14),
-                    ),
-                  ],
+                // Row(
+                //   children: [
+                //     const Text(
+                //       '----',
+                //       style: TextStyle(color: Colors.black54, fontSize: 14),
+                //     ),
+                //     const SizedBox(width: 10),
+                //     Text(
+                //       'Xem ${replyCount} câu trả lời',
+                //       style:
+                //           const TextStyle(color: Colors.black54, fontSize: 14),
+                //     ),
+                //   ],
+                // ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10, top: 20),
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('videos')
+                        .doc(widget.videoId)
+                        .collection('replies')
+                        .doc(widget.replyId)
+                        .collection('subreplies')
+                        .orderBy('timestamp', descending: false)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+
+                      final List<CustomCommentReply> subreplies =
+                          snapshot.data!.docs.map((doc) {
+                        final subreplyData = doc.data() as Map<String, dynamic>;
+                        return CustomCommentReply(
+                          content: subreplyData['content'],
+                          userId: subreplyData['userId'],
+                          videoId: subreplyData['videoId'],
+                          replyId: subreplyData['replyId'],
+                          subreplyId: subreplyData['subreplyId'],
+                          likesList: [],
+                          repliesList: [],
+                          timestamp: subreplyData['timestamp'],
+                        );
+                      }).toList();
+
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: subreplies.length,
+                        itemBuilder: (context, index) {
+                          return subreplies[index];
+                        },
+                      );
+                    },
+                  ),
                 ),
-
-                const SizedBox(height: 20),
+                // const SizedBox(height: 20),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  _likeComment(Function() onTap, bool isLike) {
+    return GestureDetector(
+      onTap: onTap,
+      child: SvgPicture.asset(
+        isLiked ? 'assets/icons/post_liked.svg' : 'assets/icons/post_like.svg',
+        width: 20,
       ),
     );
   }

@@ -116,6 +116,32 @@ class _HomeSideBarState extends State<HomeSideBar>
     }
   }
 
+  void getsumReplyCount() async {
+    int totalReplies = 0;
+
+    QuerySnapshot repliesSnapshot = await FirebaseFirestore.instance
+        .collection('videos')
+        .doc(widget.video.videoId)
+        .collection('replies')
+        .get();
+    totalReplies += repliesSnapshot.docs.length;
+
+    for (QueryDocumentSnapshot replyDoc in repliesSnapshot.docs) {
+      QuerySnapshot subrepliesSnapshot = await FirebaseFirestore.instance
+          .collection('videos')
+          .doc(widget.video.videoId)
+          .collection('replies')
+          .doc(replyDoc.id)
+          .collection('subreplies')
+          .get();
+      totalReplies += subrepliesSnapshot.docs.length;
+    }
+
+    setState(() {
+      replyCount = totalReplies;
+    });
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -177,7 +203,7 @@ class _HomeSideBarState extends State<HomeSideBar>
                 initialChildSize: 0.8,
                 minChildSize: 0.3,
                 builder: (context, scrollController) {
-                  return const CommentPage();
+                  return CommentPage(video: widget.video);
                 },
               );
             });
