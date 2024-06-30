@@ -15,14 +15,14 @@ class AddVideoScreen extends StatefulWidget {
   const AddVideoScreen({super.key});
 
   @override
-  _AddVideoScreenState createState() => _AddVideoScreenState();
+  State<AddVideoScreen> createState() => _AddVideoScreenState();
 }
 
 class _AddVideoScreenState extends State<AddVideoScreen> {
   final user = FirebaseAuth.instance.currentUser;
 
-  late CameraController cameraController;
-  late List<CameraDescription> cameras;
+  CameraController? cameraController;
+  late final List<CameraDescription> cameras;
   late int selectedCameraIndex;
   late String videoPath;
   bool isRecording = false;
@@ -49,14 +49,14 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
       CameraDescription cameraDescription) async {
     cameraController =
         CameraController(cameraDescription, ResolutionPreset.high);
-    cameraController.addListener(() {
+    cameraController?.addListener(() {
       if (mounted) {
         setState(() {});
       }
     });
 
     try {
-      await cameraController.initialize();
+      await cameraController?.initialize();
     } on CameraException catch (e) {
       _showCameraException(e);
     }
@@ -83,7 +83,7 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
 
   // Display camera preview
   Widget _cameraPreviewWidget() {
-    if (cameraController == null || !cameraController.value.isInitialized) {
+    if (cameraController == null || !cameraController!.value.isInitialized) {
       return const Text(
         'Loading',
         style: TextStyle(
@@ -97,9 +97,9 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
 
     return FittedBox(
       fit: BoxFit.cover,
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width,
-        child: CameraPreview(cameraController),
+        child: CameraPreview(cameraController!),
       ),
     );
   }
@@ -113,19 +113,12 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisSize: MainAxisSize.max,
           children: [
-            // IconButton(
-            //   icon: Icon(Icons.radio_button_on, color: Colors.white, size: 70),
-            //   onPressed: () {
-            //     // _onCapturePressed(context);
-            //   },
-            // ),
             GestureDetector(
               onTap: () async {
                 final path = join((await getTemporaryDirectory()).path,
                     "${DateTime.now()}.mp4");
                 if (isRecording) {
-                  // XFile video = await cameraController.stopVideoRecording();
-                  await cameraController.stopVideoRecording();
+                  await cameraController?.stopVideoRecording();
 
                   print('Video recorded to: ${path}');
                   Navigator.push(
@@ -133,7 +126,7 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
                       MaterialPageRoute(
                           builder: (builder) => VideoView(path: path)));
                 } else {
-                  await cameraController.startVideoRecording();
+                  await cameraController?.startVideoRecording();
                 }
                 setState(() {
                   isRecording = !isRecording;
@@ -159,8 +152,8 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
 
   // Display a row of toggle to select the camera
   Widget _cameraToggleRowWidget() {
-    if (cameras == null || cameras.isEmpty) {
-      return Spacer();
+    if (cameras.isEmpty) {
+      return const Spacer();
     }
     CameraDescription selectedCamera = cameras[selectedCameraIndex];
     CameraLensDirection lensDirection = selectedCamera.lensDirection;
@@ -175,8 +168,11 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
           size: 24,
         ),
         label: Text(
-          '${lensDirection.toString().substring(lensDirection.toString().indexOf('.') + 1).toUpperCase()}',
-          style: TextStyle(
+          lensDirection
+              .toString()
+              .substring(lensDirection.toString().indexOf('.') + 1)
+              .toUpperCase(),
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w500,
           ),
@@ -221,13 +217,6 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) =>
-              //         NavigationContainer(currentUserID: user!.uid),
-              //   ),
-              // );
             },
             icon: SvgPicture.asset(
               'assets/icons/ep_back.svg',
@@ -241,34 +230,32 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
                 fontSize: 20, color: Colors.blue, fontWeight: FontWeight.bold),
           ),
         ),
-        body: Container(
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: _cameraPreviewWidget(),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    color: Colors.black.withOpacity(1),
-                    height: 90,
-                    width: double.infinity,
-                    padding: EdgeInsets.all(5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        _cameraToggleRowWidget(),
-                        _cameraControlWidget(context),
-                        _uploadFolder(),
-                      ],
-                    ),
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: _cameraPreviewWidget(),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  color: Colors.black.withOpacity(1),
+                  height: 90,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      _cameraToggleRowWidget(),
+                      _cameraControlWidget(context),
+                      _uploadFolder(),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ));
   }
@@ -276,22 +263,6 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
   void _showCameraException(CameraException e) {
     String errorText = 'Error:${e.code}\n Error message: ${e.description}';
     print(errorText);
-  }
-
-  void _onCapturePressed(context) async {
-    if (cameraController.value.isRecordingVideo) {
-      XFile video = await cameraController.stopVideoRecording();
-      print('Video recorded to: ${video.path}');
-      // Add your navigation or further processing code here
-    } else {
-      final path =
-          join((await getTemporaryDirectory()).path, "${DateTime.now()}.mp4");
-      await cameraController.startVideoRecording(); // Remove the path argument
-      print('Recording video to: $path');
-    }
-    setState(() {
-      isRecording = !isRecording;
-    });
   }
 
   void _onSwitchCamera() {

@@ -26,7 +26,7 @@ class HomePageScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
+      body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: double.infinity,
         child: Padding(
@@ -54,7 +54,7 @@ class HomePageScreen extends StatelessWidget {
               height: 10,
             ),
             Text(
-              'Đăng nhập thành công, chào mừng ' + user.email!,
+              'Đăng nhập thành công, chào mừng ${user.email!}',
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 18,

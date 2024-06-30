@@ -1,44 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
-import 'package:chewie/chewie.dart';
 
 class VideoPlayerItem extends StatefulWidget {
   final String videoUrl;
 
   const VideoPlayerItem({
-    Key? key,
+    super.key,
     required this.videoUrl,
-  }) : super(key: key);
+  });
 
   @override
-  _VideoPlayerItemState createState() => _VideoPlayerItemState();
+  State<VideoPlayerItem> createState() => _VideoPlayerItemState();
 }
 
 class _VideoPlayerItemState extends State<VideoPlayerItem> {
   late VideoPlayerController _videoPlayerController;
-  ChewieController? _chewieController;
   bool _isLoading = true;
   bool _isError = false;
 
   @override
   void initState() {
     super.initState();
+    print("Video URL: ${widget.videoUrl}");
     _initializePlayer();
   }
 
   Future<void> _initializePlayer() async {
-    print("Video URL: ${widget.videoUrl}");
-    _videoPlayerController =
-        VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
-
     try {
+      _videoPlayerController =
+          VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+            ..addListener(() {
+              if (mounted) {
+                setState(() {});
+              }
+            })
+            ..setLooping(true);
       await _videoPlayerController.initialize();
-      _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController,
-        autoPlay: true,
-        looping: true,
-      );
+      _videoPlayerController.play();
       setState(() {
         _isLoading = false;
         _isError = false;
@@ -58,7 +57,6 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
   @override
   void dispose() {
     _videoPlayerController.dispose();
-    _chewieController?.dispose();
     super.dispose();
   }
 
@@ -68,13 +66,11 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
       return const Center(child: CircularProgressIndicator());
     } else if (_isError) {
       return const Center(child: Text("Lỗi tải video"));
-    } else if (_chewieController != null) {
+    } else {
       return AspectRatio(
         aspectRatio: _videoPlayerController.value.aspectRatio,
-        child: Chewie(controller: _chewieController!),
+        child: VideoPlayer(_videoPlayerController),
       );
-    } else {
-      return const Center(child: Text("Không thể tải video"));
     }
   }
 }

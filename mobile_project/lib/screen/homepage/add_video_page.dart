@@ -31,7 +31,7 @@ class _AddVideoPageState extends State<AddVideoPage> {
             _selectedIndex = index;
           });
         },
-        children: [
+        children: const [
           AddVideoScreen(),
           AddPostScreen(),
         ],

@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color.fromARGB(255, 99, 159, 208),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.search),
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Obx(() {
         if (widget.controller.videos.isEmpty) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
         return PageView.builder(
           onPageChanged: (int page) {

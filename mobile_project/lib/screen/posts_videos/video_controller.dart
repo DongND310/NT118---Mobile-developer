@@ -8,7 +8,7 @@ class VideoController extends GetxController {
   // var videos = <VideoModel>[].obs;
   // RxList<Video> videos = <Video>[].obs;
   RxList<VideoModel> videos = <VideoModel>[].obs;
-  VideoService _videoService = VideoService();
+  final VideoService _videoService = VideoService();
 
   @override
   void onInit() {
@@ -25,7 +25,7 @@ class VideoController extends GetxController {
     }
     _firestore.collection('videos').snapshots().listen((snapshot) {
       videos.value = snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         return VideoModel(
           videoId: doc.id,
           postedById: data['postedById'] ?? '',

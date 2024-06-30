@@ -15,7 +15,7 @@ import 'tab_save.dart';
 import 'tab_video.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen(
+  const ProfileScreen(
       {super.key, required this.currentUserId, required this.visitedUserID});
   final String currentUserId;
   final String visitedUserID;
@@ -65,6 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       _isFollowing = doc.exists;
     });
   }
+
   UserModel? userModel;
 
   Future<void> getUserData() async {
@@ -93,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (snapshot.exists) {
         setState(() {
           Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
-          List<dynamic> followingsList = data?['followingsList'];
+          List<dynamic> followingsList = data?['followingsList'] ?? [];
           _userfollowingCount = followingsList.length;
         });
       }
@@ -237,19 +238,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                        ListFollowerScreen(
-                                                            tabIndex: 1,
-                                                            currentUserId: widget
-                                                                .visitedUserID,
-                                                            followerNum:
-                                                                _followersCount,
-                                                            followingNum:!_isVisited?
-                                                            _userfollowingCount:
-                                                                _followingCount
-                                                          )
-                                                        // update following
-                                              ),
+                                                  builder: (context) =>
+                                                      ListFollowerScreen(
+                                                          tabIndex: 1,
+                                                          currentUserId:
+                                                              widget
+                                                                  .visitedUserID,
+                                                          followerNum:
+                                                              _followersCount,
+                                                          followingNum: !_isVisited
+                                                              ? _userfollowingCount
+                                                              : _followingCount)
+                                                  // update following
+                                                  ),
                                             );
                                           },
                                           child: Column(
@@ -293,8 +294,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       widget.visitedUserID,
                                                   followerNum: _followersCount,
                                                   followingNum: _isVisited
-                                                      ?_followingCount:
-                                                  _userfollowingCount,
+                                                      ? _followingCount
+                                                      : _userfollowingCount,
                                                 ),
                                               ),
                                             );
@@ -335,14 +336,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     ? GestureDetector(
                                         onTap: () {
                                           Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => ChatPage(
-                                            receiverId: widget.visitedUserID,
-                                            receiverName: userModel.name,
-                                            chatterImg: userModel.avt ?? 'assets/images/default_avt.png' ,
-                                          ),)
-                                          );
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ChatPage(
+                                                  receiverId:
+                                                      widget.visitedUserID,
+                                                  receiverName: userModel.name,
+                                                  chatterImg: userModel.avt ??
+                                                      'assets/images/default_avt.png',
+                                                ),
+                                              ));
                                         },
                                         child: Container(
                                           height: 45,
@@ -540,9 +543,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                   body: !_isVisited
                       ? TabBarView(
                           controller: _tabController,
-                          children:[
+                          children: [
                             const VideoTab(),
-                            Expanded(child: PostTab(visitedUserID: widget.visitedUserID)),
+                            Expanded(
+                                child: PostTab(
+                                    visitedUserID: widget.visitedUserID)),
                             const SaveTab(),
                             const LikeTab(),
                           ],
@@ -550,7 +555,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       : TabBarView(
                           controller: _tabController,
                           children: [
-                            VideoTab(),
+                            const VideoTab(),
                             PostTab(visitedUserID: widget.visitedUserID),
                           ],
                         )),
@@ -561,34 +566,31 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   final currentUser = FirebaseAuth.instance.currentUser!;
 
-  Container buildButton(
-      {required String text, required VoidCallback function}) {
-    return Container(
-      child: ElevatedButton(
-        onPressed: function,
-        style: ButtonStyle(
-          side: MaterialStateProperty.all(
-              const BorderSide(width: 1, color: Colors.blue)),
-          minimumSize: MaterialStateProperty.all<Size>(
-            const Size(150, 55),
-          ),
-          backgroundColor: MaterialStateProperty.all<Color>(
-              _isFollowing ? Colors.white : Colors.blue),
-          foregroundColor: MaterialStateProperty.all<Color>(
-              _isFollowing ? Colors.blue : Colors.white),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+  Widget buildButton({required String text, required VoidCallback function}) {
+    return ElevatedButton(
+      onPressed: function,
+      style: ButtonStyle(
+        side: WidgetStateProperty.all(
+            const BorderSide(width: 1, color: Colors.blue)),
+        minimumSize: WidgetStateProperty.all<Size>(
+          const Size(150, 55),
+        ),
+        backgroundColor: WidgetStateProperty.all<Color>(
+            _isFollowing ? Colors.white : Colors.blue),
+        foregroundColor: WidgetStateProperty.all<Color>(
+            _isFollowing ? Colors.blue : Colors.white),
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
+      ),
+      child: Center(
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),

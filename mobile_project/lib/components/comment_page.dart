@@ -49,10 +49,13 @@ class _CommentPageState extends State<CommentPage> {
         height: 300,
         child: Stack(
           children: [
-            Positioned(
-                top: 8,
-                left: 155,
-                child: Container(width: 90, height: 2, color: Colors.grey)),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Container(width: 90, height: 2, color: Colors.grey),
+              ),
+            ),
 
             //
             ListView(
@@ -118,55 +121,56 @@ class _CommentPageState extends State<CommentPage> {
                                 .image,
                       ),
                     ),
-                    SizedBox(
-                      height: 50,
-                      width: 270,
-                      child: Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 30),
-                            child: TextField(
-                              controller: comment,
-                              autofocus: false,
-                              maxLines: 10,
-                              minLines: 1,
-                              cursorColor: Colors.blue,
-                              decoration: const InputDecoration(
-                                hintText: "Thêm bình luận",
-                                hintStyle: TextStyle(
-                                  color: Colors.grey,
+                    Expanded(
+                      child: SizedBox(
+                        height: 50,
+                        width: 270,
+                        child: Stack(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 30),
+                              child: TextField(
+                                controller: comment,
+                                autofocus: false,
+                                maxLines: 10,
+                                minLines: 1,
+                                cursorColor: Colors.blue,
+                                decoration: const InputDecoration(
+                                  hintText: "Thêm bình luận",
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                  border: InputBorder.none,
                                 ),
-                                border: InputBorder.none,
-                              ),
-                              onChanged: (value) {
-                                setState(() {
-                                  _showClearButton = value.isNotEmpty;
-                                });
-                              },
-                            ),
-                          ),
-                          if (_showClearButton)
-                            Positioned(
-                              right: 0,
-                              top: 0,
-                              bottom: 0,
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.clear,
-                                  size: 18,
-                                ),
-                                onPressed: () {
-                                  comment.clear();
+                                onChanged: (value) {
                                   setState(() {
-                                    _showClearButton = false;
+                                    _showClearButton = value.isNotEmpty;
                                   });
                                 },
                               ),
                             ),
-                        ],
+                            if (_showClearButton)
+                              Positioned(
+                                right: 0,
+                                top: 0,
+                                bottom: 0,
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.clear,
+                                    size: 18,
+                                  ),
+                                  onPressed: () {
+                                    comment.clear();
+                                    setState(() {
+                                      _showClearButton = false;
+                                    });
+                                  },
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 20),
                     GestureDetector(
                       onTap: () {},
                       child: const Icon(
