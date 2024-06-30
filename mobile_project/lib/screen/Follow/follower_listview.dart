@@ -47,7 +47,6 @@ class _ListFollowerState extends State<ListFollowerScreen> {
     _uid = widget.currentUserId;
     _followerNum = widget.followerNum;
     _followingNum = widget.followingNum;
-
     getFriendCount();
   }
   void getFriendCount() {

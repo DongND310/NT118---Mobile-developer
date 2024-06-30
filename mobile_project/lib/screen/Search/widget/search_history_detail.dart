@@ -27,7 +27,7 @@ class _SearchHistoryState extends State<SearchHistoryDetail> {
     try {
       final prefs = await SharedPreferences.getInstance();
       final history = prefs.getStringList('search_history') ?? [];
-      return history;
+      return history.reversed.toList(); // Reverse the list to show the latest first
     } catch (e) {
       // Handle the error appropriately
       throw Exception('Failed to load search history');
@@ -37,7 +37,7 @@ class _SearchHistoryState extends State<SearchHistoryDetail> {
   Future<void> saveSearchHistory(List<String> history) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setStringList('search_history', history);
+      await prefs.setStringList('search_history', history.reversed.toList()); // Reverse the list before saving
     } catch (e) {
       // Handle the error appropriately
       throw Exception('Failed to save search history');
@@ -117,8 +117,8 @@ class _SearchHistoryState extends State<SearchHistoryDetail> {
                     onPressed: () async {
                       setState(() {
                         searchHistory.clear();
-                        saveSearchHistory(searchHistory);
                       });
+                      await saveSearchHistory(searchHistory); // Save the empty history list
                     },
                     child: const Text(
                       "Xóa tất cả",
@@ -130,24 +130,25 @@ class _SearchHistoryState extends State<SearchHistoryDetail> {
                     ),
                   ),
                 ],
-              )
-                  : Row(
+              ): searchHistory.length <= 3?
+                  Container():
+                  Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _show = true;
-                      });
-                    },
-                    child: const Text(
-                      "Xem thêm",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color(0xFF107BFD),
-                        fontSize: 18,
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _show = true;
+                        });
+                      },
+                      child: const Text(
+                        "Xem thêm",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xFF107BFD),
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
                   ),
                 ],
               ),

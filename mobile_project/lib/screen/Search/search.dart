@@ -12,62 +12,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'hashtagview.dart';
 
 class SearchScreen extends StatefulWidget {
-
-  final List<String> account = [
-    "Account1",
-    "Account1",
-    "Account1",
-    "Account1",
-    "Account1",
-    "Account1",
-    "Account1",
-    "Account1",
-    "Account1",
-    "Account1"
-  ];
-  final String descript = "description";
-  final List<String> hashtag = [
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2",
-    "#hashtag1",
-    "#hashtag2"
-  ];
-  final String title = "Title";
-  final String numLike = "1M";
-
+  final List<String> hashtag=['has1','has2','has3','has4'];
   @override
   State<StatefulWidget> createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
   late bool _showresult;
-  List<String> _search = [];
   List<String> searchHistory = [];
   final TextEditingController _textEditingController = TextEditingController();
   String? _avt;
@@ -89,11 +40,11 @@ class _SearchScreenState extends State<SearchScreen> {
     final searchText = _textEditingController.text.trim();
     if (searchText.isNotEmpty) {
       setState(() {
+        query = searchText;
         _showresult = true;
         if (!searchHistory.contains(searchText)) {
           searchHistory.add(searchText);
           saveSearchHistory(searchHistory);
-          query = searchText;
         }
       });
     }
@@ -121,43 +72,10 @@ class _SearchScreenState extends State<SearchScreen> {
     name = userDoc.get("Name");
     setState(() {});
   }
-
-  Widget _searchListView() {
-    return ListView.builder(
-        itemCount: _search.length,
-        itemBuilder: (ctx, index) {
-          return Padding(
-              padding: const EdgeInsets.only(left: 15.0, top: 10, bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        child: SvgPicture.asset(
-                          'assets/icons/search.svg',
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(_search[index]),
-                    ],
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: SvgPicture.asset(
-                      'assets/icons/cancel.svg',
-                    ),
-                  ),
-                ],
-              ));
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+        initialIndex: 0,
         length: 4,
         child: Scaffold(
           appBar: AppBar(
@@ -254,7 +172,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           body: _showresult
               ? SearchResult(query: query,name: name??'', currentId: _uid??'',)
-              : _textEditingController.text.isNotEmpty ? _searchListView()
               : SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
@@ -263,6 +180,7 @@ class _SearchScreenState extends State<SearchScreen> {
               children: [
                 SearchHistoryDetail(
                     searchHistory, false),
+                const SizedBox(height: 10,),
                 const Padding(
                   padding: EdgeInsets.only(left: 15),
                   child: Text(

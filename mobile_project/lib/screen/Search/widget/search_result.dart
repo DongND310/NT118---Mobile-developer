@@ -35,12 +35,120 @@ class _SearchResultState extends State<SearchResult> {
   final DatabaseServices databaseServices = DatabaseServices();
   @override
   void initState() {
+    super.initState();
     setState(() {
       _query= widget.query.toLowerCase();
       _uid = widget.currentId;
       _name = widget.name;
     });
   }
+  Future<bool> checkFollowing(String uerId) async {
+    DocumentSnapshot doc = await followingsRef
+        .doc(widget.currentId)
+        .collection("userFollowings")
+        .doc(uerId)
+        .get();
+    return doc.exists;
+  }
+  handleUnfollowUser(String userId) {
+    followersRef
+        .doc(userId)
+        .collection('userFollowers')
+        .doc(widget.currentId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+    followingsRef
+        .doc(widget.currentId)
+        .collection('userFollowings')
+        .doc(userId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+    DocumentReference userRef =
+    FirebaseFirestore.instance.collection('users').doc(widget.currentId);
+
+    userRef.update({
+      'followingsList': FieldValue.arrayRemove([userId])
+    }).then((_) {
+      setState(() {
+      });
+    });
+  }
+
+  handleFollowUser(String userId, bool isFollowing) {
+    followersRef
+        .doc(userId)
+        .collection('userFollowers')
+        .doc(widget.currentId)
+        .set({});
+
+    followingsRef
+        .doc(widget.currentId)
+        .collection('userFollowings')
+        .doc(userId)
+        .set({});
+    DocumentReference userRef =
+    FirebaseFirestore.instance.collection('users').doc(widget.currentId);
+    userRef.update({
+      'followingsList': FieldValue.arrayUnion([userId])
+    });
+  }
+  buildProfileButton(bool isFollowing, String userId) {
+    if (isFollowing) {
+      return buildButton(
+          text: "Unfollow",
+          isFollowing: isFollowing,
+          function: () {
+            handleUnfollowUser(userId);
+            setState(() {
+              isFollowing = false;
+            });
+          });
+
+    } else {
+      return buildButton(
+          text: "Follow",
+          isFollowing: isFollowing,
+          function: () {
+            handleFollowUser(userId, isFollowing);
+            setState(() {
+              isFollowing = true;
+            });
+          });
+    }
+  }
+
+  ElevatedButton buildButton(
+      {required String text,
+        required bool isFollowing,
+        required VoidCallback function}) {
+    return ElevatedButton(
+      onPressed: function,
+      style: ButtonStyle(
+        minimumSize: MaterialStateProperty.all<Size>(
+          const Size(125, 35),
+        ),
+        backgroundColor: MaterialStateProperty.all<Color>(
+            isFollowing ? Colors.grey : Colors.blue),
+        foregroundColor: MaterialStateProperty.all<Color>(
+            isFollowing ? Colors.black : Colors.white),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
+      ),
+      child: Text(text,),
+    );
+  }
+  @override
   Widget build(BuildContext context) {
     return TabBarView(children: [
       SingleChildScrollView(
@@ -61,63 +169,88 @@ class _SearchResultState extends State<SearchResult> {
                     if(snapshot.connectionState==ConnectionState.waiting){
                       return Container();
                     }else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return Text("Không có gì để tìm");
+                      return const Text("Không có gì để tìm");
                     }
                     else {
                       UserModel user = UserModel.fromDoc(snapshot.data!.docs[0]);
-                      return Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                "Tài khoản",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  TextButton(
-                                    onPressed: () {},
-                                    child: const Text(
-                                      "Xem thêm",
+                      return FutureBuilder<bool>(
+                        future: checkFollowing(user.uid),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<bool> followingSnapshot) {
+                          if (followingSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container();
+                          } else if (followingSnapshot.hasError) {
+                            return Text('Error: ${followingSnapshot.error}');
+                          } else {
+                            bool isFollow = followingSnapshot.data ?? false;
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(padding: EdgeInsets.only(top: 10, bottom: 10),
+                                    child:Text(
+                                      "Tài khoản",
                                       style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 16,
-                                        color: Color.fromARGB(195, 0, 0, 0),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                    ),
-                                  ),
-                                  SvgPicture.asset(
-                                    "assets/icons/more.svg",
-                                    width: 30,
-                                    height: 30,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Expanded(
-                              child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                          ( ProfileScreen(visitedUserID:user.uid ,currentUserId: _uid)
-                                          ),
-                                        ));
-                                  },
-                                  child: AccountDetail(user.name, user.bio??'', user.avt ?? '')
-                              )
-                          )
-                        ],
+                                    )
+                                ),
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                //   children: [
+                                //     ,
+                                //     // Row(
+                                //     //   children: [
+                                //     //     TextButton(
+                                //     //       onPressed: () {
+                                //     //
+                                //     //       },
+                                //     //       child: const Text(
+                                //     //         "Xem thêm",
+                                //     //         style: TextStyle(
+                                //     //           fontWeight: FontWeight.normal,
+                                //     //           fontSize: 16,
+                                //     //           color: Color.fromARGB(195, 0, 0, 0),
+                                //     //         ),
+                                //     //       ),
+                                //     //     ),
+                                //     //     SvgPicture.asset(
+                                //     //       "assets/icons/more.svg",
+                                //     //       width: 30,
+                                //     //       height: 30,
+                                //     //     ),
+                                //     //   ],
+                                //     // ),
+                                //   ],
+                                // ),
+                                Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: [
+                                     Expanded(child:
+                                     GestureDetector(
+                                         onTap: () {
+                                           Navigator.push(
+                                               context,
+                                               MaterialPageRoute(
+                                                 builder: (context) =>
+                                                 ( ProfileScreen(visitedUserID:user.uid ,currentUserId: _uid)
+                                                 ),
+                                               ));
+                                         },
+                                         child:AccountDetail(user.name, user.bio??'', user.avt ?? '')
+                                     ),),
+                                      buildProfileButton(isFollow, user.uid)
+                                    ]
+                                )
+                              ],
+                            );
+                          }
+                        },
                       );
-                    }
-                  },
-                ),
+                    }}),
                 const SizedBox(height: 15),
                 const Text(
                   "Video",
@@ -180,19 +313,45 @@ class _SearchResultState extends State<SearchResult> {
                               itemCount: listUids.length,
                               itemBuilder: (BuildContext context, int index) {
                                 UserModel user = UserModel.fromDoc(snapshot.data!.docs[index]);
-                                return Expanded(
-                                    child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                ( ProfileScreen(visitedUserID:user.uid ,currentUserId: _uid)
-                                                ),
-                                              ));
-                                        },
-                                        child: AccountDetail(user.name, user.bio??'', user.avt ?? '')
-                                    )
+                                return FutureBuilder<bool>(
+                                  future: checkFollowing(user.uid),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<bool> followingSnapshot) {
+                                    if (followingSnapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Container();
+                                    } else if (followingSnapshot.hasError) {
+                                      return Text('Error: ${followingSnapshot.error}');
+                                    } else {
+                                      bool isFollow = followingSnapshot.data ?? false;
+                                      return Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                              children: [
+                                                Expanded(child:
+                                                GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                            ( ProfileScreen(visitedUserID:user.uid ,currentUserId: _uid)
+                                                            ),
+                                                          ));
+                                                    },
+                                                    child:AccountDetail(user.name, user.bio??'', user.avt ?? '')
+                                                ),),
+                                                buildProfileButton(isFollow, user.uid)
+                                              ]
+                                          )
+                                        ],
+                                      );
+                                    }
+                                  },
                                 );
 
                               });
