@@ -110,7 +110,12 @@ class _HomePageState extends State<HomePage> {
                         color: const Color.fromARGB(255, 99, 159, 208),
                         alignment: Alignment.centerRight,
                         height: MediaQuery.of(context).size.height / 3,
-                        child: HomeSideBar(video: video),
+                        child: HomeSideBar(
+                          video: video,
+                          likesList: [],
+                          repliesList: [],
+                          savesList: [],
+                        ),
                       ),
                     ),
                   ],
