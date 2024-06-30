@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_project/components/home_side_bar.dart';
+import 'package:mobile_project/components/videocreatorinfo.dart';
 import 'package:mobile_project/screen/Search/search.dart';
 import 'package:mobile_project/screen/posts_videos/video_controller.dart';
 import 'package:mobile_project/screen/posts_videos/video_player_item.dart';
@@ -106,6 +107,14 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Expanded(
+                        flex: 2,
+                        child: Container(
+                          color: Color.fromARGB(255, 122, 128, 86),
+                          // height: MediaQuery.of(context).size.height / 5,
+                          child: VideoCreatorInfo(video: video),
+                        )),
+                    Expanded(
+                      flex: 1,
                       child: Container(
                         color: const Color.fromARGB(255, 99, 159, 208),
                         alignment: Alignment.centerRight,
