@@ -23,22 +23,36 @@ class _CommentPageState extends State<CommentPage> {
   bool _showClearButton = false;
   String? _useravt;
   int replyCount = 0;
+  String? _uid;
+  String? _avt;
 
   @override
   void initState() {
     super.initState();
     getUserData();
+    getCurrentUserData();
     getTotalReplyCount();
   }
 
   void getUserData() async {
     User currentUser = _auth.currentUser!;
+    _uid = currentUser.uid;
+    final DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(_uid).get();
+    _avt = userDoc.get('avt');
+    setState(() {});
+  }
+
+  final currentUser = FirebaseAuth.instance.currentUser!;
+
+  void getCurrentUserData() async {
     final DocumentSnapshot userDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(currentUser.uid)
         .get();
+
     setState(() {
-      _useravt = userDoc.get('avt');
+      _useravt = userDoc.get('Avt');
     });
   }
 
