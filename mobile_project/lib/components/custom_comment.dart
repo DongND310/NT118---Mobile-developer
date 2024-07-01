@@ -270,7 +270,6 @@ class _CustomCommentState extends State<CustomComment> {
                     },
                   ),
                 ),
-                // const SizedBox(height: 20),
               ],
             ),
           ),

@@ -92,8 +92,12 @@ class _CommentPageState extends State<CommentPage> {
   }
 
   void addReplyComment(String content, String replyId) async {
-    String subreplyId =
-        FirebaseFirestore.instance.collection('videos').doc().id;
+    String subreplyId = FirebaseFirestore.instance
+        .collection('videos')
+        .doc(widget.video.videoId)
+        .collection('replies')
+        .doc()
+        .id;
 
     DocumentReference videoRef = FirebaseFirestore.instance
         .collection('videos')
@@ -101,9 +105,9 @@ class _CommentPageState extends State<CommentPage> {
         .collection('replies')
         .doc(replyId);
 
-    await videoRef.update({
-      'repliesList': FieldValue.arrayUnion([subreplyId])
-    });
+    // await videoRef.update({
+    //   'repliesList': FieldValue.arrayUnion([subreplyId])
+    // });
 
     await FirebaseFirestore.instance
         .collection('videos')
@@ -118,6 +122,54 @@ class _CommentPageState extends State<CommentPage> {
       "videoId": widget.video.videoId,
       "replyId": replyId,
       "subreplyId": subreplyId,
+      "timestamp": Timestamp.now()
+    });
+
+    comment.clear();
+    setState(() {
+      _showClearButton = false;
+      replyUserId = null;
+      replyUserName = null;
+      currentReplyId = null;
+    });
+  }
+
+  void addSubReplyComment(
+      String content, String replyId, String subreplyId) async {
+    String subsubreplyId = FirebaseFirestore.instance
+        .collection('videos')
+        .doc(widget.video.videoId)
+        .collection('replies')
+        .doc(replyId)
+        .collection('subreplies')
+        .doc()
+        .id;
+
+    DocumentReference videoRef = FirebaseFirestore.instance
+        .collection('videos')
+        .doc(widget.video.videoId)
+        .collection('replies')
+        .doc(replyId)
+        .collection('subreplies')
+        .doc(subreplyId);
+
+    await videoRef.update({
+      'repliesList': FieldValue.arrayUnion([subsubreplyId])
+    });
+
+    await FirebaseFirestore.instance
+        .collection('videos')
+        .doc(widget.video.videoId)
+        .collection('replies')
+        .doc(replyId)
+        .collection('subreplies')
+        .doc(subsubreplyId)
+        .set({
+      "content": content,
+      "userId": user.uid,
+      "videoId": widget.video.videoId,
+      "replyId": replyId,
+      "subreplyId": subsubreplyId,
       "timestamp": Timestamp.now()
     });
 
@@ -310,7 +362,15 @@ class _CommentPageState extends State<CommentPage> {
                       child: GestureDetector(
                         onTap: () {
                           if (replyUserName != null) {
-                            addReplyComment(comment.text, currentReplyId ?? "");
+                            if (currentSubReplyId != null) {
+                              addSubReplyComment(
+                                  comment.text,
+                                  currentReplyId ?? "",
+                                  currentSubReplyId ?? "");
+                            } else {
+                              addReplyComment(
+                                  comment.text, currentReplyId ?? "");
+                            }
                           } else {
                             addCommentVideo(comment.text);
                           }

@@ -133,46 +133,6 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
 
   final user = FirebaseAuth.instance.currentUser!;
 
-  void addSubReplyComment(String content) {
-    DocumentReference postRef = FirebaseFirestore.instance
-        .collection('videos')
-        .doc(widget.videoId)
-        .collection('replies')
-        .doc(widget.replyId)
-        .collection('subreplies')
-        .doc(widget.subreplyId);
-
-    String subreplyId = FirebaseFirestore.instance
-        .collection('videos')
-        .doc(widget.videoId)
-        .collection('replies')
-        .doc(widget.replyId)
-        .collection('subreplies')
-        .doc()
-        .id;
-    postRef.update({
-      'repliesList': FieldValue.arrayUnion([subreplyId])
-    });
-
-    FirebaseFirestore.instance
-        .collection('videos')
-        .doc(widget.videoId)
-        .collection('replies')
-        .doc(widget.replyId)
-        .collection('subreplies')
-        .doc(subreplyId)
-        .set({
-      "content": content,
-      "userId": user.uid,
-      "postId": widget.videoId,
-      "replyId": widget.replyId,
-      "subreplyId": subreplyId,
-      "timestamp": Timestamp.now()
-    });
-    comment.clear();
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -232,11 +192,8 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
                               const SizedBox(width: 10),
                               GestureDetector(
                                 onTap: () {
-                                  widget.replyCallback(
-                                      widget.userId,
-                                      _name ?? '',
-                                      widget
-                                          .subreplyId); // Gọi callback với replyId
+                                  widget.replyCallback(widget.userId,
+                                      _name ?? '', widget.subreplyId);
                                 },
                                 child: const Text("Trả lời",
                                     style: TextStyle(
