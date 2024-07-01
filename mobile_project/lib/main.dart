@@ -1,7 +1,11 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_notification_channel/flutter_notification_channel.dart';
+import 'package:flutter_notification_channel/notification_importance.dart';
+import 'package:flutter_notification_channel/notification_visibility.dart';
 import 'package:mobile_project/components/navigation_container.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mobile_project/screen/login-regis/welcome.dart';
@@ -20,7 +24,17 @@ void main() async {
           name: "Reels Replay",
           options: DefaultFirebaseOptions.currentPlatform,
         );
-
+  var result = await FlutterNotificationChannel().registerNotificationChannel(
+      description: 'Your channel description',
+      id: 'chats',
+      importance: NotificationImportance.IMPORTANCE_HIGH,
+      name: 'Reels Replay',
+      visibility: NotificationVisibility.VISIBILITY_PUBLIC,
+      allowBubbles: true,
+      enableVibration: true,
+      enableSound: true,
+      showBadge: true,);
+  log('\nNotification Channel Result: $result');
   runApp(const MainApp());
 }
 

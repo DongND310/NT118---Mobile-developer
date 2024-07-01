@@ -336,16 +336,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     ? GestureDetector(
                                         onTap: () {
                                           Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => ChatPage(
-                                                  receiverId:
-                                                      widget.visitedUserID,
-                                                  receiverName: userModel.name,
-                                                  chatterImg: userModel.avt ??
-                                                      'assets/images/default_avt.png',
-                                                ),
-                                              ));
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProfileSettingPage(),
+                                            ),
+                                          );
                                         },
                                         child: Container(
                                           height: 45,
@@ -391,12 +387,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           GestureDetector(
                                             onTap: () {
                                               Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProfileSettingPage(),
-                                                ),
-                                              );
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => ChatPage(
+                                                      receiverId:
+                                                      widget.visitedUserID,
+                                                      receiverName: userModel.name,
+                                                      chatterImg: userModel.avt ??
+                                                          'assets/images/default_avt.png',
+                                                    ),
+                                                  ));
                                             },
                                             child: Container(
                                               height: 55,

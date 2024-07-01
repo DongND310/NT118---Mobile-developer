@@ -23,6 +23,8 @@ class UserService {
       bio: data['Bio'] ?? '',
       avt: data['Avt'] ??
           'https://i.pinimg.com/564x/21/0a/76/210a7677d78d6dcedccbf1c543aa7ebf.jpg',
+      pushToken: data['push_token']??'',
+
     );
   }
 

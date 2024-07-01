@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'package:mobile_project/services/notiApi.dart';
 import '../models/message.dart';
 
 class ChatService extends ChangeNotifier {
@@ -50,7 +50,12 @@ class ChatService extends ChangeNotifier {
         .collection("chatrooms")
         .doc(chatRoomId)
         .collection("messages")
-        .add(newMessage.toMap());
+        .add(newMessage.toMap()).then((value)
+        {
+          NotiApi notiApi = NotiApi();
+          notiApi.sendPushNotification(receiverId, message);
+        }
+    );
   }
 
   // Get messages

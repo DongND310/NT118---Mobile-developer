@@ -8,6 +8,7 @@ import 'package:mobile_project/screen/message/message_page.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:mobile_project/screen/users/profile_page.dart';
+import 'package:mobile_project/services/notiApi.dart';
 
 class NavigationContainer extends StatefulWidget {
   NavigationContainer({super.key, required this.currentUserID, this.pageIndex});
@@ -20,6 +21,7 @@ class NavigationContainer extends StatefulWidget {
 class _NavigationContainerState extends State<NavigationContainer> {
   int _selectedPageIndex = 0;
   final user = FirebaseAuth.instance.currentUser;
+  final NotiApi _api = NotiApi();
   late final List<Widget> _pages = [
     HomePage(currentUserId: widget.currentUserID),
     MessagePage(),
@@ -34,6 +36,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
   @override
   void initState() {
     super.initState();
+    _api.getFirebaseMessagingToken();
     _selectedPageIndex = widget.pageIndex ?? 0;
   }
 

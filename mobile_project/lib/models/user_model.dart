@@ -15,6 +15,7 @@ class UserModel {
   String gender;
   String? avt;
   String? bio;
+  String? pushToken;
 
   UserModel(
       {required this.uid,
@@ -25,7 +26,8 @@ class UserModel {
       required this.dob,
       required this.gender,
       required this.bio,
-      required this.avt});
+      required this.avt,
+        required this.pushToken});
 
   factory UserModel.fromDoc(DocumentSnapshot doc) {
     return UserModel(
@@ -37,7 +39,8 @@ class UserModel {
         dob: doc['DOB'],
         gender: doc['Gender'],
         bio: doc['Bio'],
-        avt: doc['Avt']);
+        avt: doc['Avt'],
+        pushToken: doc['push_token']);
   }
 }
 
