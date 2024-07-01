@@ -13,6 +13,7 @@ class CustomComment extends StatefulWidget {
   final List<String> repliesList;
   final Timestamp timestamp;
   final Function(String userId, String userName, String replyId) replyCallback;
+  final Function(String, String, String, String) subreplyCallback;
 
   const CustomComment({
     super.key,
@@ -24,6 +25,7 @@ class CustomComment extends StatefulWidget {
     required this.repliesList,
     required this.timestamp,
     required this.replyCallback,
+    required this.subreplyCallback,
   });
 
   @override
@@ -252,6 +254,8 @@ class _CustomCommentState extends State<CustomComment> {
                           likesList: [],
                           repliesList: [],
                           timestamp: subreplyData['timestamp'],
+                          replyCallback: widget.replyCallback,
+                          subreplyCallback: widget.subreplyCallback,
                         );
                       }).toList();
 

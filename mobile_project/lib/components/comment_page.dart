@@ -6,7 +6,7 @@ import 'package:mobile_project/components/custom_comment.dart';
 import 'package:mobile_project/models/video_model.dart';
 
 class CommentPage extends StatefulWidget {
-  CommentPage({super.key, required this.video});
+  CommentPage({Key? key, required this.video}) : super(key: key);
   final VideoModel video;
 
   @override
@@ -17,20 +17,22 @@ class _CommentPageState extends State<CommentPage> {
   TextEditingController comment = TextEditingController();
   final user = FirebaseAuth.instance.currentUser!;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  String? replyUserId; // Lưu userId của người dùng cần trả lời
-  String? replyUserName; // Lưu tên của người dùng cần trả lời
+  String? replyUserId;
+  String? replyUserName;
   bool _showClearButton = false;
+
+  String? currentReplyId;
+  String? currentSubReplyId;
   String? _uid;
-  String? _avt;
+  String? _useravt;
   int replyCount = 0;
-  String? currentReplyId; // Thêm biến lưu replyId hiện tại
 
   @override
   void initState() {
     super.initState();
     getUserData();
     getCurrentUserData();
-    getsumReplyCount();
+    getTotalReplyCount();
   }
 
   void getUserData() async {
@@ -38,17 +40,15 @@ class _CommentPageState extends State<CommentPage> {
     _uid = currentUser.uid;
     final DocumentSnapshot userDoc =
         await FirebaseFirestore.instance.collection('users').doc(_uid).get();
-    _avt = userDoc.get('avt');
-    setState(() {});
+    setState(() {
+      _useravt = userDoc.get('avt');
+    });
   }
-
-  final currentUser = FirebaseAuth.instance.currentUser!;
-  String? _useravt;
 
   void getCurrentUserData() async {
     final DocumentSnapshot userDoc = await FirebaseFirestore.instance
         .collection('users')
-        .doc(currentUser.uid)
+        .doc(user.uid)
         .get();
 
     setState(() {
@@ -56,18 +56,18 @@ class _CommentPageState extends State<CommentPage> {
     });
   }
 
-  String replyId = FirebaseFirestore.instance.collection('videos').doc().id;
-
-  void addCommentVideo(String content) {
+  void addCommentVideo(String content) async {
     if (content.trim().isNotEmpty) {
+      String replyId = FirebaseFirestore.instance.collection('videos').doc().id;
+
       DocumentReference videoRef = FirebaseFirestore.instance
           .collection('videos')
           .doc(widget.video.videoId);
-      videoRef.update({
+      await videoRef.update({
         'repliesList': FieldValue.arrayUnion([replyId])
       });
 
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection('videos')
           .doc(widget.video.videoId)
           .collection('replies')
@@ -79,6 +79,7 @@ class _CommentPageState extends State<CommentPage> {
         "replyId": replyId,
         "timestamp": Timestamp.now()
       });
+
       comment.clear();
       setState(() {
         _showClearButton = false;
@@ -86,30 +87,25 @@ class _CommentPageState extends State<CommentPage> {
         replyUserName = null;
         currentReplyId = null;
       });
-      getsumReplyCount();
+      getTotalReplyCount();
     }
   }
 
-  void addReplyComment(String content, String replyId) {
+  void addReplyComment(String content, String replyId) async {
+    String subreplyId =
+        FirebaseFirestore.instance.collection('videos').doc().id;
+
     DocumentReference videoRef = FirebaseFirestore.instance
         .collection('videos')
         .doc(widget.video.videoId)
         .collection('replies')
         .doc(replyId);
 
-    String subreplyId = FirebaseFirestore.instance
-        .collection('videos')
-        .doc(widget.video.videoId)
-        .collection('replies')
-        .doc(replyId)
-        .collection('subreplies')
-        .doc()
-        .id;
-    videoRef.update({
+    await videoRef.update({
       'repliesList': FieldValue.arrayUnion([subreplyId])
     });
 
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('videos')
         .doc(widget.video.videoId)
         .collection('replies')
@@ -118,7 +114,7 @@ class _CommentPageState extends State<CommentPage> {
         .doc(subreplyId)
         .set({
       "content": content,
-      "userId": replyUserId,
+      "userId": user.uid,
       "videoId": widget.video.videoId,
       "replyId": replyId,
       "subreplyId": subreplyId,
@@ -134,7 +130,7 @@ class _CommentPageState extends State<CommentPage> {
     });
   }
 
-  void getsumReplyCount() async {
+  void getTotalReplyCount() async {
     int totalReplies = 0;
 
     QuerySnapshot repliesSnapshot = await FirebaseFirestore.instance
@@ -209,17 +205,20 @@ class _CommentPageState extends State<CommentPage> {
                             likesList: [],
                             repliesList: [],
                             timestamp: replyData['timestamp'],
-                            replyCallback: (String userId, String userName,
-                                String replyId) {
-                              replyToUser(userId, userName,
-                                  replyId); // Pass replyId here
+                            replyCallback: (userId, userName, replyId) {
+                              replyToUser(userId, userName, replyId);
+                            },
+                            subreplyCallback:
+                                (userId, userName, replyId, subreplyId) {
+                              replyToSubUser(
+                                  userId, userName, replyId, subreplyId);
                             },
                           );
                         }).toList();
 
                         return ListView.builder(
                           shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
+                          physics: NeverScrollableScrollPhysics(),
                           itemCount: replies.length,
                           itemBuilder: (context, index) {
                             return replies[index];
@@ -309,10 +308,13 @@ class _CommentPageState extends State<CommentPage> {
                     Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: GestureDetector(
-                        onTap: () => replyUserName != null
-                            ? addReplyComment(
-                                comment.text, currentReplyId ?? replyId)
-                            : addCommentVideo(comment.text),
+                        onTap: () {
+                          if (replyUserName != null) {
+                            addReplyComment(comment.text, currentReplyId ?? "");
+                          } else {
+                            addCommentVideo(comment.text);
+                          }
+                        },
                         child: const Icon(
                           Icons.send,
                           color: Colors.blue,
@@ -333,11 +335,20 @@ class _CommentPageState extends State<CommentPage> {
     setState(() {
       replyUserId = userId;
       replyUserName = userName;
-      currentReplyId =
-          replyId; // Update the currentReplyId with the passed replyId
+      currentReplyId = replyId;
       comment.text = "@$userName: ";
       comment.selection =
           TextSelection.fromPosition(TextPosition(offset: comment.text.length));
+    });
+  }
+
+  void replyToSubUser(
+      String userId, String userName, String replyId, String subreplyId) {
+    setState(() {
+      replyUserId = userId;
+      replyUserName = userName;
+      currentReplyId = replyId;
+      currentSubReplyId = subreplyId;
     });
   }
 }

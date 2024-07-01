@@ -12,16 +12,22 @@ class CustomCommentReply extends StatefulWidget {
   final List<String> likesList;
   final List<String> repliesList;
   final Timestamp timestamp;
-  CustomCommentReply(
-      {super.key,
-      required this.content,
-      required this.userId,
-      required this.videoId,
-      required this.replyId,
-      required this.subreplyId,
-      required this.likesList,
-      required this.repliesList,
-      required this.timestamp});
+  final Function(String, String, String) replyCallback;
+  final Function(String, String, String, String) subreplyCallback;
+
+  CustomCommentReply({
+    super.key,
+    required this.content,
+    required this.userId,
+    required this.videoId,
+    required this.replyId,
+    required this.subreplyId,
+    required this.likesList,
+    required this.repliesList,
+    required this.timestamp,
+    required this.replyCallback,
+    required this.subreplyCallback,
+  });
 
   @override
   State<CustomCommentReply> createState() => _CustomCommentReplyState();
@@ -55,7 +61,6 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
   String? _name;
   String? _avt;
   TextEditingController _replyController = TextEditingController();
-  bool _showReplyField = false;
   TextEditingController comment = TextEditingController();
   bool _showClearButton = false;
 
@@ -128,13 +133,6 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
 
   final user = FirebaseAuth.instance.currentUser!;
 
-  void showReplyField() {
-    setState(() {
-      _showReplyField = true;
-      comment.text = '${_name ?? ''}: ';
-    });
-  }
-
   void addSubReplyComment(String content) {
     DocumentReference postRef = FirebaseFirestore.instance
         .collection('videos')
@@ -172,9 +170,7 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
       "timestamp": Timestamp.now()
     });
     comment.clear();
-    setState(() {
-      _showReplyField = false;
-    });
+    setState(() {});
   }
 
   @override
@@ -236,7 +232,11 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
                               const SizedBox(width: 10),
                               GestureDetector(
                                 onTap: () {
-                                  // widget.replyCallback(widget.userId, _name ?? '');
+                                  widget.replyCallback(
+                                      widget.userId,
+                                      _name ?? '',
+                                      widget
+                                          .subreplyId); // Gọi callback với replyId
                                 },
                                 child: const Text("Trả lời",
                                     style: TextStyle(
@@ -271,8 +271,12 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
           padding: const EdgeInsets.only(left: 10),
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
+                .collection('videos')
+                .doc(widget.videoId)
                 .collection('replies')
                 .doc(widget.replyId)
+                .collection('subreplies')
+                .doc(widget.subreplyId)
                 .collection('subreplies')
                 .orderBy('timestamp', descending: false)
                 .snapshots(),
@@ -287,15 +291,16 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
                   snapshot.data!.docs.map((doc) {
                 final subreplyData = doc.data() as Map<String, dynamic>;
                 return CustomCommentReply(
-                  videoId: subreplyData['videoId'],
-                  content: subreplyData['content'],
-                  userId: subreplyData['userId'],
-                  subreplyId: subreplyData['subreplyId'],
-                  replyId: subreplyData['replyId'],
-                  likesList: [],
-                  repliesList: [],
-                  timestamp: subreplyData['timestamp'],
-                );
+                    videoId: subreplyData['videoId'],
+                    content: subreplyData['content'],
+                    userId: subreplyData['userId'],
+                    subreplyId: subreplyData['subreplyId'],
+                    replyId: subreplyData['replyId'],
+                    likesList: [],
+                    repliesList: [],
+                    timestamp: subreplyData['timestamp'],
+                    replyCallback: widget.replyCallback,
+                    subreplyCallback: widget.subreplyCallback);
               }).toList();
 
               return ListView.builder(
