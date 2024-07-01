@@ -140,14 +140,14 @@ class _CommentPageState extends State<CommentPage> {
 
     String? mainReplyId = await findMainReplyIdBySubreplyId(replyId);
 
-    print("add subreply chính mainreplyId: $mainReplyId");
-    print("subreplyid của mainreplyId: $subreplyId");
+    print("mainreplyId: $mainReplyId");
+    print("subreplyid: $subreplyId");
 
     await FirebaseFirestore.instance
         .collection('videos')
         .doc(widget.video.videoId)
         .collection('replies')
-        .doc(mainReplyId)
+        .doc(mainReplyId ?? replyId)
         .collection('subreplies')
         .doc(subreplyId)
         .set({
