@@ -164,56 +164,63 @@ class _CommentPageState extends State<CommentPage> {
         height: 300,
         child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Container(width: 90, height: 2, color: Colors.grey),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: 30, bottom: 50, left: 15, right: 20),
-              child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('videos')
-                    .doc(widget.video.videoId)
-                    .collection('replies')
-                    .orderBy('timestamp', descending: false)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child:
+                          Container(width: 90, height: 2, color: Colors.grey),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 30, bottom: 80, left: 15, right: 20),
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('videos')
+                          .doc(widget.video.videoId)
+                          .collection('replies')
+                          .orderBy('timestamp', descending: false)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
 
-                  final List<CustomComment> replies =
-                      snapshot.data!.docs.map((doc) {
-                    final replyData = doc.data() as Map<String, dynamic>;
-                    return CustomComment(
-                      content: replyData['content'],
-                      userId: replyData['userId'],
-                      videoId: replyData['videoId'],
-                      replyId: replyData['replyId'],
-                      likesList: [],
-                      repliesList: [],
-                      timestamp: replyData['timestamp'],
-                      replyCallback: (String userId, String userName) {
-                        replyToUser(userId, userName);
+                        final List<CustomComment> replies =
+                            snapshot.data!.docs.map((doc) {
+                          final replyData = doc.data() as Map<String, dynamic>;
+                          return CustomComment(
+                            content: replyData['content'],
+                            userId: replyData['userId'],
+                            videoId: replyData['videoId'],
+                            replyId: replyData['replyId'],
+                            likesList: [],
+                            repliesList: [],
+                            timestamp: replyData['timestamp'],
+                            replyCallback: (String userId, String userName) {
+                              replyToUser(userId, userName);
+                            },
+                          );
+                        }).toList();
+
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: replies.length,
+                          itemBuilder: (context, index) {
+                            return replies[index];
+                          },
+                        );
                       },
-                    );
-                  }).toList();
-
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: replies.length,
-                    itemBuilder: (context, index) {
-                      return replies[index];
-                    },
-                  );
-                },
+                    ),
+                  ),
+                ],
               ),
             ),
             Positioned(
@@ -221,7 +228,7 @@ class _CommentPageState extends State<CommentPage> {
               right: 0,
               left: 0,
               child: Container(
-                height: 60,
+                height: 100,
                 width: double.infinity,
                 color: Colors.white,
                 child: Row(
@@ -239,7 +246,6 @@ class _CommentPageState extends State<CommentPage> {
                     ),
                     Expanded(
                       child: SizedBox(
-                        height: 100,
                         width: 270,
                         child: Stack(
                           children: [
