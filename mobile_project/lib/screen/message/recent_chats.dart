@@ -113,7 +113,8 @@ class _RecentChatState extends State<RecentChats> {
                   }
                   UserModel userModel = UserModel.fromDoc(snapshot.data);
                   return Padding(
-                    padding: const EdgeInsets.only(left: 15, top: 15, bottom: 15),
+                    padding:
+                        const EdgeInsets.only(left: 15, top: 15, bottom: 15),
                     child: InkWell(
                       onTap: () {
                         Navigator.push(
@@ -135,7 +136,8 @@ class _RecentChatState extends State<RecentChats> {
                                 backgroundImage:
                                     NetworkImage(userModel.avt ?? '')),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -171,7 +173,7 @@ class _RecentChatState extends State<RecentChats> {
                                           softWrap: false,
                                         ),
                                       ),
-                                      const SizedBox(width: 30),
+                                      const SizedBox(width: 20),
                                       Align(
                                         alignment: Alignment.bottomRight,
                                         child: Text(
@@ -180,15 +182,11 @@ class _RecentChatState extends State<RecentChats> {
                                           style: const TextStyle(
                                               fontSize: 15,
                                               color: Colors.black54),
+                                          textAlign: TextAlign.end,
                                         ),
-                                        // Expanded(
-                                        //   child:
-                                        // ),
                                       )
                                     ],
                                   ),
-                                  // Expanded(
-                                  //     child:)
                                 ],
                               ),
                             ),
