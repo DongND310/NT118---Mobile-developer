@@ -12,7 +12,7 @@ class CustomComment extends StatefulWidget {
   final List<String> likesList;
   final List<String> repliesList;
   final Timestamp timestamp;
-  final Function(String, String) replyCallback;
+  final Function(String userId, String userName, String replyId) replyCallback;
 
   const CustomComment({
     super.key,
@@ -180,7 +180,8 @@ class _CustomCommentState extends State<CustomComment> {
                           const SizedBox(width: 10),
                           GestureDetector(
                             onTap: () {
-                              widget.replyCallback(widget.userId, _name ?? '');
+                              widget.replyCallback(
+                                  widget.userId, _name ?? '', widget.replyId);
                             },
                             child: const Text("Trả lời",
                                 style: TextStyle(

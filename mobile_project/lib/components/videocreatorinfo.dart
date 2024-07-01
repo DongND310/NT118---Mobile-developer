@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/models/video_model.dart';
 import 'package:mobile_project/screen/users/profile_page.dart';
 
@@ -15,8 +14,9 @@ class VideoCreatorInfo extends StatefulWidget {
 }
 
 class _VideoCreatorInfoState extends State<VideoCreatorInfo> {
-  late String _avt;
-  late String _name;
+  String? _avt;
+  String? _name;
+  bool _isLoading = true; // Trạng thái tải dữ liệu
   bool _isExpanded = false; // Trạng thái mở rộng caption
 
   @override
@@ -36,11 +36,18 @@ class _VideoCreatorInfoState extends State<VideoCreatorInfo> {
     setState(() {
       _name = userDoc.get('Name');
       _avt = userDoc.get('Avt');
+      _isLoading = false; // Dữ liệu đã tải xong
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.only(left: 15, bottom: 10),
       child: Column(
@@ -52,10 +59,10 @@ class _VideoCreatorInfoState extends State<VideoCreatorInfo> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => (ProfileScreen(
+                    builder: (context) => ProfileScreen(
                       visitedUserID: widget.video.postedById,
                       currentUserId: user.uid,
-                    )),
+                    ),
                   ));
             },
             child: Row(
@@ -64,14 +71,14 @@ class _VideoCreatorInfoState extends State<VideoCreatorInfo> {
                   padding: const EdgeInsets.only(top: 10, right: 15),
                   child: CircleAvatar(
                     radius: 20,
-                    backgroundImage: _avt.isNotEmpty
-                        ? NetworkImage(_avt)
+                    backgroundImage: _avt != null
+                        ? NetworkImage(_avt!)
                         : const AssetImage('assets/images/default_avt.png')
                             as ImageProvider,
                   ),
                 ),
                 Text(
-                  _name,
+                  _name!,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,

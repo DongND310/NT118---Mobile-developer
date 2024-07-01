@@ -41,6 +41,7 @@ class _HomeSideBarState extends State<HomeSideBar>
     _animationController.repeat();
     super.initState();
 
+    getsumReplyCount();
     isLiked = false;
     isSaved = false;
     FirebaseFirestore.instance

@@ -107,7 +107,7 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
       isLiked = !isLiked;
     });
 
-    DocumentReference postRef = FirebaseFirestore.instance
+    DocumentReference videoRef = FirebaseFirestore.instance
         .collection('videos')
         .doc(widget.videoId)
         .collection('replies')
@@ -116,11 +116,11 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
         .doc(widget.subreplyId);
 
     if (isLiked) {
-      postRef.update({
+      videoRef.update({
         'likesList': FieldValue.arrayUnion([currentUser.uid])
       });
     } else {
-      postRef.update({
+      videoRef.update({
         'likesList': FieldValue.arrayRemove([currentUser.uid])
       });
     }
@@ -312,73 +312,6 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
         const SizedBox(
           height: 10,
         ),
-        // if (_showReplyField)
-        //   Container(
-        //     margin: const EdgeInsets.only(bottom: 30, right: 10),
-        //     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-        //     decoration: BoxDecoration(
-        //       color: Colors.white,
-        //       border: Border.all(color: Colors.grey.shade500),
-        //       borderRadius: BorderRadius.circular(25),
-        //     ),
-        //     child: Row(
-        //       children: [
-        //         CircleAvatar(
-        //           radius: 20,
-        //           backgroundImage: _avt != null
-        //               ? NetworkImage(_avt!)
-        //               : const AssetImage('assets/images/default_avt.png')
-        //                   as ImageProvider,
-        //         ),
-        //         Expanded(
-        //           child: TextField(
-        //             controller: comment,
-        //             autofocus: true,
-        //             maxLines: 10,
-        //             minLines: 1,
-        //             cursorColor: Colors.blue,
-        //             decoration: InputDecoration(
-        //               hintText: "Thêm bình luận",
-        //               hintStyle: const TextStyle(
-        //                 color: Colors.grey,
-        //               ),
-        //               border: InputBorder.none,
-        //               contentPadding: const EdgeInsets.symmetric(
-        //                   vertical: 10, horizontal: 10),
-        //               suffixIcon: _showClearButton
-        //                   ? IconButton(
-        //                       icon: const Icon(
-        //                         Icons.clear,
-        //                         size: 18,
-        //                         color: Colors.grey,
-        //                       ),
-        //                       onPressed: () {
-        //                         comment.clear();
-        //                         setState(() {
-        //                           _showClearButton = false;
-        //                         });
-        //                       },
-        //                     )
-        //                   : null,
-        //             ),
-        //             onChanged: (value) {
-        //               setState(() {
-        //                 _showClearButton = value.isNotEmpty;
-        //               });
-        //             },
-        //           ),
-        //         ),
-        //         const SizedBox(width: 10),
-        //         GestureDetector(
-        //           onTap: () => addSubReplyComment(comment.text),
-        //           child: const Icon(
-        //             Icons.send,
-        //             color: Colors.blue,
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
       ],
     );
   }

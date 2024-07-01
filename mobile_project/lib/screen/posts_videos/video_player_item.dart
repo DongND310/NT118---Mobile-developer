@@ -65,7 +65,7 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     } else if (_isError) {
-      return const Center(child: Text("Lỗi tải video"));
+      return const Center(child: CircularProgressIndicator());
     } else {
       return AspectRatio(
         aspectRatio: _videoPlayerController.value.aspectRatio,

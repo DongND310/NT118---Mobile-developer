@@ -23,6 +23,7 @@ class _CommentPageState extends State<CommentPage> {
   String? _uid;
   String? _avt;
   int replyCount = 0;
+  String? currentReplyId; // Thêm biến lưu replyId hiện tại
 
   @override
   void initState() {
@@ -56,6 +57,7 @@ class _CommentPageState extends State<CommentPage> {
   }
 
   String replyId = FirebaseFirestore.instance.collection('videos').doc().id;
+
   void addCommentVideo(String content) {
     if (content.trim().isNotEmpty) {
       DocumentReference videoRef = FirebaseFirestore.instance
@@ -80,25 +82,26 @@ class _CommentPageState extends State<CommentPage> {
       comment.clear();
       setState(() {
         _showClearButton = false;
+        replyUserId = null;
+        replyUserName = null;
+        currentReplyId = null;
       });
       getsumReplyCount();
     }
-    print("content cmt: $content");
   }
 
-  void addReplyComment(String content) {
+  void addReplyComment(String content, String replyId) {
     DocumentReference videoRef = FirebaseFirestore.instance
         .collection('videos')
         .doc(widget.video.videoId)
         .collection('replies')
-        .doc(widget.video.videoId);
+        .doc(replyId);
 
-    // Add subreply
     String subreplyId = FirebaseFirestore.instance
         .collection('videos')
         .doc(widget.video.videoId)
         .collection('replies')
-        .doc(widget.video.videoId)
+        .doc(replyId)
         .collection('subreplies')
         .doc()
         .id;
@@ -124,7 +127,10 @@ class _CommentPageState extends State<CommentPage> {
 
     comment.clear();
     setState(() {
-      // _showReplyField = false;
+      _showClearButton = false;
+      replyUserId = null;
+      replyUserName = null;
+      currentReplyId = null;
     });
   }
 
@@ -203,8 +209,10 @@ class _CommentPageState extends State<CommentPage> {
                             likesList: [],
                             repliesList: [],
                             timestamp: replyData['timestamp'],
-                            replyCallback: (String userId, String userName) {
-                              replyToUser(userId, userName);
+                            replyCallback: (String userId, String userName,
+                                String replyId) {
+                              replyToUser(userId, userName,
+                                  replyId); // Pass replyId here
                             },
                           );
                         }).toList();
@@ -287,6 +295,9 @@ class _CommentPageState extends State<CommentPage> {
                                     comment.clear();
                                     setState(() {
                                       _showClearButton = false;
+                                      replyUserId = null;
+                                      replyUserName = null;
+                                      currentReplyId = null;
                                     });
                                   },
                                 ),
@@ -299,7 +310,8 @@ class _CommentPageState extends State<CommentPage> {
                       padding: const EdgeInsets.only(right: 10),
                       child: GestureDetector(
                         onTap: () => replyUserName != null
-                            ? addReplyComment(comment.text)
+                            ? addReplyComment(
+                                comment.text, currentReplyId ?? replyId)
                             : addCommentVideo(comment.text),
                         child: const Icon(
                           Icons.send,
@@ -317,10 +329,15 @@ class _CommentPageState extends State<CommentPage> {
     );
   }
 
-  void replyToUser(String userId, String userName) {
+  void replyToUser(String userId, String userName, String replyId) {
     setState(() {
       replyUserId = userId;
       replyUserName = userName;
+      currentReplyId =
+          replyId; // Update the currentReplyId with the passed replyId
+      comment.text = "@$userName: ";
+      comment.selection =
+          TextSelection.fromPosition(TextPosition(offset: comment.text.length));
     });
   }
 }

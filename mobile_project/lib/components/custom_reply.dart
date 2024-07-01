@@ -144,7 +144,7 @@ class _CustomPostReplyState extends State<CustomPostReply> {
   void showReplyField() {
     setState(() {
       _showReplyField = true;
-      comment.text = '${_name ?? ''}: ';
+      comment.text = '@${_name ?? ''}: ';
     });
   }
 
