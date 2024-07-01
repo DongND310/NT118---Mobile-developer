@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_project/_mock_data/mock.dart';
 import 'package:mobile_project/models/video_model.dart';
+import 'package:mobile_project/screen/users/profile_page.dart';
 
 class VideoCreatorInfo extends StatefulWidget {
   VideoCreatorInfo({Key? key, required this.video}) : super(key: key);
@@ -23,6 +25,8 @@ class _VideoCreatorInfoState extends State<VideoCreatorInfo> {
     getUserData();
   }
 
+  final user = FirebaseAuth.instance.currentUser!;
+
   void getUserData() async {
     final userDoc = await FirebaseFirestore.instance
         .collection('users')
@@ -43,27 +47,39 @@ class _VideoCreatorInfoState extends State<VideoCreatorInfo> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 10, right: 15),
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundImage: _avt.isNotEmpty
-                      ? NetworkImage(_avt)
-                      : const AssetImage('assets/images/default_avt.png')
-                          as ImageProvider,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => (ProfileScreen(
+                      visitedUserID: widget.video.postedById,
+                      currentUserId: user.uid,
+                    )),
+                  ));
+            },
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 10, right: 15),
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundImage: _avt.isNotEmpty
+                        ? NetworkImage(_avt)
+                        : const AssetImage('assets/images/default_avt.png')
+                            as ImageProvider,
+                  ),
                 ),
-              ),
-              Text(
-                _name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                Text(
+                  _name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 8),
           GestureDetector(
