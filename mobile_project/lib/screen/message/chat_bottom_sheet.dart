@@ -54,17 +54,6 @@ class ChatBottomSheet extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 10),
-                //   child: IconButton(
-                //     icon: const Icon(
-                //       Icons.emoji_emotions_outlined,
-                //       size: 30,
-                //     ),
-                //     color: Colors.blue,
-                //     onPressed: () {},
-                //   ),
-                // ),
                  const SizedBox(width: 35),
                 Flexible(
                   child: Container(
