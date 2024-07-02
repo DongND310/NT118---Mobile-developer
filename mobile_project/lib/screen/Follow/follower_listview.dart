@@ -190,7 +190,9 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                                           userModel.avt ?? ''),
                                                     )
                                                   ),
+                                                  widget.currentUserId == user.uid?
                                                   buildProfileButton(isFollow, uid)
+                                                      :Container()
                                                 ],
                                               );
                                             });
@@ -271,7 +273,9 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                                     userModel.avt ?? ''),
                                               ),
                                             ),
+                                            widget.currentUserId == user.uid?
                                             buildProfileButton(true, uid)
+                                                :Container()
                                           ],
                                         );
                                       });
