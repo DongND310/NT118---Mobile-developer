@@ -97,15 +97,20 @@ class _RecentChatState extends State<RecentChats> {
               return Container();
             }
             var datamessage = snapshot.data!.docs[0];
+            var data = datamessage.data() as Map<String, dynamic>;
+
+            // Kiểm tra sự tồn tại của trường 'read'
+            var read = data.containsKey('read') ? data['read'] : '';
+            bool isRead = read != '';
             bool isSender = false;
-            if (datamessage["senderId"] == _auth.currentUser!.uid) {
+            if (data["senderId"] == _auth.currentUser!.uid) {
               isSender = true;
             }
             return FutureBuilder(
                 future: usersRef
                     .doc(isSender
-                        ? datamessage["receiverId"]
-                        : datamessage["senderId"])
+                        ? data["receiverId"]
+                        : data["senderId"])
                     .get(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (!snapshot.hasData) {
@@ -162,11 +167,17 @@ class _RecentChatState extends State<RecentChats> {
                                                 2,
                                         child: Text(
                                           isSender
-                                              ? "Bạn: ${datamessage['message'] ?? ''}"
-                                              : datamessage['message'] ?? '',
-                                          style: const TextStyle(
+                                              ? "Bạn: ${data['message'] ?? ''}"
+                                              : data['message'] ?? '',
+                                          style: isRead?
+                                          const TextStyle(
                                             fontSize: 15,
                                             color: Colors.black54,
+                                          )
+                                          :const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
@@ -178,7 +189,7 @@ class _RecentChatState extends State<RecentChats> {
                                         alignment: Alignment.bottomRight,
                                         child: Text(
                                           formatTimestamp(
-                                              datamessage['timestamp']),
+                                              data['timestamp']),
                                           style: const TextStyle(
                                               fontSize: 15,
                                               color: Colors.black54),

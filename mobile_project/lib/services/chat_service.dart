@@ -95,4 +95,28 @@ class ChatService extends ChangeNotifier {
     }
     return false;
   }
+  Future<void> updateMessageReadStatus(String senderId, String receiverId) async {
+    List<String> ids = [senderId, receiverId];
+    ids.sort();
+    String chatRoomId = ids.join('_');
+
+    QuerySnapshot querySnapshot = await _firestore
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .collection("messages")
+        .where("senderId", isEqualTo: senderId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      DocumentSnapshot messageDoc = querySnapshot.docs[0];
+      await _firestore
+          .collection('chatrooms')
+          .doc(chatRoomId)
+          .collection("messages")
+          .doc(messageDoc.id)
+          .update({
+        'read': DateTime.now().millisecondsSinceEpoch.toString(),
+      });
+    }
+  }
 }

@@ -543,8 +543,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ))
                     ];
                   },
-                  body: !_isVisited
-                      ? TabBarView(
+                  body: TabBarView(
                           controller: _tabController,
                           children: [
                             const VideoTab(),
@@ -554,15 +553,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             const SaveTab(),
                             const LikeTab(),
                           ],
-                        )
-                      : TabBarView(
-                          controller: _tabController,
-                          children: [
-                            const VideoTab(),
-                            PostTab(visitedUserID: widget.visitedUserID),
-                          ],
-                        )),
-            );
+                        )));
           }),
     );
   }
