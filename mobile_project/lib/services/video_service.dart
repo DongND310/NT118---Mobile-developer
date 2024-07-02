@@ -66,6 +66,22 @@ class VideoService {
         .set(newVideoPost.toMap());
   }
 
+  Future<VideoModel?> getVideoById(String videoId) async {
+    try {
+      DocumentSnapshot docSnapshot =
+          await _firestore.collection('videos').doc(videoId).get();
+      if (docSnapshot.exists) {
+        return VideoModel.fromJson(docSnapshot.data() as Map<String, dynamic>);
+      } else {
+        print('Document does not exist');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching video by id: $e');
+      return null;
+    }
+  }
+
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   final usersCollection = FirebaseFirestore.instance.collection('videos');

@@ -67,7 +67,7 @@ class _HomeSideBarState extends State<HomeSideBar>
     });
   }
 
-  void toggleLike() {
+  void toggleLike() async {
     setState(() {
       isLiked = !isLiked;
     });
@@ -85,6 +85,32 @@ class _HomeSideBarState extends State<HomeSideBar>
       videoRef.update({
         'likesList': FieldValue.arrayUnion([currentUser.uid])
       });
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      if (currentUser.uid != widget.video.postedById) {
+        await firestore
+            .collection('users')
+            .doc(widget.video.postedById)
+            .collection('notifications')
+            .doc(widget.video.videoId) // Đặt ID của tài liệu là videoId
+            .set({
+          'videoId': widget.video.videoId,
+        });
+
+        await firestore
+            .collection('users')
+            .doc(widget.video.postedById)
+            .collection('notifications')
+            .doc(widget.video.videoId)
+            .collection('reactors')
+            .doc(currentUser.uid)
+            .set({
+          'type': 'video_like',
+          'senderId': currentUser.uid,
+          'videoId': widget.video.videoId,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
     } else {
       videoRef.update({
         'likesList': FieldValue.arrayRemove([currentUser.uid])

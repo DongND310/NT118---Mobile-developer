@@ -1,45 +1,111 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_project/components/video_detail.dart';
+import 'package:mobile_project/models/video.dart';
+import 'package:mobile_project/models/video_model.dart';
+import 'package:mobile_project/services/video_service.dart';
 
-class CustomLikedNotification extends StatelessWidget {
-  const CustomLikedNotification({super.key});
+class CustomLikedNotification extends StatefulWidget {
+  final String senderId;
+  final String videoId;
+  final Timestamp timestamp;
+  final String type;
+
+  CustomLikedNotification({
+    required this.senderId,
+    required this.videoId,
+    required this.timestamp,
+    required this.type,
+  });
+
+  @override
+  State<CustomLikedNotification> createState() =>
+      _CustomLikedNotificationState();
+}
+
+class _CustomLikedNotificationState extends State<CustomLikedNotification> {
+  String? _name;
+  String? _avt;
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+  VideoService _service = VideoService();
+
+  void getUserData() async {
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.senderId)
+        .get();
+
+    setState(() {
+      _name = userDoc.get('Name');
+      _avt = userDoc.get('Avt');
+    });
+  }
+
+  String formatTimestamp(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    Duration difference = DateTime.now().difference(dateTime);
+
+    if (difference.inSeconds < 60) {
+      return '${difference.inSeconds}s';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}m';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}h';
+    } else if (difference.inDays < 30) {
+      return '${difference.inDays}d';
+    } else if (difference.inDays < 365) {
+      int months = difference.inDays ~/ 30;
+      return '${months}mo';
+    } else {
+      int years = difference.inDays ~/ 365;
+      return '${years}y';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.only(right: 10,bottom: 20),
-        child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 5),
-            child: CircleAvatar(
+    return ListTile(
+      subtitle: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Row(
+          children: [
+            CircleAvatar(
               radius: 25,
-              backgroundImage: AssetImage("assets/images/avatar.png"),
+              backgroundImage: _avt != null
+                  ? NetworkImage(_avt!)
+                  : const AssetImage('assets/images/default_avt.png')
+                      as ImageProvider,
             ),
-          ),
-          const SizedBox(
-            width: 30,
-          ),
-          Expanded(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
+            const SizedBox(
+              width: 20,
+            ),
+            Expanded(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                    flex: 6,
                     child: RichText(
-                      text: const TextSpan(
+                      text: TextSpan(
                         children: [
                           TextSpan(
-                            text: "Account Tester1",
-                            style: TextStyle(
+                            text: '$_name ',
+                            style: const TextStyle(
                               height: 1,
                               color: Colors.blue,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          TextSpan(
+                          const TextSpan(
                             text: " đã thích bài đăng của bạn.",
                             style: TextStyle(
                               height: 1.2,
@@ -50,12 +116,43 @@ class CustomLikedNotification extends StatelessWidget {
                           ),
                         ],
                       ),
+                    )),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    formatTimestamp(widget.timestamp),
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
                     ),
+                    textAlign: TextAlign.end,
                   ),
-                ],
+                ),
+              ],
+            ))
+          ],
+        ),
+      ),
+      onTap: () async {
+        if (widget.type == "video_like") {
+          List<VideoModel> videos = await fetchVideos();
+          VideoModel? video = videos.firstWhere(
+            (video) => video.videoId == widget.videoId,
+            orElse: null,
+          );
+          if (video != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VideoDetailScreen(video: video),
               ),
-            ],
-          )),
-        ]));
+            );
+          } else {
+            print('Không tìm thấy video với id: ${widget.videoId}');
+          }
+        }
+      },
+    );
   }
 }
