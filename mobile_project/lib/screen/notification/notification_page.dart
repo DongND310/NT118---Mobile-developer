@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobile_project/components/custom_follow_notification.dart';
-import 'package:mobile_project/components/custom_liked_notification.dart';
+import 'package:mobile_project/components/noti_post_liked.dart';
+import 'package:mobile_project/components/noti_video_liked.dart';
+import 'package:mobile_project/components/noti_video_saved.dart';
 
 class NotificationPage extends StatefulWidget {
   NotificationPage({super.key});
@@ -81,15 +83,26 @@ class _NotificationPageState extends State<NotificationPage> {
                   return Column(
                     children: reactors.map((reactor) {
                       return reactor['type'] == 'video_like'
-                          ? CustomLikedNotification(
+                          ? LikeVideoNoti(
                               senderId: reactor['senderId'],
                               videoId: reactor['videoId'],
                               timestamp: reactor['timestamp'],
-                              type: reactor['type'],
                             )
-                          : CustomFollowNotification(
-                              senderId: reactor['senderId'],
-                            );
+                          : reactor['type'] == 'video_save'
+                              ? SaveVideoNoti(
+                                  senderId: reactor['senderId'],
+                                  videoId: reactor['videoId'],
+                                  timestamp: reactor['timestamp'],
+                                )
+                              : reactor['type'] == 'post_like'
+                                  ? LikePostNoti(
+                                      senderId: reactor['senderId'],
+                                      postId: reactor['postId'],
+                                      timestamp: reactor['timestamp'],
+                                    )
+                                  : CustomFollowNotification(
+                                      senderId: reactor['senderId'],
+                                    );
                     }).toList(),
                   );
                 },

@@ -4,38 +4,40 @@ import 'package:flutter/material.dart';
 import 'package:mobile_project/components/video_detail.dart';
 import 'package:mobile_project/models/video.dart';
 import 'package:mobile_project/models/video_model.dart';
+import 'package:mobile_project/screen/posts_videos/post_reply.dart';
+import 'package:mobile_project/services/post_service.dart';
 import 'package:mobile_project/services/video_service.dart';
 
-class CustomLikedNotification extends StatefulWidget {
+class LikePostNoti extends StatefulWidget {
   final String senderId;
-  final String videoId;
+  final String postId;
   final Timestamp timestamp;
-  final String type;
 
-  CustomLikedNotification({
+  LikePostNoti({
     required this.senderId,
-    required this.videoId,
+    required this.postId,
     required this.timestamp,
-    required this.type,
   });
 
   @override
-  State<CustomLikedNotification> createState() =>
-      _CustomLikedNotificationState();
+  State<LikePostNoti> createState() => _LikePostNotiState();
 }
 
-class _CustomLikedNotificationState extends State<CustomLikedNotification> {
+class _LikePostNotiState extends State<LikePostNoti> {
   String? _name;
   String? _avt;
+  String? _Uname;
+  String? _Uavt;
   final userId = FirebaseAuth.instance.currentUser?.uid;
 
   @override
   void initState() {
     super.initState();
     getUserData();
+    getCurrentUserData();
   }
 
-  VideoService _service = VideoService();
+  PostService _postService = PostService();
 
   void getUserData() async {
     final DocumentSnapshot userDoc = await FirebaseFirestore.instance
@@ -46,6 +48,16 @@ class _CustomLikedNotificationState extends State<CustomLikedNotification> {
     setState(() {
       _name = userDoc.get('Name');
       _avt = userDoc.get('Avt');
+    });
+  }
+
+  void getCurrentUserData() async {
+    final DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    setState(() {
+      _Uname = userDoc.get('Name');
+      _Uavt = userDoc.get('Avt');
     });
   }
 
@@ -135,23 +147,16 @@ class _CustomLikedNotificationState extends State<CustomLikedNotification> {
         ),
       ),
       onTap: () async {
-        if (widget.type == "video_like") {
-          List<VideoModel> videos = await fetchVideos();
-          VideoModel? video = videos.firstWhere(
-            (video) => video.videoId == widget.videoId,
-            orElse: null,
-          );
-          if (video != null) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => VideoDetailScreen(video: video),
-              ),
-            );
-          } else {
-            print('Không tìm thấy video với id: ${widget.videoId}');
-          }
-        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => PostReply(
+                    postId: widget.postId,
+                    name: _Uname ?? "",
+                    img: _Uavt ?? 'assets/images/default_avt.png',
+                    creatorId: userId!,
+                  )),
+        );
       },
     );
   }

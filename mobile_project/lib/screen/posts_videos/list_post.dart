@@ -91,6 +91,7 @@ class _ListPostsState extends State<ListPosts> {
                             likesList: [],
                             repliesList: [],
                             time: post.timestamp,
+                            id: widget.visitedUserID,
                           ),
                         ],
                       ),

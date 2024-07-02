@@ -14,6 +14,7 @@ class PostDetailScreen extends StatefulWidget {
   final List<String> likesList;
   final List<String> repliesList;
   final Timestamp time;
+  final String id;
 
   PostDetailScreen(
       {super.key,
@@ -23,7 +24,8 @@ class PostDetailScreen extends StatefulWidget {
       required this.postId,
       required this.likesList,
       required this.repliesList,
-      required this.time});
+      required this.time,
+      required this.id});
 
   @override
   State<PostDetailScreen> createState() => _PostDetailScreenState();
@@ -83,7 +85,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
   final currentUser = FirebaseAuth.instance.currentUser!;
 
-  void toggleLike() {
+  void toggleLike() async {
     setState(() {
       isLiked = !isLiked;
     });
@@ -100,6 +102,33 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       postRef.update({
         'likesList': FieldValue.arrayUnion([currentUser.uid])
       });
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      List<String> ids = [currentUser.uid, "like"];
+      String reactorId = ids.join('_');
+      if (currentUser.uid != widget.postId) {
+        await firestore
+            .collection('users')
+            .doc(widget.id)
+            .collection('notifications')
+            .doc(widget.postId)
+            .set({
+          'postId': widget.postId,
+        });
+
+        await firestore
+            .collection('users')
+            .doc(widget.id)
+            .collection('notifications')
+            .doc(widget.postId)
+            .collection('reactors')
+            .doc(reactorId)
+            .set({
+          'type': 'post_like',
+          'senderId': currentUser.uid,
+          'postId': widget.postId,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
     } else {
       postRef.update({
         'likesList': FieldValue.arrayRemove([currentUser.uid])
@@ -233,6 +262,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                         postId: widget.postId,
                                         name: widget.name!,
                                         img: widget.img!,
+                                        creatorId: widget.id,
                                       )),
                             );
                           },
