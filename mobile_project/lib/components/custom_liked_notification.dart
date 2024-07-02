@@ -49,12 +49,12 @@ class CustomLikedNotification extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Flexible(
+                      Expanded(
                         child: RichText(
                           text: const TextSpan(
                             children: [
                               TextSpan(
-                                text: "Account Tester2",
+                                text: "Account Tester1",
                                 style: TextStyle(
                                   height: 1,
                                   color: Colors.blue,
@@ -63,24 +63,9 @@ class CustomLikedNotification extends StatelessWidget {
                                 ),
                               ),
                               TextSpan(
-                                text: " và ",
-                                style: TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "Account Tester3",
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextSpan(
                                 text: " đã thích bài đăng của bạn.",
                                 style: TextStyle(
+                                  height: 1.2,
                                   color: Colors.black87,
                                   fontSize: 16,
                                   fontWeight: FontWeight.normal,

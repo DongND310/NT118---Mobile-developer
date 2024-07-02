@@ -80,7 +80,7 @@ class _SearchMessageState extends State<SearchMessageScreen> {
             AsyncSnapshot<QuerySnapshot> snapshot) {
            if (!snapshot.hasData ||
               snapshot.data!.docs.isEmpty) {
-            return const Text('Không có dự liệu');
+            return const Text('Không có dữ liệu.');
           } else {
             List<String> listFollowerUids = snapshot
                 .data!.docs

@@ -158,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       MyTextField(
                           controller: passwordController,
-                          label: "Password",
+                          label: "Mật khẩu",
                           hint: "Nhập mật khẩu",
                           obscureText: true),
 
