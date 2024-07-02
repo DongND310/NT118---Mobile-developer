@@ -44,7 +44,7 @@ dependencies:
   googleapis: ^13.1.0
   googleapis_auth: ^1.6.0
   flutter_notification_channel: ^3.1.0
-  flutter_local_notifications: ^9.5.3
+  flutter_local_notifications: ^17.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
