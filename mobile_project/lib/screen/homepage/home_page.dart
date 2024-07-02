@@ -102,21 +102,17 @@ class _HomePageState extends State<HomePage> {
             return Stack(
               alignment: Alignment.bottomCenter,
               children: [
-                VideoPlayerItem(videoUrl: video.videoUrl),
+                VideoPlayerItem(videoUrl: video.videoUrl, index: index),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Expanded(
-                        flex: 2,
-                        child: Container(
-                          color: Color.fromARGB(255, 122, 128, 86),
-                          // height: MediaQuery.of(context).size.height / 5,
-                          child: VideoCreatorInfo(video: video),
-                        )),
+                      flex: 2,
+                      child: VideoCreatorInfo(video: video),
+                    ),
                     Expanded(
                       flex: 1,
                       child: Container(
-                        color: const Color.fromARGB(255, 99, 159, 208),
                         alignment: Alignment.centerRight,
                         height: MediaQuery.of(context).size.height / 3,
                         child: HomeSideBar(

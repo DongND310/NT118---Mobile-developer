@@ -67,6 +67,23 @@ flutter:
     - assets/images/
     - assets/videos/
     - assets/videos/loading.json
+    - assets/videos/video_demo_0.mp4
+    - assets/videos/video_demo_1.mp4
+    - assets/videos/video_demo_2.mp4
+    - assets/videos/video_demo_3.mp4
+    - assets/videos/video_demo_4.mp4
+    - assets/videos/video_demo_5.mp4
+    - assets/videos/video_demo_6.mp4
+    - assets/videos/video_demo_7.mp4
+    - assets/videos/video_demo_8.mp4
+    - assets/videos/video_demo_9.mp4
+    - assets/videos/video_demo_10.mp4
+    - assets/videos/video_demo_11.mp4
+    - assets/videos/video_demo_12.mp4
+    - assets/videos/video_demo_13.mp4
+    - assets/videos/video_demo_14.mp4
+    - assets/videos/video_demo_15.mp4
+    - assets/videos/video_demo_16.mp4
 
   fonts:
     - family: Inter

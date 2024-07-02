@@ -17,7 +17,10 @@ class VideoDetail extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        VideoPlayerItem(videoUrl: video.videoUrl),
+        VideoPlayerItem(
+          videoUrl: video.videoUrl,
+          index: 0,
+        ),
         ListTile(
           dense: true,
           minLeadingWidth: 0,
