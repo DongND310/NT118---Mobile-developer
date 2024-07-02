@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:mobile_project/components/custom_follow_notification.dart';
 import 'package:mobile_project/components/noti_post_liked.dart';
 import 'package:mobile_project/components/noti_video_liked.dart';
@@ -53,58 +54,61 @@ class _NotificationPageState extends State<NotificationPage> {
           if (notifications.isEmpty) {
             return const Center(child: Text('Không có thông báo'));
           }
-          return ListView.builder(
-            itemCount: notifications.length,
-            itemBuilder: (context, index) {
-              final notificationDoc = notifications[index];
 
-              return StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(userId)
-                    .collection('notifications')
-                    .doc(notificationDoc.id)
-                    .collection('reactors')
-                    .orderBy('timestamp', descending: true)
-                    .snapshots(),
-                builder:
-                    (context, AsyncSnapshot<QuerySnapshot> reactorsSnapshot) {
-                  if (!reactorsSnapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+          // Tạo danh sách các stream của reactors
+          List<Stream<QuerySnapshot>> reactorStreams = notifications.map((notification) {
+            return FirebaseFirestore.instance
+                .collection('users')
+                .doc(userId)
+                .collection('notifications')
+                .doc(notification.id)
+                .collection('reactors')
+                .snapshots();
+          }).toList();
 
-                  final reactors = reactorsSnapshot.data?.docs ?? [];
+          // Sử dụng rxdart để hợp nhất các stream thành một stream duy nhất
+          return StreamBuilder(
+            stream: Rx.combineLatestList(reactorStreams),
+            builder: (context, AsyncSnapshot<List<QuerySnapshot>> combinedSnapshot) {
+              if (!combinedSnapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-                  if (reactors.isEmpty) {
-                    return const SizedBox
-                        .shrink(); // Trả về một widget trống nếu không có tài liệu
-                  }
+              // Tạo danh sách tổng hợp các reactors
+              List<DocumentSnapshot> combinedReactors = [];
+              for (var snapshot in combinedSnapshot.data!) {
+                combinedReactors.addAll(snapshot.docs);
+              }
 
-                  return Column(
-                    children: reactors.map((reactor) {
-                      return reactor['type'] == 'video_like'
-                          ? LikeVideoNoti(
+              // Sắp xếp các reactors theo timestamp
+              combinedReactors.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
+
+              return ListView.builder(
+                itemCount: combinedReactors.length,
+                itemBuilder: (context, index) {
+                  final reactor = combinedReactors[index];
+
+                  return reactor['type'] == 'video_like'
+                      ? LikeVideoNoti(
+                          senderId: reactor['senderId'],
+                          videoId: reactor['videoId'],
+                          timestamp: reactor['timestamp'],
+                        )
+                      : reactor['type'] == 'video_save'
+                          ? SaveVideoNoti(
                               senderId: reactor['senderId'],
                               videoId: reactor['videoId'],
                               timestamp: reactor['timestamp'],
                             )
-                          : reactor['type'] == 'video_save'
-                              ? SaveVideoNoti(
+                          : reactor['type'] == 'post_like'
+                              ? LikePostNoti(
                                   senderId: reactor['senderId'],
-                                  videoId: reactor['videoId'],
+                                  postId: reactor['postId'],
                                   timestamp: reactor['timestamp'],
                                 )
-                              : reactor['type'] == 'post_like'
-                                  ? LikePostNoti(
-                                      senderId: reactor['senderId'],
-                                      postId: reactor['postId'],
-                                      timestamp: reactor['timestamp'],
-                                    )
-                                  : CustomFollowNotification(
-                                      senderId: reactor['senderId'],
-                                    );
-                    }).toList(),
-                  );
+                              : CustomFollowNotification(
+                                  senderId: reactor['senderId'],
+                                );
                 },
               );
             },
