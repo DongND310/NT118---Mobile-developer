@@ -31,17 +31,20 @@ class _PostTabState extends State<PostTab> {
   void initState() {
     super.initState();
     getUserData();
+    print("trang cá nhân: ${widget.visitedUserID}");
+    print("tên tab_post trang cá nhân: $_name");
   }
 
   void getUserData() async {
-    //User currentUser = _auth.currentUser!;
-    _uid = widget.visitedUserID;
-    //_uid = currentUser.uid;
-    final DocumentSnapshot userDoc =
-        await FirebaseFirestore.instance.collection('users').doc(_uid).get();
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.visitedUserID)
+        // .doc(_uid)
+        .get();
     _id = userDoc.get('ID');
     _name = userDoc.get('Name');
     _avt = userDoc.get('Avt');
+
     setState(() {});
   }
 
@@ -53,7 +56,7 @@ class _PostTabState extends State<PostTab> {
       //PostService().getPostsByUser(FirebaseAuth.instance.currentUser?.uid),
       child: Scaffold(
         body: Container(
-          child: const ListPosts(),
+          child: ListPosts(visitedUserID: widget.visitedUserID),
         ),
       ),
     );

@@ -74,39 +74,43 @@ class NotiApi {
     return credentials.accessToken.data;
   }
 
-  Future<void> sendPushNotification(String userId, String msg) async {
-    try {
-      DocumentSnapshot userSend = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
+  Future<void> sendPushNotification(String userId, String msg) async{
+    try{
+      DocumentSnapshot userReceiver = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+      DocumentSnapshot userSend = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
       final String serverAccessTokenKey = await getAccessToken();
       String endpointFirebaseCloudMessaging =
           'https://fcm.googleapis.com/v1/projects/nt118-reelreplay/messages:send';
 
       final Map<String, dynamic> message = {
         'message': {
-          'token': userSend.get('push_token'),
+          'token': userReceiver.get('push_token'),
           'notification': {
-            'title': user.displayName ??
-                'Notification', // Fallback title if displayName is null
+            'title': user.displayName ?? 'Notification',
             'body': msg
           },
           'android': {
-            'notification': {'channel_id': 'chats', 'sound': 'default'}
+            'notification': {
+              'channel_id': 'chats',
+              'sound': 'default'
+            }
           },
           'data': {
-            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+            'type': 'chat',
+            'receiverId': user.uid,
+            'receiverName': user.displayName,
+            'chatterImg': userReceiver.get('Avt')
           }
         }
       };
-      final http.Response response =
-          await http.post(Uri.parse(endpointFirebaseCloudMessaging),
-              headers: <String, String>{
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer $serverAccessTokenKey'
-              },
-              body: jsonEncode(message));
+      log(jsonEncode(message));
+      final http.Response response = await http.post(Uri.parse(endpointFirebaseCloudMessaging),
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $serverAccessTokenKey'
+          },
+          body: jsonEncode(message)
+      );
       log("response status: ${response.statusCode}");
       log('body: ${response.body}');
     } catch (e) {

@@ -231,6 +231,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                               MaterialPageRoute(
                                   builder: (context) => PostReply(
                                         postId: widget.postId,
+                                        name: widget.name!,
+                                        img: widget.img!,
                                       )),
                             );
                           },

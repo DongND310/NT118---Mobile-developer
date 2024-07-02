@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/screen/users/profile_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../services/chat_service.dart';
 
 class MoreScreen extends StatefulWidget {
   final String receiverId;
@@ -20,7 +23,25 @@ class MoreScreen extends StatefulWidget {
 
 class _MoreState extends State<MoreScreen> {
   final user = FirebaseAuth.instance.currentUser;
-  bool _isPressed = false;
+  bool _isPressed = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNotificationState();
+  }
+
+  void _loadNotificationState() async {
+    ChatService chatService = ChatService();
+    bool isPressed = await chatService.getNotificationState(user!.uid, widget.receiverId);
+    setState(() {
+      _isPressed = isPressed;
+    });
+  }
+  void _saveNotificationState(bool value) async {
+    ChatService chatService = ChatService();
+    chatService.setNotificationState(value, user!.uid, widget.receiverId);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,6 +115,7 @@ class _MoreState extends State<MoreScreen> {
                           onPressed: () {
                             setState(() {
                               _isPressed = !_isPressed;
+                              _saveNotificationState(_isPressed);
                             });
                           },
                           icon: _isPressed

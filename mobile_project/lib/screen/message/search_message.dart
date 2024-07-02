@@ -3,6 +3,7 @@ import 'package:diacritic/diacritic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/screen/message/chat_page.dart';
 
 import '../../constants.dart';
 import '../../models/user_model.dart';
@@ -139,11 +140,23 @@ class _SearchMessageState extends State<SearchMessageScreen> {
                             }
                             return Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                child: AccountDetail(
-                                  userModel.name,
-                                  userModel.bio ?? '',
-                                  userModel.avt ?? '',
-                                )
+                                child: Expanded(child:
+                                GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                            (
+                                              ChatPage(
+                                                receiverId: userModel.uid,
+                                                receiverName: userModel.name,
+                                                chatterImg: userModel.avt??'',)
+                                            ),
+                                          ));
+                                    },
+                                    child:AccountDetail(userModel.name, userModel.bio??'', userModel.avt ?? '')
+                                ),),
                             );
                           }
                         },
@@ -156,89 +169,8 @@ class _SearchMessageState extends State<SearchMessageScreen> {
           }
         },
       ),
-      // body: StreamBuilder<QuerySnapshot>(
-      //     stream: FirebaseFirestore.instance
-      //         .collection('users')
-      //         .orderBy('Name')
-      //         .startAt([searchName])
-      //         .endAt([searchName + "\uf8ff"])
-      //         .where('Name', isNotEqualTo: _auth.currentUser!.displayName)
-      //         .snapshots(),
-      //     builder: (context, snapshot) {
-      //       if (snapshot.hasError) {
-      //         return const Text('Có lỗi xảy ra.');
-      //       }
-      //
-      //       if (snapshot.connectionState == ConnectionState.waiting) {
-      //         return const Text("Loading");
-      //       }
-      //       return ListView.builder(
-      //         itemCount: snapshot.data!.docs.length,
-      //         itemBuilder: (context, index) {
-      //           var data = snapshot.data!.docs[index];
-      //           return GestureDetector(
-      //             onTap: () {
-      //               Navigator.push(
-      //                 context,
-      //                 MaterialPageRoute(
-      //                   builder: (context) => ChatPage(
-      //                     receiverId: data.id,
-      //                     receiverName: data['Name'],
-      //                     chatterImg: data['Avt'] ?? 'assets/images/default_avt.png' ,
-      //                   ),
-      //                 ),
-      //               );
-      //             },
-      //             child: Padding(
-      //               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      //               child: AccountDetail(data['Name'], "",
-      //                   data['Avt'] ?? 'assets/images/default_avt.png'),
-      //             ),
-      //           );
-      //         },
-      //       );
-      //     }),
     );
   }
-  // Widget _buildUserList(){
-  //   return StreamBuilder(stream: FirebaseFirestore.instance.collection('users').snapshots(),
-  //       builder: (context, snapshot){
-  //         if (snapshot.hasError) {
-  //           return Text('Something went wrong');
-  //         }
-  //
-  //         if (snapshot.connectionState == ConnectionState.waiting) {
-  //           return Text("Loading");
-  //         }
-  //         return ListView(
-  //           children: snapshot.data!.docs
-  //           .map<Widget>((doc)=> _buildUserListItem(doc)).toList(),
-  //         );
-  //       }
-  //   );
-  // }
-  // Widget _buildUserListItem(DocumentSnapshot document)
-  // {
-  //   Map<String, dynamic> data = document.data()! as Map<String,dynamic>;
-  //   if(_auth.currentUser!.displayName != data['Name']){
-  //     return  GestureDetector(
-  //       onTap: () {
-  //         Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) => ChatPage(receiverId: data.id, receiverName: data['Name'],
-  //             ),
-  //           ),
-  //         );
-  //       },
-  //       child: Padding(
-  //         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-  //         child: AccountDetail(data['Name'], ""),
-  //       ),
-  //     );
-  //   }
-  //   else return Container();
-  // }
 }
 
 

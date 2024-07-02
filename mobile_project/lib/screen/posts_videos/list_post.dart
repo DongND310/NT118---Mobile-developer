@@ -10,8 +10,8 @@ import '../../components/postdetail.dart';
 import '../../models/user_model.dart';
 
 class ListPosts extends StatefulWidget {
-  const ListPosts({super.key});
-
+  ListPosts({super.key, required this.visitedUserID});
+  final String visitedUserID;
   @override
   State<ListPosts> createState() => _ListPostsState();
 }
@@ -29,16 +29,19 @@ class _ListPostsState extends State<ListPosts> {
   }
 
   void getUserData() async {
-    User? currentUser = _auth.currentUser;
-    if (currentUser != null) {
-      _uid = currentUser.uid;
-      final DocumentSnapshot userDoc =
-          await FirebaseFirestore.instance.collection('users').doc(_uid).get();
+    if (widget.visitedUserID != null) {
+      // _uid = currentUser.uid;
+      final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.visitedUserID)
+          .get();
       setState(() {
         _name = userDoc.get('Name');
         _avt = userDoc.get('Avt');
       });
     }
+
+    print("tên trang cá nhân: $_name");
   }
 
   final UserService _userService = UserService();
@@ -80,6 +83,7 @@ class _ListPostsState extends State<ListPosts> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           PostDetailScreen(
+                            // name: _name ?? '',
                             name: _name ?? '',
                             content: post.content,
                             img: _avt ?? '',

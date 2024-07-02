@@ -1,5 +1,4 @@
 import 'package:expandable_text/expandable_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/models/user_model.dart';
 import 'package:mobile_project/models/video_model.dart';
@@ -17,7 +16,10 @@ class VideoDetail extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        VideoPlayerItem(videoUrl: video.videoUrl),
+        VideoPlayerItem(
+          videoUrl: video.videoUrl,
+          index: 0,
+        ),
         ListTile(
           dense: true,
           minLeadingWidth: 0,

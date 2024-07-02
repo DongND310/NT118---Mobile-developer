@@ -40,6 +40,7 @@ class VideoModel {
         "postedById": postedById,
         "caption": caption,
         "videoUrl": videoUrl,
+        'timestamp': timestamp,
       };
   static VideoModel fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
@@ -48,8 +49,7 @@ class VideoModel {
         postedById: snapshot['postedById'],
         caption: snapshot['caption'],
         videoUrl: snapshot['videoUrl'],
-        timestamp: snapshot['timestamp']
-        );
+        timestamp: snapshot['timestamp']);
   }
 
   Map<String, dynamic> toMap() {
@@ -86,7 +86,7 @@ class VideoModel {
 }
 
 Future<List<VideoModel>> fetchVideos() async {
-  QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('videos').get();
+  QuerySnapshot snapshot =
+      await FirebaseFirestore.instance.collection('videos').get();
   return snapshot.docs.map((doc) => VideoModel.fromDocument(doc)).toList();
-
 }

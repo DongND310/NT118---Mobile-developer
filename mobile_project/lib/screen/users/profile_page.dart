@@ -389,11 +389,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                    builder: (context) => ChatPage(
+                                                    builder: (context) =>
+                                                        ChatPage(
                                                       receiverId:
-                                                      widget.visitedUserID,
-                                                      receiverName: userModel.name,
-                                                      chatterImg: userModel.avt ??
+                                                          widget.visitedUserID,
+                                                      receiverName:
+                                                          userModel.name,
+                                                      chatterImg: userModel
+                                                              .avt ??
                                                           'assets/images/default_avt.png',
                                                     ),
                                                   ));
