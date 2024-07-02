@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/components/custom_follow_notification.dart';
 import 'package:mobile_project/components/custom_liked_notification.dart';
@@ -16,7 +17,7 @@ class NotificationPage extends StatelessWidget {
     "liked",
     "liked",
   ];
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
