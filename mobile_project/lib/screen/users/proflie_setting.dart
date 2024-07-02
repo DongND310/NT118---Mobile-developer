@@ -7,6 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/components/navigation_container.dart';
 import 'package:mobile_project/screen/login-regis/welcome.dart';
+import 'package:mobile_project/screen/users/about_us.dart';
+import 'package:mobile_project/screen/users/policy.dart';
 
 import 'profile_change.dart';
 import 'profile_detail.dart';
@@ -186,17 +188,17 @@ class _ProfileSettingPageState extends State<ProfileSettingPage> {
                             width: 20,
                           ),
                           const Text(
-                            'Quyền riêng tư',
+                            'Chính sách',
                             style: TextStyle(color: Colors.black, fontSize: 18),
                           ),
                         ],
                       ),
                       IconButton(
                         onPressed: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => PersonProfileScreen()));
+                          Navigator.push(
+                               context,
+                               MaterialPageRoute(
+                                   builder: (context) => PolicyScreen()));
                         },
                         icon: const Icon(
                           Icons.arrow_forward_ios_sharp,
@@ -221,17 +223,17 @@ class _ProfileSettingPageState extends State<ProfileSettingPage> {
                             width: 20,
                           ),
                           const Text(
-                            'Giới thiệu',
+                            'Về chúng tôi',
                             style: TextStyle(color: Colors.black, fontSize: 18),
                           ),
                         ],
                       ),
                       IconButton(
                         onPressed: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => PersonProfileScreen()));
+                          Navigator.push(
+                               context,
+                               MaterialPageRoute(
+                                   builder: (context) => AboutUsScreen()));
                         },
                         icon: const Icon(
                           Icons.arrow_forward_ios_sharp,
