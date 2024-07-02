@@ -148,7 +148,7 @@ class _SearchResultState extends State<SearchResult> {
   Widget build(BuildContext context) {
     return  DefaultTabController(
         initialIndex: 0,
-        length: 4,
+        length: 3,
         child: Column(
             children: [
               const TabBar(
@@ -156,7 +156,6 @@ class _SearchResultState extends State<SearchResult> {
                   Tab(text: "Thịnh hành"),
                   Tab(text: "Tài khoản"),
                   Tab(text: "Video"),
-                  Tab(text: "Hashtag"),
                 ],
                 unselectedLabelColor: Colors.black54,
                 indicatorColor: Colors.blue,
@@ -182,7 +181,7 @@ class _SearchResultState extends State<SearchResult> {
                                     if(snapshot.connectionState==ConnectionState.waiting){
                                       return Container();
                                     }else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                                      return const Text("Không có gì để tìm");
+                                      return Container();
                                     }
                                     else {
                                       UserModel user = UserModel.fromDoc(snapshot.data!.docs[0]);
@@ -283,8 +282,16 @@ class _SearchResultState extends State<SearchResult> {
                                     builder: (context, snapshot) {
                                       if(snapshot.connectionState==ConnectionState.waiting){
                                         return Container();
-                                      }else if(!snapshot.hasData){
-                                        return Container();
+                                      }else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                                        return const Padding(
+                                          padding: EdgeInsets.only(left: 45, top: 50),
+                                          child: Text(
+                                            "Không có tài khoản trùng khớp!",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold, fontSize: 18),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        );
                                       }
                                       else
                                       {
@@ -366,35 +373,6 @@ class _SearchResultState extends State<SearchResult> {
                             },
                           ),
                         )),
-                    SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: SizedBox(
-                                height: 50 ,
-                                child: ListView.builder(
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemExtent: 70,
-                                    itemCount: 20,
-                                    itemBuilder: (BuildContext context, int index) {
-                                      return GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => const HashTagScreen(
-                                                        "hashtag nè")));
-                                          },
-                                          child: Hashtag("hashtag nè"));
-                                    }),
-                              )),
-                        ],
-                      ),
-                    )
                   ]
                   )
               )
