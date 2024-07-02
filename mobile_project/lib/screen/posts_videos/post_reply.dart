@@ -9,8 +9,12 @@ import '../../components/custom_reply.dart';
 import 'like_button.dart';
 
 class PostReply extends StatefulWidget {
-  PostReply({Key? key, required this.postId}) : super(key: key);
+  PostReply(
+      {Key? key, required this.postId, required this.name, required this.img})
+      : super(key: key);
   final String postId;
+  final String img;
+  final String name;
 
   @override
   State<PostReply> createState() => _PostReplyState();
@@ -30,6 +34,7 @@ class _PostReplyState extends State<PostReply> {
   void initState() {
     super.initState();
     getUserData();
+    getCurrentUserData();
     getsumReplyCount();
     isLiked = false;
     FirebaseFirestore.instance
@@ -51,15 +56,32 @@ class _PostReplyState extends State<PostReply> {
     });
   }
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String? _uid;
+
   void getUserData() async {
-    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get();
+    User currentUser = _auth.currentUser!;
+    _uid = currentUser.uid;
+    final DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(_uid).get();
 
     setState(() {
       _avt = userDoc.get('Avt');
       _name = userDoc.get('Name');
+    });
+  }
+
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  String? _useravt;
+
+  void getCurrentUserData() async {
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+
+    setState(() {
+      _useravt = userDoc.get('Avt');
     });
   }
 
@@ -230,8 +252,8 @@ class _PostReplyState extends State<PostReply> {
                                   const EdgeInsets.only(top: 10, right: 20),
                               child: CircleAvatar(
                                 radius: 20,
-                                backgroundImage: _avt != null
-                                    ? NetworkImage(_avt!)
+                                backgroundImage: widget.img != null
+                                    ? NetworkImage(widget.img)
                                     : Image.asset(
                                             'assets/images/default_avt.png')
                                         .image,
@@ -240,7 +262,7 @@ class _PostReplyState extends State<PostReply> {
                             Expanded(
                               flex: 5,
                               child: Text(
-                                _name ?? '',
+                                widget.name ?? '',
                                 style: const TextStyle(
                                     color: Colors.blue,
                                     fontSize: 18,
@@ -383,8 +405,8 @@ class _PostReplyState extends State<PostReply> {
                     children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundImage: _avt != null
-                            ? NetworkImage(_avt!)
+                        backgroundImage: _useravt != null
+                            ? NetworkImage(_useravt!)
                             : const AssetImage('assets/images/default_avt.png')
                                 as ImageProvider,
                       ),
