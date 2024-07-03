@@ -87,6 +87,37 @@ class _CommentPageState extends State<CommentPage> {
         replyUserName = null;
       });
       getTotalReplyCount();
+
+      // noti
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      List<String> ids = [currentUser.uid, "cmt", replyId];
+      // List<String> _replyid = [currentUser.uid, replyId];
+      String reactorId = ids.join('_');
+      if (currentUser.uid != widget.video.postedById) {
+        await firestore
+            .collection('users')
+            .doc(widget.video.postedById)
+            .collection('notifications')
+            .doc(widget.video.videoId)
+            .set({
+          'videoId': widget.video.videoId,
+        });
+
+        await firestore
+            .collection('users')
+            .doc(widget.video.postedById)
+            .collection('notifications')
+            .doc(widget.video.videoId)
+            .collection('reactors')
+            .doc(reactorId)
+            .set({
+          'type': 'video_cmt',
+          'senderId': currentUser.uid,
+          'videoId': widget.video.videoId,
+          'replyId': replyId,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
     }
   }
 
@@ -128,44 +159,81 @@ class _CommentPageState extends State<CommentPage> {
     return mainReplyId;
   }
 
-  void addReplyComment(String content, String replyId) async {
-    String subreplyId = FirebaseFirestore.instance
-        .collection('videos')
-        .doc(widget.video.videoId)
-        .collection('replies')
-        .doc()
-        .id;
+  void addReplyComment(String content, String replyId, String _replyUserName,
+      String _replyUserId) async {
+    if (content.trim().isNotEmpty) {
+      String subreplyId = FirebaseFirestore.instance
+          .collection('videos')
+          .doc(widget.video.videoId)
+          .collection('replies')
+          .doc()
+          .id;
 
-    print("replyId truyền vào replyId: $replyId");
+      print("replyId truyền vào replyId: $replyId");
 
-    String? mainReplyId = await findMainReplyIdBySubreplyId(replyId);
+      String? mainReplyId = await findMainReplyIdBySubreplyId(replyId);
 
-    print("mainreplyId: $mainReplyId");
-    print("subreplyid: $subreplyId");
+      print("mainreplyId: $mainReplyId");
+      print("subreplyid: $subreplyId");
 
-    await FirebaseFirestore.instance
-        .collection('videos')
-        .doc(widget.video.videoId)
-        .collection('replies')
-        .doc(mainReplyId ?? replyId)
-        .collection('subreplies')
-        .doc(subreplyId)
-        .set({
-      "content": content,
-      "userId": user.uid,
-      "videoId": widget.video.videoId,
-      "replyId": mainReplyId ?? replyId, // Sử dụng replyId nếu mainReplyId null
-      "subreplyId": subreplyId,
-      "timestamp": Timestamp.now()
-    });
+      await FirebaseFirestore.instance
+          .collection('videos')
+          .doc(widget.video.videoId)
+          .collection('replies')
+          .doc(mainReplyId ?? replyId)
+          .collection('subreplies')
+          .doc(subreplyId)
+          .set({
+        "content": content,
+        "userId": user.uid,
+        "videoId": widget.video.videoId,
+        "replyId":
+            mainReplyId ?? replyId, // Sử dụng replyId nếu mainReplyId null
+        "subreplyId": subreplyId,
+        "timestamp": Timestamp.now()
+      });
 
-    comment.clear();
-    setState(() {
-      _showClearButton = false;
-      replyUserId = null;
-      replyUserName = null;
-      currentReplyId = null;
-    });
+      comment.clear();
+      setState(() {
+        _showClearButton = false;
+        replyUserId = null;
+        replyUserName = null;
+        currentReplyId = null;
+      });
+
+      print('uid cmt reply: $_replyUserId');
+      print('name cmt reply: $_replyUserName');
+
+      // noti
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      List<String> ids = [currentUser.uid, "replycmt", subreplyId];
+      String reactorId = ids.join('_');
+      if (currentUser.uid != replyUserId) {
+        await firestore
+            .collection('users')
+            .doc(_replyUserId)
+            .collection('notifications')
+            .doc(widget.video.videoId)
+            .set({
+          'videoId': widget.video.videoId,
+        });
+
+        await firestore
+            .collection('users')
+            .doc(_replyUserId)
+            .collection('notifications')
+            .doc(widget.video.videoId)
+            .collection('reactors')
+            .doc(reactorId)
+            .set({
+          'type': 'video_cmt_reply',
+          'senderId': currentUser.uid,
+          'videoId': widget.video.videoId,
+          'replyId': subreplyId,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
+    }
   }
 
   void getTotalReplyCount() async {
@@ -298,7 +366,7 @@ class _CommentPageState extends State<CommentPage> {
                               padding: const EdgeInsets.only(right: 50),
                               child: TextField(
                                 controller: comment,
-                                autofocus: false,
+                                autofocus: true,
                                 maxLines: 8,
                                 minLines: 1,
                                 cursorColor: Colors.blue,
@@ -347,7 +415,8 @@ class _CommentPageState extends State<CommentPage> {
                       child: GestureDetector(
                         onTap: () {
                           if (replyUserName != null) {
-                            addReplyComment(comment.text, currentReplyId ?? "");
+                            addReplyComment(comment.text, currentReplyId ?? "",
+                                replyUserName ?? "", replyUserId ?? "");
                           } else {
                             addCommentVideo(comment.text);
                           }

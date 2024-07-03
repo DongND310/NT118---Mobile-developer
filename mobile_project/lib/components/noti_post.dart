@@ -8,22 +8,24 @@ import 'package:mobile_project/screen/posts_videos/post_reply.dart';
 import 'package:mobile_project/services/post_service.dart';
 import 'package:mobile_project/services/video_service.dart';
 
-class LikePostNoti extends StatefulWidget {
+class PostNoti extends StatefulWidget {
   final String senderId;
   final String postId;
   final Timestamp timestamp;
+  final String action;
 
-  LikePostNoti({
+  PostNoti({
     required this.senderId,
     required this.postId,
     required this.timestamp,
+    required this.action,
   });
 
   @override
-  State<LikePostNoti> createState() => _LikePostNotiState();
+  State<PostNoti> createState() => _PostNotiState();
 }
 
-class _LikePostNotiState extends State<LikePostNoti> {
+class _PostNotiState extends State<PostNoti> {
   String? _name;
   String? _avt;
   String? _Uname;
@@ -117,10 +119,10 @@ class _LikePostNotiState extends State<LikePostNoti> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const TextSpan(
-                            text: " đã thích bài đăng của bạn.",
-                            style: TextStyle(
-                              height: 1.2,
+                          TextSpan(
+                            text: "đã ${widget.action} của bạn.",
+                            style: const TextStyle(
+                              height: 1.4,
                               color: Colors.black87,
                               fontSize: 16,
                               fontWeight: FontWeight.normal,

@@ -6,22 +6,24 @@ import 'package:mobile_project/models/video.dart';
 import 'package:mobile_project/models/video_model.dart';
 import 'package:mobile_project/services/video_service.dart';
 
-class SaveVideoNoti extends StatefulWidget {
+class VideoNoti extends StatefulWidget {
   final String senderId;
   final String videoId;
   final Timestamp timestamp;
+  final String action;
 
-  SaveVideoNoti({
+  VideoNoti({
     required this.senderId,
     required this.videoId,
     required this.timestamp,
+    required this.action,
   });
 
   @override
-  State<SaveVideoNoti> createState() => _SaveVideoNotiState();
+  State<VideoNoti> createState() => _VideoNotiState();
 }
 
-class _SaveVideoNotiState extends State<SaveVideoNoti> {
+class _VideoNotiState extends State<VideoNoti> {
   String? _name;
   String? _avt;
   final userId = FirebaseAuth.instance.currentUser?.uid;
@@ -102,10 +104,10 @@ class _SaveVideoNotiState extends State<SaveVideoNoti> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const TextSpan(
-                            text: " đã lưu video của bạn.",
-                            style: TextStyle(
-                              height: 1.2,
+                          TextSpan(
+                            text: "đã ${widget.action} của bạn.",
+                            style: const TextStyle(
+                              height: 1.4,
                               color: Colors.black87,
                               fontSize: 16,
                               fontWeight: FontWeight.normal,

@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:mobile_project/components/custom_follow_notification.dart';
-import 'package:mobile_project/components/noti_post_liked.dart';
-import 'package:mobile_project/components/noti_video_liked.dart';
-import 'package:mobile_project/components/noti_video_saved.dart';
+import 'package:mobile_project/components/noti_post.dart';
+import 'package:mobile_project/components/noti_video.dart';
 
 class NotificationPage extends StatefulWidget {
   NotificationPage({super.key});
@@ -56,7 +55,8 @@ class _NotificationPageState extends State<NotificationPage> {
           }
 
           // Tạo danh sách các stream của reactors
-          List<Stream<QuerySnapshot>> reactorStreams = notifications.map((notification) {
+          List<Stream<QuerySnapshot>> reactorStreams =
+              notifications.map((notification) {
             return FirebaseFirestore.instance
                 .collection('users')
                 .doc(userId)
@@ -69,7 +69,8 @@ class _NotificationPageState extends State<NotificationPage> {
           // Sử dụng rxdart để hợp nhất các stream thành một stream duy nhất
           return StreamBuilder(
             stream: Rx.combineLatestList(reactorStreams),
-            builder: (context, AsyncSnapshot<List<QuerySnapshot>> combinedSnapshot) {
+            builder:
+                (context, AsyncSnapshot<List<QuerySnapshot>> combinedSnapshot) {
               if (!combinedSnapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
@@ -81,7 +82,8 @@ class _NotificationPageState extends State<NotificationPage> {
               }
 
               // Sắp xếp các reactors theo timestamp
-              combinedReactors.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
+              combinedReactors
+                  .sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
 
               return ListView.builder(
                 itemCount: combinedReactors.length,
@@ -89,26 +91,52 @@ class _NotificationPageState extends State<NotificationPage> {
                   final reactor = combinedReactors[index];
 
                   return reactor['type'] == 'video_like'
-                      ? LikeVideoNoti(
+                      ? VideoNoti(
                           senderId: reactor['senderId'],
                           videoId: reactor['videoId'],
                           timestamp: reactor['timestamp'],
-                        )
+                          action: "thích video")
                       : reactor['type'] == 'video_save'
-                          ? SaveVideoNoti(
+                          ? VideoNoti(
                               senderId: reactor['senderId'],
                               videoId: reactor['videoId'],
                               timestamp: reactor['timestamp'],
-                            )
-                          : reactor['type'] == 'post_like'
-                              ? LikePostNoti(
+                              action: "lưu video")
+                          : reactor['type'] == 'video_cmt'
+                              ? VideoNoti(
                                   senderId: reactor['senderId'],
-                                  postId: reactor['postId'],
+                                  videoId: reactor['videoId'],
                                   timestamp: reactor['timestamp'],
-                                )
-                              : CustomFollowNotification(
-                                  senderId: reactor['senderId'],
-                                );
+                                  action: "bình luận về video")
+                              : reactor['type'] == 'video_cmt_like'
+                                  ? VideoNoti(
+                                      senderId: reactor['senderId'],
+                                      videoId: reactor['videoId'],
+                                      timestamp: reactor['timestamp'],
+                                      action: "thích bình luận")
+                                  : reactor['type'] == 'video_cmt_reply'
+                                      ? VideoNoti(
+                                          senderId: reactor['senderId'],
+                                          videoId: reactor['videoId'],
+                                          timestamp: reactor['timestamp'],
+                                          action: "phản hồi về bình luận")
+                                      : reactor['type'] == 'post_like'
+                                          ? PostNoti(
+                                              senderId: reactor['senderId'],
+                                              postId: reactor['postId'],
+                                              timestamp: reactor['timestamp'],
+                                              action: "thích bài đăng")
+                                          : reactor['type'] == 'post_cmt'
+                                              ? PostNoti(
+                                                  senderId: reactor['senderId'],
+                                                  postId: reactor['postId'],
+                                                  timestamp:
+                                                      reactor['timestamp'],
+                                                  action:
+                                                      "bình luận về bài đăng")
+                                              : CustomFollowNotification(
+                                                  senderId: reactor['senderId'],
+                                                );
                 },
               );
             },

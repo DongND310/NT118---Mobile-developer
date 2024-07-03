@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/components/custom_comment_reply.dart';
+import 'package:mobile_project/screen/users/profile_page.dart';
 
 class CustomComment extends StatefulWidget {
   final String userId;
@@ -101,7 +103,7 @@ class _CustomCommentState extends State<CustomComment> {
 
   final currentUser = FirebaseAuth.instance.currentUser!;
 
-  void toggleLike() {
+  void toggleLike() async {
     setState(() {
       isLiked = !isLiked;
     });
@@ -116,6 +118,35 @@ class _CustomCommentState extends State<CustomComment> {
       videoRef.update({
         'likesList': FieldValue.arrayUnion([currentUser.uid])
       });
+      // noti
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      List<String> ids = [currentUser.uid, "likecmt", widget.replyId];
+      String reactorId = ids.join('_');
+      if (currentUser.uid != widget.userId) {
+        await firestore
+            .collection('users')
+            .doc(widget.userId)
+            .collection('notifications')
+            .doc(widget.videoId)
+            .set({
+          'videoId': widget.videoId,
+        });
+
+        await firestore
+            .collection('users')
+            .doc(widget.userId)
+            .collection('notifications')
+            .doc(widget.videoId)
+            .collection('reactors')
+            .doc(reactorId)
+            .set({
+          'type': 'video_cmt_like',
+          'senderId': currentUser.uid,
+          'videoId': widget.videoId,
+          'replyId': widget.replyId,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
     } else {
       videoRef.update({
         'likesList': FieldValue.arrayRemove([currentUser.uid])
@@ -146,13 +177,25 @@ class _CustomCommentState extends State<CustomComment> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  _name ?? '',
-                  style: const TextStyle(
-                      color: Colors.blue,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.ellipsis),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileScreen(
+                            visitedUserID: widget.userId,
+                            currentUserId: currentUser.uid,
+                          ),
+                        ));
+                  },
+                  child: Text(
+                    _name ?? '',
+                    style: const TextStyle(
+                        color: Colors.blue,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis),
+                  ),
                 ),
                 const SizedBox(height: 5),
                 SizedBox(
