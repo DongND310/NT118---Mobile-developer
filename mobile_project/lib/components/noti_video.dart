@@ -84,7 +84,7 @@ class _VideoNotiState extends State<VideoNoti> {
                       as ImageProvider,
             ),
             const SizedBox(
-              width: 20,
+              width: 15,
             ),
             Expanded(
                 child: Row(

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:mobile_project/components/custom_follow_notification.dart';
+import 'package:mobile_project/components/noti_follow.dart';
 import 'package:mobile_project/components/noti_post.dart';
 import 'package:mobile_project/components/noti_video.dart';
 
@@ -154,10 +154,15 @@ class _NotificationPageState extends State<NotificationPage> {
                                                               'timestamp'],
                                                           action:
                                                               "phản hồi về bình luận")
-                                                      : CustomFollowNotification(
-                                                          senderId: reactor[
-                                                              'senderId'],
-                                                        );
+                                                      : reactor['type'] ==
+                                                              'follow'
+                                                          ? FollowNoti(
+                                                              senderId: reactor[
+                                                                  'senderId'],
+                                                                  timestamp: reactor[
+                                                              'timestamp'],
+                                                            )
+                                                          : Container();
                 },
               );
             },

@@ -108,7 +108,7 @@ class _SearchResultState extends State<SearchResult> {
     });
   }
 
-  handleFollowUser(String userId, bool isFollowing) {
+  handleFollowUser(String userId, bool isFollowing) async {
     followersRef
         .doc(userId)
         .collection('userFollowers')
@@ -124,6 +124,29 @@ class _SearchResultState extends State<SearchResult> {
         FirebaseFirestore.instance.collection('users').doc(widget.currentId);
     userRef.update({
       'followingsList': FieldValue.arrayUnion([userId])
+    });
+    //noti
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    List<String> ids = [widget.currentId, "follow"];
+    String reactorId = ids.join('_');
+    await firestore
+        .collection('users')
+        .doc(userId)
+        .collection('notifications')
+        .doc(reactorId)
+        .set({});
+
+    await firestore
+        .collection('users')
+        .doc(userId)
+        .collection('notifications')
+        .doc(reactorId)
+        .collection('reactors')
+        .doc(widget.currentId)
+        .set({
+      'type': 'follow',
+      'senderId': widget.currentId,
+      'timestamp': FieldValue.serverTimestamp(),
     });
   }
 
@@ -294,6 +317,9 @@ class _SearchResultState extends State<SearchResult> {
                                                       user.name,
                                                       user.bio ?? '',
                                                       user.avt ?? '')),
+                                            ),
+                                            const SizedBox(
+                                              width: 20,
                                             ),
                                             buildProfileButton(
                                                 isFollow, user.uid)

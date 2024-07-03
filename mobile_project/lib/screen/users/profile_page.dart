@@ -651,7 +651,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     });
   }
 
-  handleFollowUser() {
+  handleFollowUser() async {
     followersRef
         .doc(widget.visitedUserID)
         .collection('userFollowers')
@@ -672,6 +672,30 @@ class _ProfileScreenState extends State<ProfileScreen>
         FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
     userRef.update({
       'followingsList': FieldValue.arrayUnion([widget.visitedUserID])
+    });
+
+    //noti
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    List<String> ids = [currentUser.uid, "follow"];
+    String reactorId = ids.join('_');
+    await firestore
+        .collection('users')
+        .doc(widget.visitedUserID)
+        .collection('notifications')
+        .doc(reactorId)
+        .set({});
+
+    await firestore
+        .collection('users')
+        .doc(widget.visitedUserID)
+        .collection('notifications')
+        .doc(reactorId)
+        .collection('reactors')
+        .doc(widget.currentUserId)
+        .set({
+      'type': 'follow',
+      'senderId': currentUser.uid,
+      'timestamp': FieldValue.serverTimestamp(),
     });
   }
 }

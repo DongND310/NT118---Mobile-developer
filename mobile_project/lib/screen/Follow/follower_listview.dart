@@ -31,7 +31,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
   int _tabIndex = 0;
   int _followingNum = 0;
   int _followerNum = 0;
-  int _friendNum =0;
+  int _friendNum = 0;
 
   final TextEditingController _textEditingController = TextEditingController();
   final DatabaseServices _databaseServices = DatabaseServices();
@@ -46,20 +46,23 @@ class _ListFollowerState extends State<ListFollowerScreen> {
     _followingNum = widget.followingNum;
     getFriendCount();
   }
+
   void getFriendCount() {
     followersRef
         .doc(widget.currentUserId)
         .collection("userFollowers")
         .get()
         .then((followersSnapshot) {
-      List<String> followersList = followersSnapshot.docs.map((doc) => doc.id).toList();
+      List<String> followersList =
+          followersSnapshot.docs.map((doc) => doc.id).toList();
 
       followingsRef
           .doc(widget.currentUserId)
           .collection("userFollowings")
           .get()
           .then((followingSnapshot) {
-        List<String> followingList = followingSnapshot.docs.map((doc) => doc.id).toList();
+        List<String> followingList =
+            followingSnapshot.docs.map((doc) => doc.id).toList();
         Set<String> followersSet = Set<String>.from(followersList);
         Set<String> followingSet = Set<String>.from(followingList);
         Set<String> friendsSet = followersSet.intersection(followingSet);
@@ -140,64 +143,76 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                 itemBuilder: (context, index) {
                                   String uid = listFollowerUids[index];
                                   return FutureBuilder<bool>(
-                                    future: checkFollowing(uid),
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<bool> followingSnapshot) {
-                                      if (followingSnapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return Container();
-                                      } else if (followingSnapshot.hasError) {
-                                        return Text('Error: ${followingSnapshot.error}');
-                                      } else {
-                                        bool isFollow = followingSnapshot.data ?? false;
-                                        return FutureBuilder(
-                                            future: usersRef.doc(uid).get(),
-                                            builder: (BuildContext context,
-                                                AsyncSnapshot snapshot) {
-                                              if (!snapshot.hasData) {
-                                                return Container();
-                                              }
-                                              UserModel userModel =
-                                              UserModel.fromDoc(snapshot.data);
-                                              String name =
-                                              removeDiacritics(userModel.name)
-                                                  .toLowerCase();
-                                              if (_searchQuery.isNotEmpty &&
-                                                  !name.contains(
-                                                      _textEditingController.text
-                                                          .toLowerCase())) {
-                                                return Container();
-                                              }
-                                              return Row(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                                children: [
-                                                  Expanded(
-                                                    child:
-                                                    GestureDetector(
+                                      future: checkFollowing(uid),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<bool>
+                                              followingSnapshot) {
+                                        if (followingSnapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Container();
+                                        } else if (followingSnapshot.hasError) {
+                                          return Text(
+                                              'Error: ${followingSnapshot.error}');
+                                        } else {
+                                          bool isFollow =
+                                              followingSnapshot.data ?? false;
+                                          return FutureBuilder(
+                                              future: usersRef.doc(uid).get(),
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot snapshot) {
+                                                if (!snapshot.hasData) {
+                                                  return Container();
+                                                }
+                                                UserModel userModel =
+                                                    UserModel.fromDoc(
+                                                        snapshot.data);
+                                                String name = removeDiacritics(
+                                                        userModel.name)
+                                                    .toLowerCase();
+                                                if (_searchQuery.isNotEmpty &&
+                                                    !name.contains(
+                                                        _textEditingController
+                                                            .text
+                                                            .toLowerCase())) {
+                                                  return Container();
+                                                }
+                                                return Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Expanded(
+                                                        child: GestureDetector(
                                                       onTap: () {
                                                         Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ( ProfileScreen(visitedUserID:userModel.uid ,currentUserId: widget.currentUserId,isBack: true,)
-                                                          ),
-                                                        ));
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  (ProfileScreen(
+                                                                visitedUserID:
+                                                                    userModel
+                                                                        .uid,
+                                                                currentUserId:
+                                                                    widget
+                                                                        .currentUserId,
+                                                                isBack: true,
+                                                              )),
+                                                            ));
                                                       },
                                                       child: AccountDetail(
                                                           userModel.name,
                                                           userModel.bio ?? '',
                                                           userModel.avt ?? ''),
-                                                    )
-                                                  ),
-                                                  widget.currentUserId == user.uid?
-                                                  buildProfileButton(isFollow, uid)
-                                                      :Container()
-                                                ],
-                                              );
-                                            });
-                                      }
-                                    });
+                                                    )),
+                                                    widget.currentUserId ==
+                                                            user.uid
+                                                        ? buildProfileButton(
+                                                            isFollow, uid)
+                                                        : Container()
+                                                  ],
+                                                );
+                                              });
+                                        }
+                                      });
                                 },
                               );
                             }
@@ -263,8 +278,13 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                        ( ProfileScreen(visitedUserID:userModel.uid ,currentUserId: widget.currentUserId,isBack: true,)
-                                                        ),
+                                                            (ProfileScreen(
+                                                          visitedUserID:
+                                                              userModel.uid,
+                                                          currentUserId: widget
+                                                              .currentUserId,
+                                                          isBack: true,
+                                                        )),
                                                       ));
                                                 },
                                                 child: AccountDetail(
@@ -273,9 +293,9 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                                     userModel.avt ?? ''),
                                               ),
                                             ),
-                                            widget.currentUserId == user.uid?
-                                            buildProfileButton(true, uid)
-                                                :Container()
+                                            widget.currentUserId == user.uid
+                                                ? buildProfileButton(true, uid)
+                                                : Container()
                                           ],
                                         );
                                       });
@@ -372,46 +392,83 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                                               .center,
                                                       children: [
                                                         Expanded(
-                                                          child: GestureDetector(
-                                                            onTap: () {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder: (context) =>
-                                                                    ( ProfileScreen(visitedUserID:userModel.uid ,currentUserId: widget.currentUserId,isBack: true,)
-                                                                    ),
-                                                                  ));
-                                                            },
-                                                            child: AccountDetail(
-                                                                userModel.name,
-                                                                userModel.bio ?? '',
-                                                                userModel.avt ?? ''),
-                                                          )
-                                                        ),
+                                                            child:
+                                                                GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          (ProfileScreen(
+                                                                    visitedUserID:
+                                                                        userModel
+                                                                            .uid,
+                                                                    currentUserId:
+                                                                        widget
+                                                                            .currentUserId,
+                                                                    isBack:
+                                                                        true,
+                                                                  )),
+                                                                ));
+                                                          },
+                                                          child: AccountDetail(
+                                                              userModel.name,
+                                                              userModel.bio ??
+                                                                  '',
+                                                              userModel.avt ??
+                                                                  ''),
+                                                        )),
                                                         ElevatedButton(
                                                           onPressed: () {
-                                                            Navigator.push(context,
+                                                            Navigator.push(
+                                                                context,
                                                                 MaterialPageRoute(
-                                                                  builder: (context) => ChatPage(
-                                                                    receiverId: uid,
-                                                                    receiverName: userModel.name,
-                                                                    chatterImg: userModel.avt ?? 'assets/images/default_avt.png' ,
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ChatPage(
+                                                                    receiverId:
+                                                                        uid,
+                                                                    receiverName:
+                                                                        userModel
+                                                                            .name,
+                                                                    chatterImg:
+                                                                        userModel.avt ??
+                                                                            'assets/images/default_avt.png',
                                                                   ),
                                                                 ));
                                                           },
                                                           style: ButtonStyle(
-                                                            minimumSize: MaterialStateProperty.all<Size>(
-                                                              const Size(125, 35),
+                                                            minimumSize:
+                                                                MaterialStateProperty
+                                                                    .all<Size>(
+                                                              const Size(
+                                                                  125, 35),
                                                             ),
-                                                            backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Colors
+                                                                            .blue),
+                                                            foregroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Colors
+                                                                            .white),
+                                                            shape: MaterialStateProperty
+                                                                .all<
+                                                                    RoundedRectangleBorder>(
                                                               RoundedRectangleBorder(
-                                                                borderRadius: BorderRadius.circular(5),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
                                                               ),
                                                             ),
                                                           ),
-                                                          child: const Text('Nhắn tin',),
+                                                          child: const Text(
+                                                            'Nhắn tin',
+                                                          ),
                                                         )
                                                       ],
                                                     );
@@ -444,41 +501,42 @@ class _ListFollowerState extends State<ListFollowerScreen> {
   }
   //final currentUser = FirebaseAuth.instance.currentUser!;
 
-   handleUnfollowUser(String userId) {
-     followersRef
-         .doc(userId)
-         .collection('userFollowers')
-         .doc(widget.currentUserId)
-         .get()
-         .then((doc) {
-       if (doc.exists) {
-         doc.reference.delete();
-       }
-     });
-     followingsRef
-         .doc(widget.currentUserId)
-         .collection('userFollowings')
-         .doc(userId)
-         .get()
-         .then((doc) {
-       if (doc.exists) {
-         doc.reference.delete();
-       }
-     });
-     DocumentReference userRef =
-     FirebaseFirestore.instance.collection('users').doc(widget.currentUserId);
+  handleUnfollowUser(String userId) {
+    followersRef
+        .doc(userId)
+        .collection('userFollowers')
+        .doc(widget.currentUserId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+    followingsRef
+        .doc(widget.currentUserId)
+        .collection('userFollowings')
+        .doc(userId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+    DocumentReference userRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.currentUserId);
 
-     userRef.update({
-       'followingsList': FieldValue.arrayRemove([userId])
-     }).then((_) {
-       setState(() {
-         _followingNum -= 1;
-         getFriendCount();
-       });
-       });
+    userRef.update({
+      'followingsList': FieldValue.arrayRemove([userId])
+    }).then((_) {
+      setState(() {
+        _followingNum -= 1;
+        getFriendCount();
+      });
+    });
   }
 
-  handleFollowUser(String userId, bool isFollowing) {
+  handleFollowUser(String userId, bool isFollowing) async {
     followersRef
         .doc(userId)
         .collection('userFollowers')
@@ -490,8 +548,9 @@ class _ListFollowerState extends State<ListFollowerScreen> {
         .collection('userFollowings')
         .doc(userId)
         .set({});
-    DocumentReference userRef =
-    FirebaseFirestore.instance.collection('users').doc(widget.currentUserId);
+    DocumentReference userRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.currentUserId);
     userRef.update({
       'followingsList': FieldValue.arrayUnion([userId])
     }).then((_) {
@@ -500,7 +559,31 @@ class _ListFollowerState extends State<ListFollowerScreen> {
         getFriendCount();
       });
     });
+    //noti
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    List<String> ids = [widget.currentUserId, "follow"];
+    String reactorId = ids.join('_');
+    await firestore
+        .collection('users')
+        .doc(userId)
+        .collection('notifications')
+        .doc(reactorId)
+        .set({});
+
+    await firestore
+        .collection('users')
+        .doc(userId)
+        .collection('notifications')
+        .doc(reactorId)
+        .collection('reactors')
+        .doc(widget.currentUserId)
+        .set({
+      'type': 'follow',
+      'senderId': widget.currentUserId,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
   }
+
   buildProfileButton(bool isFollowing, String userId) {
     if (isFollowing) {
       return buildButton(
@@ -512,7 +595,6 @@ class _ListFollowerState extends State<ListFollowerScreen> {
               isFollowing = false;
             });
           });
-
     } else {
       return buildButton(
           text: "Follow",
@@ -546,7 +628,9 @@ class _ListFollowerState extends State<ListFollowerScreen> {
           ),
         ),
       ),
-      child: Text(text,),
+      child: Text(
+        text,
+      ),
     );
   }
 }

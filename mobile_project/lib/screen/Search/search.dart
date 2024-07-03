@@ -7,7 +7,7 @@ import 'package:mobile_project/screen/Search/widget/suggest_detail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchScreen extends StatefulWidget {
-  final List<String> hashtag=['has1','has2','has3','has4'];
+  final List<String> hashtag = ['has1', 'has2', 'has3', 'has4'];
 
   SearchScreen({super.key});
   @override
@@ -16,12 +16,12 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   late bool _showresult;
-  late List<String> searchHistory =[];
+  late List<String> searchHistory = [];
   late bool _show;
   final TextEditingController _textEditingController = TextEditingController();
   String? _uid;
   String? name;
-  String query='';
+  String query = '';
   final user = FirebaseAuth.instance.currentUser!;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -46,6 +46,7 @@ class _SearchScreenState extends State<SearchScreen> {
       });
     }
   }
+
   Future<void> loadSearchHistory() async {
     final prefs = await SharedPreferences.getInstance();
     final history = prefs.getStringList('search_history') ?? [];
@@ -53,6 +54,7 @@ class _SearchScreenState extends State<SearchScreen> {
       searchHistory = history.reversed.toList();
     });
   }
+
   //
   // Future<void> saveSearchHistory(List<String> history) async {
   //   final prefs = await SharedPreferences.getInstance();
@@ -61,12 +63,14 @@ class _SearchScreenState extends State<SearchScreen> {
   Future<void> saveSearchHistory(List<String> history) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setStringList('search_history', history); // Reverse the list before saving
+      await prefs.setStringList(
+          'search_history', history); // Reverse the list before saving
     } catch (e) {
       // Handle the error appropriately
       throw Exception('Failed to save search history');
     }
   }
+
   Widget buildSearchHistoryDetail(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -78,7 +82,9 @@ class _SearchScreenState extends State<SearchScreen> {
             physics: const PageScrollPhysics(),
             shrinkWrap: true,
             itemExtent: 35,
-            itemCount: _show ? searchHistory.length : (searchHistory.length < 3 ? searchHistory.length : 3),
+            itemCount: _show
+                ? searchHistory.length
+                : (searchHistory.length < 3 ? searchHistory.length : 3),
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
                 onTap: () {
@@ -103,7 +109,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             searchHistory[index],
                             style: const TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.normal,
                             ),
                           ),
                         ),
@@ -130,58 +136,62 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         _show
             ? Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton(
-              onPressed: () async {
-                setState(() {
-                  searchHistory.clear();
-                });
-                await saveSearchHistory(searchHistory); // Save the empty history list
-              },
-              child: const Text(
-                "Xóa tất cả",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF107BFD),
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ],
-        ): searchHistory.length <= 3?
-        Container():
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _show = true;
-                });
-              },
-              child: const Text(
-                "Xem thêm",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF107BFD),
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ],
-        ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () async {
+                      setState(() {
+                        searchHistory.clear();
+                      });
+                      await saveSearchHistory(
+                          searchHistory); // Save the empty history list
+                    },
+                    child: const Text(
+                      "Xóa tất cả",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFF107BFD),
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : searchHistory.length <= 3
+                ? Container()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _show = true;
+                          });
+                        },
+                        child: const Text(
+                          "Xem thêm",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Color(0xFF107BFD),
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
       ],
     );
   }
+
   void getUserData() async {
     User currentUser = _auth.currentUser!;
     _uid = currentUser.uid;
     final DocumentSnapshot userDoc =
-    await FirebaseFirestore.instance.collection('users').doc(_uid).get();
+        await FirebaseFirestore.instance.collection('users').doc(_uid).get();
     name = userDoc.get("Name");
     setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -224,20 +234,20 @@ class _SearchScreenState extends State<SearchScreen> {
               suffixIcon: _textEditingController.text.isEmpty
                   ? null
                   : Padding(
-                padding: const EdgeInsets.only(right: 0.0),
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _showresult = false;
-                      loadSearchHistory();
-                      _textEditingController.clear();
-                    });
-                  },
-                  icon: SvgPicture.asset(
-                    'assets/icons/cancel.svg',
-                  ),
-                ),
-              ),
+                      padding: const EdgeInsets.only(right: 0.0),
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _showresult = false;
+                            loadSearchHistory();
+                            _textEditingController.clear();
+                          });
+                        },
+                        icon: SvgPicture.asset(
+                          'assets/icons/cancel.svg',
+                        ),
+                      ),
+                    ),
               filled: true,
               fillColor: Colors.grey[200],
             ),
@@ -263,31 +273,37 @@ class _SearchScreenState extends State<SearchScreen> {
         ],
       ),
       body: _showresult
-          ? SearchResult(query: query,name: name??'', currentId: _uid??'',)
+          ? SearchResult(
+              query: query,
+              name: name ?? '',
+              currentId: _uid ?? '',
+            )
           : SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildSearchHistoryDetail(context),
-            //SearchHistoryDetail( false, name: name??'', uid: _uid??'',),
-            const SizedBox(height: 10,),
-            const Padding(
-              padding: EdgeInsets.only(left: 15),
-              child: Text(
-                "Khám phá",
-                style: TextStyle(
-                  color: Color(0xFF107BFD),
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildSearchHistoryDetail(context),
+                  //SearchHistoryDetail( false, name: name??'', uid: _uid??'',),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 15),
+                    child: Text(
+                      "Khám phá",
+                      style: TextStyle(
+                        color: Color(0xFF107BFD),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SuggestDetail(widget.hashtag)
+                ],
               ),
             ),
-            SuggestDetail(widget.hashtag)
-          ],
-        ),
-      ),
     );
   }
   // Widget bSearchHistoryDetail(BuildContext context) {
