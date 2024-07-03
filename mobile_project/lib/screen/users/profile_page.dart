@@ -92,9 +92,9 @@ class _ProfileScreenState extends State<ProfileScreen>
         .snapshots()
         .listen((DocumentSnapshot snapshot) {
       if (snapshot.exists) {
+        Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+        List<dynamic> followingsList = data?['followingsList'] ?? [];
         setState(() {
-          Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
-          List<dynamic> followingsList = data?['followingsList'] ?? [];
           _userfollowingCount = followingsList.length;
         });
       }
@@ -543,7 +543,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ))
                     ];
                   },
-                  body: TabBarView(
+                  body: !_isVisited?
+                  TabBarView(
                           controller: _tabController,
                           children: [
                             const VideoTab(),
@@ -553,7 +554,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                             const SaveTab(),
                             const LikeTab(),
                           ],
-                        )));
+                        )
+                  :TabBarView(
+                    controller: _tabController,
+                    children: [
+                      const VideoTab(),
+                      Expanded(
+                          child: PostTab(
+                              visitedUserID: widget.visitedUserID)),
+                    ],
+                  )
+              )
+            );
           }),
     );
   }

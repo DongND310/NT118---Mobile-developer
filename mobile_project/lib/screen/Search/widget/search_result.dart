@@ -5,11 +5,13 @@ import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/models/user_model.dart';
+import 'package:mobile_project/models/video_model.dart';
 import 'package:mobile_project/screen/Search/widget/video_search.dart';
 import 'package:mobile_project/services/database_services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../../../components/video_detail.dart';
 import '../../users/profile_page.dart';
 import 'account_detail.dart';
 class SearchResult extends StatefulWidget {
@@ -387,13 +389,25 @@ class _SearchResultState extends State<SearchResult> {
                                                     return Container();
                                                   } else {
                                                     UserModel userModel = UserModel.fromDoc(userSnapshot.data!);
+                                                    VideoModel video = VideoModel.fromDocument(snapshot.data!);
                                                     List<dynamic> likesList = dataVideo['likesList'] ?? [];
-                                                    return VideoSearch(
-                                                      dataVideo['caption'],
-                                                      likesList.length.toString(),
-                                                      userModel.name,
-                                                      '',
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) => VideoDetailScreen(video: video),
+                                                          ),
+                                                        );
+                                                      },
+                                                      child: VideoSearch(
+                                                        dataVideo['caption'],
+                                                        likesList.length.toString(),
+                                                        userModel.name,
+                                                        '',
+                                                      )
                                                     );
+
                                                   }
                                                 },
                                               );

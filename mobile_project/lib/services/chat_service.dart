@@ -110,10 +110,10 @@ class ChatService extends ChangeNotifier {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       if (data.containsKey('notificationSettings')) {
         Map<String, dynamic> notificationSettings = data['notificationSettings'];
-        return notificationSettings[currentUserId] ?? false;
+        return notificationSettings[currentUserId] ?? true;
       }
     }
-    return false;
+    return true;
   }
   Future<void> updateMessageReadStatus(String senderId, String receiverId, String messageId) async {
     List<String> ids = [senderId, receiverId];
