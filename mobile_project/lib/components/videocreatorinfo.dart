@@ -62,6 +62,7 @@ class _VideoCreatorInfoState extends State<VideoCreatorInfo> {
                     builder: (context) => ProfileScreen(
                       visitedUserID: widget.video.postedById,
                       currentUserId: user.uid,
+                      isBack: true,
                     ),
                   ));
             },

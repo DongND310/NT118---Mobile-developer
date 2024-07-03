@@ -185,6 +185,7 @@ class _CustomCommentState extends State<CustomComment> {
                           builder: (context) => ProfileScreen(
                             visitedUserID: widget.userId,
                             currentUserId: currentUser.uid,
+                            isBack: true,
                           ),
                         ));
                   },

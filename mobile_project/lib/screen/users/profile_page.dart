@@ -16,9 +16,13 @@ import 'tab_video.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen(
-      {super.key, required this.currentUserId, required this.visitedUserID});
+      {super.key,
+      required this.currentUserId,
+      required this.visitedUserID,
+      required this.isBack});
   final String currentUserId;
   final String visitedUserID;
+  final bool isBack;
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -111,13 +115,11 @@ class _ProfileScreenState extends State<ProfileScreen>
     super.dispose();
   }
 
-  //User? currentUser = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
           future: usersRef.doc(widget.visitedUserID).get(),
-          // future: usersRef.doc(widget.currentUserId).get(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
               return const Center(
@@ -128,444 +130,447 @@ class _ProfileScreenState extends State<ProfileScreen>
             }
             UserModel userModel = UserModel.fromDoc(snapshot.data);
             return DefaultTabController(
-              length: !_isVisited ? 4 : 2,
-              child: NestedScrollView(
-                  headerSliverBuilder: (context, index) {
-                    return [
-                      SliverAppBar(
-                        leading: Visibility(
-                            visible: _isVisited,
-                            child: IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: SvgPicture.asset(
-                                'assets/icons/ep_back.svg',
-                                width: 30,
-                                height: 30,
-                              ),
-                            )),
-                        centerTitle: true,
-                        automaticallyImplyLeading: false,
-                        pinned: true,
-                        floating: true,
-                        snap: true,
-                        backgroundColor: Colors.white,
-                        elevation: 0.5,
-                        title: Text(
-                          userModel.id,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        actions: [
-                          Visibility(
-                              visible: !_isVisited,
+                length: !_isVisited ? 4 : 2,
+                child: NestedScrollView(
+                    headerSliverBuilder: (context, index) {
+                      return [
+                        SliverAppBar(
+                          leading: Visibility(
+                              visible: _isVisited,
                               child: IconButton(
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProfileSettingPage(),
-                                    ),
-                                  );
+                                  Navigator.pop(context);
                                 },
                                 icon: SvgPicture.asset(
-                                  'assets/icons/setting_list.svg',
-                                  width: 18,
+                                  'assets/icons/ep_back.svg',
+                                  width: 30,
+                                  height: 30,
                                 ),
                               )),
-                        ],
-                      ),
-                      SliverToBoxAdapter(
-                        child: Container(
-                          color: Colors.white,
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                // avatar + userID
-                                GestureDetector(
-                                  onTap: () {
+                          centerTitle: true,
+                          automaticallyImplyLeading: widget.isBack,
+                          pinned: true,
+                          floating: true,
+                          snap: true,
+                          backgroundColor: Colors.white,
+                          elevation: 0.5,
+                          title: Text(
+                            userModel.id,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          actions: [
+                            Visibility(
+                                visible: !_isVisited,
+                                child: IconButton(
+                                  onPressed: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => AvtChangeScreen(),
+                                        builder: (context) =>
+                                            ProfileSettingPage(),
                                       ),
                                     );
                                   },
-                                  child: CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage: userModel.avt != null
-                                        ? NetworkImage(userModel.avt!)
-                                        : Image.asset(
-                                                'assets/images/default_avt.png')
-                                            .image,
+                                  icon: SvgPicture.asset(
+                                    'assets/icons/setting_list.svg',
+                                    width: 18,
                                   ),
-                                ),
-
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Text(
-                                  userModel.name,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 0,
+                                )),
+                          ],
+                        ),
+                        SliverToBoxAdapter(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const SizedBox(
+                                    height: 15,
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
+                                  // avatar + userID
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              AvtChangeScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 50,
+                                      backgroundImage: userModel.avt != null
+                                          ? NetworkImage(userModel.avt!)
+                                          : Image.asset(
+                                                  'assets/images/default_avt.png')
+                                              .image,
+                                    ),
+                                  ),
 
-                                // follow
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 0.0, left: 40, right: 45),
-                                  child: Row(
-                                    children: [
-                                      // following
-                                      Expanded(
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ListFollowerScreen(
-                                                          tabIndex: 1,
-                                                          currentUserId:
-                                                              widget
-                                                                  .visitedUserID,
-                                                          followerNum:
-                                                              _followersCount,
-                                                          followingNum: !_isVisited
-                                                              ? _userfollowingCount
-                                                              : _followingCount)
-                                                  // update following
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    userModel.name,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+
+                                  // follow
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 0.0, left: 40, right: 45),
+                                    child: Row(
+                                      children: [
+                                        // following
+                                        Expanded(
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ListFollowerScreen(
+                                                            tabIndex: 1,
+                                                            currentUserId: widget
+                                                                .visitedUserID,
+                                                            followerNum:
+                                                                _followersCount,
+                                                            followingNum: !_isVisited
+                                                                ? _userfollowingCount
+                                                                : _followingCount)
+                                                    // update following
+                                                    ),
+                                              );
+                                            },
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  !_isVisited
+                                                      ? '$_userfollowingCount'
+                                                      : '$_followingCount',
+                                                  style: const TextStyle(
+                                                    color: Colors.blue,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                            );
-                                          },
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                !_isVisited
-                                                    ? '$_userfollowingCount'
-                                                    : '$_followingCount',
-                                                style: const TextStyle(
-                                                  color: Colors.blue,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
                                                 ),
-                                              ),
-                                              const Text(
-                                                'Following',
-                                                style: TextStyle(
-                                                  color: Colors.black54,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.normal,
+                                                const Text(
+                                                  'Following',
+                                                  style: TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
 
-                                      // follower
-                                      Expanded(
-                                        child: GestureDetector(
+                                        // follower
+                                        Expanded(
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ListFollowerScreen(
+                                                    tabIndex: 0,
+                                                    currentUserId:
+                                                        widget.visitedUserID,
+                                                    followerNum:
+                                                        _followersCount,
+                                                    followingNum: _isVisited
+                                                        ? _followingCount
+                                                        : _userfollowingCount,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  '$_followersCount',
+                                                  style: const TextStyle(
+                                                    color: Colors.blue,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const Text(
+                                                  'Follower',
+                                                  style: TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 25,
+                                  ),
+
+                                  // btn edit profile
+                                  !_isVisited
+                                      ? GestureDetector(
                                           onTap: () {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ListFollowerScreen(
-                                                  tabIndex: 0,
-                                                  currentUserId:
-                                                      widget.visitedUserID,
-                                                  followerNum: _followersCount,
-                                                  followingNum: _isVisited
-                                                      ? _followingCount
-                                                      : _userfollowingCount,
-                                                ),
+                                                    ChangeProfilePage(),
                                               ),
                                             );
                                           },
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                '$_followersCount',
-                                                style: const TextStyle(
-                                                  color: Colors.blue,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
+                                          child: Container(
+                                            height: 45,
+                                            width: 260,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: Colors.blue),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.2),
+                                                  spreadRadius: 0.5,
+                                                  blurRadius: 8,
+                                                  offset: const Offset(0, 3),
                                                 ),
-                                              ),
-                                              const Text(
-                                                'Follower',
+                                              ],
+                                            ),
+                                            child: const Center(
+                                              child: Text(
+                                                'Chỉnh sửa hồ sơ',
                                                 style: TextStyle(
-                                                  color: Colors.black54,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.blue,
                                                 ),
                                               ),
-                                            ],
+                                            ),
+                                          ),
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            buildProfileButton(),
+                                            const SizedBox(
+                                              width: 30,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ChatPage(
+                                                        receiverId: widget
+                                                            .visitedUserID,
+                                                        receiverName:
+                                                            userModel.name,
+                                                        chatterImg: userModel
+                                                                .avt ??
+                                                            'assets/images/default_avt.png',
+                                                      ),
+                                                    ));
+                                              },
+                                              child: Container(
+                                                height: 55,
+                                                width: 130,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  border: Border.all(
+                                                      color: Colors.blue),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.2),
+                                                      spreadRadius: 0.5,
+                                                      blurRadius: 8,
+                                                      offset:
+                                                          const Offset(0, 3),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: const Center(
+                                                  child: Text(
+                                                    'Nhắn tin',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Colors.blue,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                  // bio
+                                  const SizedBox(
+                                    height: 25,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 0.0, left: 40, right: 45),
+                                    child: Text(
+                                      userModel.bio ?? '',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        color: Color.fromARGB(193, 0, 0, 0),
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                ]),
+                          ),
+                        ),
+                        !_isVisited
+                            ? SliverPersistentHeader(
+                                pinned: true,
+                                floating: false,
+                                delegate: _SliverAppBarDelegate(
+                                  TabBar(
+                                    controller: _tabController,
+                                    tabs: [
+                                      Tab(
+                                        icon: SvgPicture.asset(
+                                          _tabController.index == 0
+                                              ? 'assets/icons/list_video_selected.svg'
+                                              : 'assets/icons/list_video.svg',
+                                          width: 25,
+                                        ),
+                                      ),
+                                      Tab(
+                                        icon: SvgPicture.asset(
+                                          _tabController.index == 1
+                                              ? 'assets/icons/list_post_selected.svg'
+                                              : 'assets/icons/list_post.svg',
+                                          width: 25,
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: !_isVisited,
+                                        child: Tab(
+                                          icon: SvgPicture.asset(
+                                            _tabController.index == 2
+                                                ? 'assets/icons/list_save_selected.svg'
+                                                : 'assets/icons/list_save.svg',
+                                            width: 17,
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 25,
-                                ),
-
-                                // btn edit profile
-                                !_isVisited
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ChangeProfilePage(),
-                                            ),
-                                          );
-                                        },
-                                        child: Container(
-                                          height: 45,
-                                          width: 260,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            border:
-                                                Border.all(color: Colors.blue),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.2),
-                                                spreadRadius: 0.5,
-                                                blurRadius: 8,
-                                                offset: const Offset(0, 3),
-                                              ),
-                                            ],
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                              'Chỉnh sửa hồ sơ',
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.blue,
-                                              ),
-                                            ),
+                                      Visibility(
+                                        visible: !_isVisited,
+                                        child: Tab(
+                                          icon: SvgPicture.asset(
+                                            _tabController.index == 3
+                                                ? 'assets/icons/list_like_selected.svg'
+                                                : 'assets/icons/list_like.svg',
+                                            width: 23,
                                           ),
                                         ),
                                       )
-                                    : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          buildProfileButton(),
-                                          const SizedBox(
-                                            width: 30,
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ChatPage(
-                                                      receiverId:
-                                                          widget.visitedUserID,
-                                                      receiverName:
-                                                          userModel.name,
-                                                      chatterImg: userModel
-                                                              .avt ??
-                                                          'assets/images/default_avt.png',
-                                                    ),
-                                                  ));
-                                            },
-                                            child: Container(
-                                              height: 55,
-                                              width: 130,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                    color: Colors.blue),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey
-                                                        .withOpacity(0.2),
-                                                    spreadRadius: 0.5,
-                                                    blurRadius: 8,
-                                                    offset: const Offset(0, 3),
-                                                  ),
-                                                ],
-                                              ),
-                                              child: const Center(
-                                                child: Text(
-                                                  'Nhắn tin',
-                                                  style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.blue,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                // bio
-                                const SizedBox(
-                                  height: 25,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 0.0, left: 40, right: 45),
-                                  child: Text(
-                                    userModel.bio ?? '',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      color: Color.fromARGB(193, 0, 0, 0),
-                                      fontWeight: FontWeight.normal,
-                                    ),
+                                    ],
+                                    indicatorColor: Colors.blue,
+                                    onTap: (index) {
+                                      _tabController.animateTo(index);
+                                    },
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                              ]),
-                        ),
-                      ),
-                      !_isVisited
-                          ? SliverPersistentHeader(
-                              pinned: true,
-                              floating: false,
-                              delegate: _SliverAppBarDelegate(
-                                TabBar(
-                                  controller: _tabController,
-                                  tabs: [
-                                    Tab(
-                                      icon: SvgPicture.asset(
-                                        _tabController.index == 0
-                                            ? 'assets/icons/list_video_selected.svg'
-                                            : 'assets/icons/list_video.svg',
-                                        width: 25,
-                                      ),
-                                    ),
-                                    Tab(
-                                      icon: SvgPicture.asset(
-                                        _tabController.index == 1
-                                            ? 'assets/icons/list_post_selected.svg'
-                                            : 'assets/icons/list_post.svg',
-                                        width: 25,
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: !_isVisited,
-                                      child: Tab(
+                                ))
+                            : SliverPersistentHeader(
+                                pinned: true,
+                                floating: false,
+                                delegate: _SliverAppBarDelegate(
+                                  TabBar(
+                                    controller: _tabController,
+                                    tabs: [
+                                      Tab(
                                         icon: SvgPicture.asset(
-                                          _tabController.index == 2
-                                              ? 'assets/icons/list_save_selected.svg'
-                                              : 'assets/icons/list_save.svg',
-                                          width: 17,
+                                          _tabController.index == 0
+                                              ? 'assets/icons/list_video_selected.svg'
+                                              : 'assets/icons/list_video.svg',
+                                          width: 25,
                                         ),
                                       ),
-                                    ),
-                                    Visibility(
-                                      visible: !_isVisited,
-                                      child: Tab(
+                                      Tab(
                                         icon: SvgPicture.asset(
-                                          _tabController.index == 3
-                                              ? 'assets/icons/list_like_selected.svg'
-                                              : 'assets/icons/list_like.svg',
-                                          width: 23,
+                                          _tabController.index == 1
+                                              ? 'assets/icons/list_post_selected.svg'
+                                              : 'assets/icons/list_post.svg',
+                                          width: 25,
                                         ),
                                       ),
-                                    )
-                                  ],
-                                  indicatorColor: Colors.blue,
-                                  onTap: (index) {
-                                    _tabController.animateTo(index);
-                                  },
-                                ),
-                              ))
-                          : SliverPersistentHeader(
-                              pinned: true,
-                              floating: false,
-                              delegate: _SliverAppBarDelegate(
-                                TabBar(
-                                  controller: _tabController,
-                                  tabs: [
-                                    Tab(
-                                      icon: SvgPicture.asset(
-                                        _tabController.index == 0
-                                            ? 'assets/icons/list_video_selected.svg'
-                                            : 'assets/icons/list_video.svg',
-                                        width: 25,
-                                      ),
-                                    ),
-                                    Tab(
-                                      icon: SvgPicture.asset(
-                                        _tabController.index == 1
-                                            ? 'assets/icons/list_post_selected.svg'
-                                            : 'assets/icons/list_post.svg',
-                                        width: 25,
-                                      ),
-                                    ),
-                                  ],
-                                  indicatorColor: Colors.blue,
-                                  onTap: (index) {
-                                    _tabController.animateTo(index);
-                                  },
-                                ),
-                              ))
-                    ];
-                  },
-                  body: !_isVisited?
-                  TabBarView(
-                          controller: _tabController,
-                          children: [
-                            const VideoTab(),
-                            Expanded(
-                                child: PostTab(
-                                    visitedUserID: widget.visitedUserID)),
-                            const SaveTab(),
-                            const LikeTab(),
-                          ],
-                        )
-                  :TabBarView(
-                    controller: _tabController,
-                    children: [
-                      const VideoTab(),
-                      Expanded(
-                          child: PostTab(
-                              visitedUserID: widget.visitedUserID)),
-                    ],
-                  )
-              )
-            );
+                                    ],
+                                    indicatorColor: Colors.blue,
+                                    onTap: (index) {
+                                      _tabController.animateTo(index);
+                                    },
+                                  ),
+                                ))
+                      ];
+                    },
+                    body: !_isVisited
+                        ? TabBarView(
+                            controller: _tabController,
+                            children: [
+                              const VideoTab(),
+                              Expanded(
+                                  child: PostTab(
+                                      visitedUserID: widget.visitedUserID)),
+                              const SaveTab(),
+                              const LikeTab(),
+                            ],
+                          )
+                        : TabBarView(
+                            controller: _tabController,
+                            children: [
+                              const VideoTab(),
+                              Expanded(
+                                  child: PostTab(
+                                      visitedUserID: widget.visitedUserID)),
+                            ],
+                          )));
           }),
     );
   }

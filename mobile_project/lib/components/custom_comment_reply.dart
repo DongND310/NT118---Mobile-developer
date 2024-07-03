@@ -194,6 +194,7 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
                               builder: (context) => ProfileScreen(
                                 visitedUserID: widget.userId,
                                 currentUserId: currentUser.uid,
+                                isBack: true,
                               ),
                             ));
                       },
