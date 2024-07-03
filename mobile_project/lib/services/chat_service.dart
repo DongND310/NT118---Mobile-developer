@@ -26,6 +26,7 @@ class ChatService extends ChangeNotifier {
 
     // Create message
     Message newMessage = Message(
+      messageId: '',
       senderId: _auth.currentUser!.uid,
       senderName: _name ?? '',
       receiverId: receiverId,
@@ -48,13 +49,21 @@ class ChatService extends ChangeNotifier {
     }
 
     // Add message to database
-    await _firestore.collection("chatrooms").doc(chatRoomId).collection("messages").add(newMessage.toMap()).then((value) async {
-      bool isNotificationEnabled = await getNotificationState(receiverId, _auth.currentUser!.uid);
-      if (isNotificationEnabled) {
-        NotiApi notiApi = NotiApi();
-        notiApi.sendPushNotification(receiverId, message);
-      }
+    DocumentReference docRef = await _firestore
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .collection("messages")
+        .add(newMessage.toMap());
+
+    String messageId = docRef.id;
+    await docRef.update({
+      'messageId': messageId,
     });
+    bool isNotificationEnabled = await getNotificationState(receiverId, _auth.currentUser!.uid);
+    if (isNotificationEnabled) {
+      NotiApi notiApi = NotiApi();
+      notiApi.sendPushNotification(receiverId, message);
+    }
   }
 
   // Get messages
@@ -63,6 +72,17 @@ class ChatService extends ChangeNotifier {
     ids.sort();
     String chatRoomId = ids.join('_');
     return _firestore.collection("chatrooms").doc(chatRoomId).collection("messages").orderBy("timestamp", descending: false).snapshots();
+  }
+  Stream<DocumentSnapshot> getMessage(String messageId,String userID, String anotherUserID) {
+    List<String> ids = [userID, anotherUserID];
+    ids.sort();
+    String chatRoomId = ids.join('_');
+    return _firestore
+        .collection("chatrooms")
+        .doc(chatRoomId)
+        .collection("messages")
+        .doc(messageId)
+        .snapshots();
   }
 
   Stream<QuerySnapshot> getLastMessage(String chatRoomId) {
@@ -95,28 +115,20 @@ class ChatService extends ChangeNotifier {
     }
     return false;
   }
-  Future<void> updateMessageReadStatus(String senderId, String receiverId) async {
+  Future<void> updateMessageReadStatus(String senderId, String receiverId, String messageId) async {
     List<String> ids = [senderId, receiverId];
     ids.sort();
     String chatRoomId = ids.join('_');
-
-    QuerySnapshot querySnapshot = await _firestore
-        .collection("chatrooms")
-        .doc(chatRoomId)
-        .collection("messages")
-        .where("senderId", isEqualTo: senderId)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      DocumentSnapshot messageDoc = querySnapshot.docs[0];
       await _firestore
           .collection('chatrooms')
           .doc(chatRoomId)
           .collection("messages")
-          .doc(messageDoc.id)
+          .doc(messageId)
           .update({
-        'read': DateTime.now().millisecondsSinceEpoch.toString(),
+        'read': DateTime
+            .now()
+            .millisecondsSinceEpoch
+            .toString(),
       });
     }
-  }
 }

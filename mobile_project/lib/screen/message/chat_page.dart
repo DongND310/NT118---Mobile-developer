@@ -101,17 +101,17 @@ class _ChatPageState extends State<ChatPage> {
             });
             return ListView.builder(
               controller: _controller,
-              //shrinkWrap: true,
               padding:
                   const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 80),
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 Map<String, dynamic> map =
                     snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                return ChatSample(map: map);
+                return ChatSample(map: map,chatService: _chatService,);
               },
             );
-          } else {
+          }
+          else {
             return Container();
           }
         },

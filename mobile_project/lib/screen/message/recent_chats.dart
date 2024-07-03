@@ -101,7 +101,11 @@ class _RecentChatState extends State<RecentChats> {
 
             // Kiểm tra sự tồn tại của trường 'read'
             var read = data.containsKey('read') ? data['read'] : '';
-            bool isRead = read != '';
+            bool isRead =true;
+            if(read ==''&& data['senderId'] != _auth.currentUser!.uid)
+              {
+                isRead = false;
+              }
             bool isSender = false;
             if (data["senderId"] == _auth.currentUser!.uid) {
               isSender = true;

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,9 @@ import 'package:mobile_project/services/chat_service.dart';
 class ChatSample extends StatefulWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Map<String, dynamic> map;
+  final ChatService chatService;
 
-  ChatSample({required this.map});
+  ChatSample({required this.map, required this.chatService});
 
   @override
   _ChatSampleState createState() => _ChatSampleState();
@@ -18,12 +20,26 @@ class _ChatSampleState extends State<ChatSample> {
   void initState() {
     super.initState();
     if (!widget.map.containsKey('read') && widget.map['receiverId'] == widget._auth.currentUser!.uid) {
-      ChatService chatService = ChatService();
-      chatService.updateMessageReadStatus(widget.map['senderId'], widget.map['receiverId']);
+      widget.chatService.updateMessageReadStatus(
+          widget.map['senderId'],
+          widget.map['receiverId'],
+          widget.map['messageId']
+      ).then((_) {
+        setState(() {
+          widget.map['read'] = DateTime.now().millisecondsSinceEpoch.toString();
+        });
+      });
     }
   }
 
   Widget whiteMessage() {
+    if(!widget.map.containsKey('read') && widget.map['receiverId'] == widget._auth.currentUser!.uid) {
+      widget.chatService.updateMessageReadStatus(
+          widget.map['senderId'],
+          widget.map['receiverId'],
+          widget.map['messageId']
+      );
+    }
     return Container(
       alignment: Alignment.centerLeft,
       child: Padding(

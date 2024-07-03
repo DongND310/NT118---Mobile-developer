@@ -99,7 +99,8 @@ class NotiApi {
             'type': 'chat',
             'receiverId': user.uid,
             'receiverName': user.displayName,
-            'chatterImg': userReceiver.get('Avt')
+            'chatterImg': userReceiver.get('Avt'),
+            "click_action" :"activity to be open"
           }
         }
       };
