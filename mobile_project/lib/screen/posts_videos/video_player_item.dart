@@ -7,12 +7,12 @@ import 'package:video_player/video_player.dart';
 
 class VideoPlayerItem extends StatefulWidget {
   final String videoUrl;
-  final int index;
+  // final int index;
 
   VideoPlayerItem({
     Key? key,
     required this.videoUrl,
-    required this.index,
+    // required this.index,
   }) : super(key: key);
 
   @override
@@ -28,19 +28,17 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
   void initState() {
     super.initState();
     print("Video URL: ${widget.videoUrl}");
-    print("Video index: ${widget.index}");
-    print("Video index: assets/videos/video_demo_${widget.index}.mp4");
-    // File videoFile = File('assets/videos/video_demo_${widget.index}.mp4');
-    File videoFile = File('assets/videos/video_demo_${widget.index}.mp4');
+    // print("Video index: ${widget.index}");
+    // print("Video index: assets/videos/video_demo_${widget.index}.mp4");
     _initializePlayer();
-    print("videoFile index: $videoFile");
+    // print("videoFile index: $videoFile");
   }
 
   Future<void> _initializePlayer() async {
     try {
-      // _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
-      _videoPlayerController =
-          VideoPlayerController.asset('video_demo_${widget.index}.mp4')
+      _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+      // _videoPlayerController =
+          // VideoPlayerController.asset('video_demo_${widget.index}.mp4')
             ..addListener(() {
               if (mounted) {
                 setState(() {});

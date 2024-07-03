@@ -10,11 +10,12 @@ import 'like_button.dart';
 
 class PostReply extends StatefulWidget {
   PostReply(
-      {Key? key, required this.postId, required this.name, required this.img})
+      {Key? key, required this.postId, required this.name, required this.img, required this.creatorId})
       : super(key: key);
   final String postId;
   final String img;
   final String name;
+  final String creatorId;
 
   @override
   State<PostReply> createState() => _PostReplyState();
@@ -115,7 +116,7 @@ class _PostReplyState extends State<PostReply> {
     }
   }
 
-  void toggleLike() {
+  void toggleLike() async {
     setState(() {
       isLiked = !isLiked;
     });
@@ -132,6 +133,33 @@ class _PostReplyState extends State<PostReply> {
       postRef.update({
         'likesList': FieldValue.arrayUnion([user.uid])
       });
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      List<String> ids = [currentUser.uid, "like"];
+      String reactorId = ids.join('_');
+      if (currentUser.uid != widget.postId) {
+        await firestore
+            .collection('users')
+            .doc(widget.creatorId)
+            .collection('notifications')
+            .doc(widget.postId)
+            .set({
+          'postId': widget.postId,
+        });
+
+        await firestore
+            .collection('users')
+            .doc(widget.creatorId)
+            .collection('notifications')
+            .doc(widget.postId)
+            .collection('reactors')
+            .doc(reactorId)
+            .set({
+          'type': 'post_like',
+          'senderId': currentUser.uid,
+          'postId': widget.postId,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
     } else {
       postRef.update({
         'likesList': FieldValue.arrayRemove([user.uid])

@@ -8,14 +8,6 @@ class VideoModel {
   final Timestamp timestamp;
   DocumentReference? ref;
 
-  // String postByName;
-  // String postByAvt;
-  // String songName;
-  // String thumbnail;
-  // List likes;
-  // int comments;
-  // int bookmarks;
-
   VideoModel({
     required this.videoId,
     required this.postedById,

@@ -134,6 +134,7 @@ class _CustomPostReplyState extends State<CustomPostReply> {
       postRef.update({
         'likesList': FieldValue.arrayUnion([currentUser.uid])
       });
+      
     } else {
       postRef.update({
         'likesList': FieldValue.arrayRemove([currentUser.uid])

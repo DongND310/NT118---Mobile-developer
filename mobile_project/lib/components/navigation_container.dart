@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/screen/homepage/add_video_page.dart';
 import 'package:mobile_project/screen/homepage/home_page.dart';
-import 'package:mobile_project/screen/homepage/notification_page.dart';
+import 'package:mobile_project/screen/notification/notification_page.dart';
 import 'package:mobile_project/screen/message/message_page.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';

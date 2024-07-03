@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
             return Stack(
               alignment: Alignment.bottomCenter,
               children: [
-                VideoPlayerItem(videoUrl: video.videoUrl, index: index),
+                VideoPlayerItem(videoUrl: video.videoUrl),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [

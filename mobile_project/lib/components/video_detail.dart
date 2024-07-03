@@ -1,87 +1,48 @@
-import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_project/models/user_model.dart';
+import 'package:mobile_project/components/home_side_bar.dart';
+import 'package:mobile_project/components/videocreatorinfo.dart';
+import 'package:mobile_project/models/video.dart';
 import 'package:mobile_project/models/video_model.dart';
-import 'package:mobile_project/screen/posts_videos/video_player_item.dart';
-import '../screen/users/profile_page.dart';
+import 'package:mobile_project/screen/posts_videos/video_player_item.dart'; // Đảm bảo import model video hoặc sử dụng như mong đợi
 
-class VideoDetail extends StatelessWidget {
-  VideoDetail(
-      {super.key, required this.video, required this.user, required videoUrl});
+class VideoDetailScreen extends StatelessWidget {
   final VideoModel video;
-  final UserModel user;
+
+  VideoDetailScreen({required this.video});
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        VideoPlayerItem(
-          videoUrl: video.videoUrl,
-          index: 0,
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
-        ListTile(
-          dense: true,
-          minLeadingWidth: 0,
-          horizontalTitleGap: 10,
-          title: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ProfileScreen(
-                          currentUserId: "CP5ovzUbQTYsCsY8PN8tyf4mxjg1",
-                          visitedUserID: "G0BT9oat2MW8ltF56E0nm3An05w2")));
-            },
-            child: const Text(
-              "data.postByName - Follow",
-              style: TextStyle(
-                  color: Color(0xffF1FCFD),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16),
+        body: Stack(
+          children: [
+            VideoPlayerItem(videoUrl: video.videoUrl),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: VideoCreatorInfo(video: video),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    height: MediaQuery.of(context).size.height / 3,
+                    child: HomeSideBar(
+                      video: video,
+                      likesList: [],
+                      repliesList: [],
+                      savesList: [],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-          leading: CircleAvatar(
-            radius: 14,
-            //backgroundImage: NetworkImage(user.profileImageUrl!)
-            backgroundImage: user.avt != null
-                ? NetworkImage(user.avt!)
-                : Image.asset('assets/images/default_avt.png').image,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: ExpandableText(
-            video.caption,
-            style: const TextStyle(
-                fontSize: 15, color: Colors.white, fontWeight: FontWeight.w100),
-            expandText: 'more',
-            collapseText: 'less',
-            expandOnTextTap: true,
-            collapseOnTextTap: true,
-            maxLines: 2,
-            linkColor: Colors.grey,
-          ),
-        ),
-        // ListTile(
-        //   dense: true,
-        //   minLeadingWidth: 0,
-        //   horizontalTitleGap: 5,
-        //   title: Text(
-        //     video.songName,
-        //     style: const TextStyle(
-        //         color: Color(0xffF1FCFD),
-        //         fontWeight: FontWeight.w500,
-        //         fontSize: 12),
-        //   ),
-        //   leading: const Icon(
-        //     CupertinoIcons.music_note_2,
-        //     size: 15,
-        //     color: Colors.white,
-        //   ),
-        // ),
-        const SizedBox(height: 10),
-      ],
-    );
+          ],
+        ));
   }
 }
