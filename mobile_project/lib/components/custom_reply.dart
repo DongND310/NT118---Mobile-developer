@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/components/custom_subreply.dart';
+import 'package:mobile_project/screen/users/profile_page.dart';
 
 import '../screen/posts_videos/like_button.dart';
 
@@ -119,7 +120,7 @@ class _CustomPostReplyState extends State<CustomPostReply> {
 
   final currentUser = FirebaseAuth.instance.currentUser!;
 
-  void toggleLike() {
+  void toggleLike() async {
     setState(() {
       isLiked = !isLiked;
     });
@@ -134,7 +135,34 @@ class _CustomPostReplyState extends State<CustomPostReply> {
       postRef.update({
         'likesList': FieldValue.arrayUnion([currentUser.uid])
       });
-      
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      List<String> ids = [currentUser.uid, "likecmt", widget.replyId];
+      String reactorId = ids.join('_');
+      if (currentUser.uid != widget.postId) {
+        await firestore
+            .collection('users')
+            .doc(widget.userId)
+            .collection('notifications')
+            .doc(widget.postId)
+            .set({
+          'postId': widget.postId,
+        });
+
+        await firestore
+            .collection('users')
+            .doc(widget.userId)
+            .collection('notifications')
+            .doc(widget.postId)
+            .collection('reactors')
+            .doc(reactorId)
+            .set({
+          'type': 'post_cmt_like',
+          'senderId': currentUser.uid,
+          'postId': widget.postId,
+          'replyId': widget.replyId,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
     } else {
       postRef.update({
         'likesList': FieldValue.arrayRemove([currentUser.uid])
@@ -149,7 +177,7 @@ class _CustomPostReplyState extends State<CustomPostReply> {
     });
   }
 
-  void addReplyComment(String content) {
+  void addReplyComment(String content) async {
     DocumentReference postRef = FirebaseFirestore.instance
         .collection('posts')
         .doc(widget.postId)
@@ -189,6 +217,36 @@ class _CustomPostReplyState extends State<CustomPostReply> {
     setState(() {
       _showReplyField = false;
     });
+
+    // noti
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    List<String> ids = [currentUser.uid, "replycmt", subreplyId];
+    String reactorId = ids.join('_');
+    if (currentUser.uid != widget.userId) {
+      await firestore
+          .collection('users')
+          .doc(widget.userId)
+          .collection('notifications')
+          .doc(widget.postId)
+          .set({
+        'postId': widget.postId,
+      });
+
+      await firestore
+          .collection('users')
+          .doc(widget.userId)
+          .collection('notifications')
+          .doc(widget.postId)
+          .collection('reactors')
+          .doc(reactorId)
+          .set({
+        'type': 'post_cmt_reply',
+        'senderId': currentUser.uid,
+        'postId': widget.postId,
+        'replyId': subreplyId,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
   }
 
   void listenToReplyChanges() {
@@ -238,13 +296,25 @@ class _CustomPostReplyState extends State<CustomPostReply> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            child: Text(
-                              _name ?? '',
-                              style: const TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  overflow: TextOverflow.ellipsis),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProfileScreen(
+                                        visitedUserID: widget.userId,
+                                        currentUserId: currentUser.uid,isBack: true,
+                                      ),
+                                    ));
+                              },
+                              child: Text(
+                                _name ?? '',
+                                style: const TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    overflow: TextOverflow.ellipsis),
+                              ),
                             ),
                           ),
 

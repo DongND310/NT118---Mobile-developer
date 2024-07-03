@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/models/post_model.dart';
+import 'package:mobile_project/screen/users/profile_page.dart';
 import 'package:mobile_project/services/post_service.dart';
 
 import '../../components/custom_reply.dart';
@@ -10,7 +13,11 @@ import 'like_button.dart';
 
 class PostReply extends StatefulWidget {
   PostReply(
-      {Key? key, required this.postId, required this.name, required this.img, required this.creatorId})
+      {Key? key,
+      required this.postId,
+      required this.name,
+      required this.img,
+      required this.creatorId})
       : super(key: key);
   final String postId;
   final String img;
@@ -289,13 +296,26 @@ class _PostReplyState extends State<PostReply> {
                             ),
                             Expanded(
                               flex: 5,
-                              child: Text(
-                                widget.name ?? '',
-                                style: const TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    overflow: TextOverflow.ellipsis),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ProfileScreen(
+                                          visitedUserID: widget.creatorId,
+                                          currentUserId: currentUser.uid,
+                                          isBack: true,
+                                        ),
+                                      ));
+                                },
+                                child: Text(
+                                  widget.name ?? '',
+                                  style: const TextStyle(
+                                      color: Colors.blue,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.ellipsis),
+                                ),
                               ),
                             ),
                             Row(

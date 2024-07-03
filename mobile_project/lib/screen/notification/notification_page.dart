@@ -134,9 +134,30 @@ class _NotificationPageState extends State<NotificationPage> {
                                                       reactor['timestamp'],
                                                   action:
                                                       "bình luận về bài đăng")
-                                              : CustomFollowNotification(
-                                                  senderId: reactor['senderId'],
-                                                );
+                                              : reactor['type'] ==
+                                                      'post_cmt_like'
+                                                  ? PostNoti(
+                                                      senderId:
+                                                          reactor['senderId'],
+                                                      postId: reactor['postId'],
+                                                      timestamp:
+                                                          reactor['timestamp'],
+                                                      action: "thích bình luận")
+                                                  : reactor['type'] ==
+                                                          'post_cmt_reply'
+                                                      ? PostNoti(
+                                                          senderId: reactor[
+                                                              'senderId'],
+                                                          postId:
+                                                              reactor['postId'],
+                                                          timestamp: reactor[
+                                                              'timestamp'],
+                                                          action:
+                                                              "phản hồi về bình luận")
+                                                      : CustomFollowNotification(
+                                                          senderId: reactor[
+                                                              'senderId'],
+                                                        );
                 },
               );
             },
