@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,8 @@ import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/models/user_model.dart';
 import 'package:mobile_project/screen/Search/widget/video_search.dart';
 import 'package:mobile_project/services/database_services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../users/profile_page.dart';
 import 'account_detail.dart';
@@ -27,6 +31,7 @@ class _SearchResultState extends State<SearchResult> {
   late final String _query;
   late final String _name;
   late final String _uid;
+  
   final DatabaseServices databaseServices = DatabaseServices();
   @override
   void initState() {
@@ -36,6 +41,27 @@ class _SearchResultState extends State<SearchResult> {
       _uid = widget.currentId;
       _name = widget.name;
     });
+  }
+  Future<List<DocumentSnapshot>> _getUsers() async {
+    QuerySnapshot querySnapshot = await usersRef.where('Name', isNotEqualTo: _name).get();
+    return querySnapshot.docs;
+  }
+
+  Future<List<DocumentSnapshot>> _getVideos() async {
+    QuerySnapshot querySnapshot = await videoRef.get();
+    return querySnapshot.docs;
+  }
+
+  Future<Map<String, List<DocumentSnapshot>>> _fetchData() async {
+    List<Future<List<DocumentSnapshot>>> futures = [
+      _getUsers(),
+      _getVideos(),
+    ];
+    List<List<DocumentSnapshot>> results = await Future.wait(futures);
+    return {
+      'users': results[0],
+      'videos': results[1],
+    };
   }
   Future<bool> checkFollowing(String uerId) async {
     DocumentSnapshot doc = await followingsRef
@@ -142,6 +168,7 @@ class _SearchResultState extends State<SearchResult> {
       child: Text(text,),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return  DefaultTabController(
@@ -168,6 +195,19 @@ class _SearchResultState extends State<SearchResult> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
+                              const Padding(
+                                  padding: EdgeInsets
+                                      .only(top: 10,
+                                      bottom: 10),
+                                  child: Text(
+                                    "Tài khoản",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight
+                                          .bold,
+                                    ),
+                                  )
+                              ),
                               StreamBuilder<QuerySnapshot>(
                                   stream: usersRef
                                       .where('Name', isNotEqualTo: _name)
@@ -195,7 +235,13 @@ class _SearchResultState extends State<SearchResult> {
                                         }
                                       }
                                       if (listUids.isEmpty) {
-                                        return Container();
+                                        return const Text(
+                                          "Không có tài khoản trùng khớp!",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        );
                                       }
                                       return StreamBuilder(
                                           stream: usersRef.doc(listUids[0])
@@ -211,11 +257,9 @@ class _SearchResultState extends State<SearchResult> {
                                               return const Text(
                                                   'No data available'); // Or handle the case when data is null
                                             }
-                                            DocumentSnapshot<
-                                                Object?> docSnapshot = snapshot
-                                                .data!;
                                             UserModel user = UserModel.fromDoc(
-                                                docSnapshot);
+                                                snapshot
+                                                    .data!);
                                             return FutureBuilder<bool>(
                                               future: checkFollowing(user.uid),
                                               builder: (BuildContext context,
@@ -233,58 +277,37 @@ class _SearchResultState extends State<SearchResult> {
                                                 } else {
                                                   bool isFollow = followingSnapshot
                                                       .data ?? false;
-                                                  return Column(
-                                                    mainAxisAlignment: MainAxisAlignment
-                                                        .start,
-                                                    crossAxisAlignment: CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      const Padding(
-                                                          padding: EdgeInsets
-                                                              .only(top: 10,
-                                                              bottom: 10),
-                                                          child: Text(
-                                                            "Tài khoản",
-                                                            style: TextStyle(
-                                                              fontSize: 18,
-                                                              fontWeight: FontWeight
-                                                                  .bold,
-                                                            ),
-                                                          )
-                                                      ),
-                                                      Row(
-                                                          crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                          children: [
-                                                            Expanded(child:
-                                                            GestureDetector(
-                                                                onTap: () {
-                                                                  Navigator
-                                                                      .push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                        builder: (
-                                                                            context) =>
-                                                                        (ProfileScreen(
-                                                                            visitedUserID: user
-                                                                                .uid,
-                                                                            currentUserId: _uid)
-                                                                        ),
-                                                                      ));
-                                                                },
-                                                                child: AccountDetail(
-                                                                    user.name,
-                                                                    user.bio ??
-                                                                        '', user
-                                                                    .avt ?? '')
-                                                            ),),
-                                                            buildProfileButton(
-                                                                isFollow,
-                                                                user.uid)
-                                                          ]
-                                                      )
-                                                    ],
+                                                  return Row(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .center,
+                                                      children: [
+                                                        Expanded(child:
+                                                        GestureDetector(
+                                                            onTap: () {
+                                                              Navigator
+                                                                  .push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (
+                                                                        context) =>
+                                                                    (ProfileScreen(
+                                                                        visitedUserID: user
+                                                                            .uid,
+                                                                        currentUserId: _uid)
+                                                                    ),
+                                                                  ));
+                                                            },
+                                                            child: AccountDetail(
+                                                                user.name,
+                                                                user.bio ??
+                                                                    '', user
+                                                                .avt ?? '')
+                                                        ),),
+                                                        buildProfileButton(
+                                                            isFollow,
+                                                            user.uid)
+                                                      ]
                                                   );
                                                 }
                                               },
@@ -301,22 +324,86 @@ class _SearchResultState extends State<SearchResult> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              GridView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 10,
-                                  mainAxisExtent: 220,
+                              SizedBox(
+                                height: MediaQuery.of(context).size.height, // Đặt chiều cao cụ thể cho GridView
+                                child: StreamBuilder<QuerySnapshot>(
+                                  stream: videoRef.snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                                      return Container();
+                                    } else {
+                                      List<String> listVidids = [];
+                                      for (int i = 0; i < snapshot.data!.size; i++) {
+                                        var data = snapshot.data!.docs[i].data() as Map<String, dynamic>;
+                                        String videoTitle = removeDiacritics(data['caption']).toLowerCase();
+                                        String id = data['videoId'];
+                                        if (videoTitle.contains(_query.toLowerCase())) {
+                                          listVidids.add(id);
+                                        }
+                                      }
+                                      if (listVidids.isEmpty) {
+                                        return const Padding(
+                                          padding: EdgeInsets.only(left: 20, top: 50),
+                                          child: Text(
+                                            "Không có video trùng khớp!",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        );
+                                      }
+                                      return GridView.builder(
+                                        physics: const PageScrollPhysics(),
+                                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          crossAxisSpacing: 10,
+                                          mainAxisExtent: 218,
+                                        ),
+                                        itemCount: listVidids.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          return StreamBuilder(
+                                            stream: videoRef.doc(listVidids[index]).snapshots(),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                return const CircularProgressIndicator();
+                                              }
+
+                                              if (!snapshot.hasData || snapshot.data == null) {
+                                                return const Text('No data available');
+                                              }
+
+                                              var dataVideo = snapshot.data!.data() as Map<String, dynamic>;
+
+                                              return StreamBuilder(
+                                                stream: usersRef.doc(dataVideo['postedById']).snapshots(),
+                                                builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> userSnapshot) {
+                                                  if (userSnapshot.connectionState == ConnectionState.waiting) {
+                                                    return Container();
+                                                  } else if (!userSnapshot.hasData) {
+                                                    return Container();
+                                                  } else {
+                                                    UserModel userModel = UserModel.fromDoc(userSnapshot.data!);
+                                                    List<dynamic> likesList = dataVideo['likesList'] ?? [];
+                                                    return VideoSearch(
+                                                      dataVideo['caption'],
+                                                      likesList.length.toString(),
+                                                      userModel.name,
+                                                      '',
+                                                    );
+                                                  }
+                                                },
+                                              );
+                                            },
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
                                 ),
-                                itemCount: 3,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return VideoSearch(
-                                    "hihi",
-                                    "30",
-                                    "hihiihi",
-                                  );
-                                },
                               ),
                             ],
                           ),
@@ -485,6 +572,7 @@ class _SearchResultState extends State<SearchResult> {
                                             }
 
                                             var dataVideo = snapshot.data!.data() as Map<String, dynamic>;
+
                                             return StreamBuilder(stream: usersRef.doc(dataVideo['postedById']).snapshots(),
                                                 builder: (BuildContext context,AsyncSnapshot<
                                                     DocumentSnapshot>
@@ -501,10 +589,11 @@ class _SearchResultState extends State<SearchResult> {
                                                     UserModel.fromDoc(
                                                         userSnapshot.data!);
                                                     List<dynamic> likesList = dataVideo['likesList'] ?? [];
-
-                                                    return VideoSearch(dataVideo['caption'],
-                                                        likesList.length.toString() ,
-                                                        userModel.name);
+                                                    return VideoSearch(
+                                                        dataVideo['caption'],
+                                                        likesList.length.toString(),
+                                                        userModel.name,
+                                                       '');
                                                   }
                                                 });
                                           },);
@@ -513,26 +602,9 @@ class _SearchResultState extends State<SearchResult> {
 
                                 }
                               }),
-                          //
                           // }
 
                         )
-                      // GridView.builder(
-                      //   physics: const PageScrollPhysics(),
-                      //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      //     crossAxisCount: 2,
-                      //     crossAxisSpacing: 10,
-                      //     mainAxisExtent: 218,
-                      //   ),
-                      //   itemCount: 20,
-                      //   itemBuilder: (BuildContext context, int index) {
-                      //     return VideoSearch(
-                      //       "widget.title",
-                      //       "10",
-                      //       "account",
-                      //     );
-                      //   },
-                      // ),
                     )
                   ]
                   )
@@ -540,5 +612,16 @@ class _SearchResultState extends State<SearchResult> {
             ])
     );
   }
-
+  // Future<String> _getThumbnail(String videoUrl) async {
+  //   final tempDir = await getTemporaryDirectory();
+  //   final thumbnailPath = await VideoThumbnail.thumbnailFile(
+  //     video: videoUrl,
+  //     thumbnailPath: tempDir.path,
+  //     imageFormat: ImageFormat.PNG,
+  //     maxHeight: 200, // you can specify the height of the thumbnail, optional
+  //     quality: 75, // quality of the thumbnail, from 0 to 100, optional
+  //   );
+  //
+  //   return thumbnailPath!;
+  // }
 }

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -5,7 +6,8 @@ class VideoSearch extends StatelessWidget {
   final String title;
   final String numLike;
   final String account;
-  VideoSearch(this.title, this.numLike, this.account);
+  final String thumbnailPath;
+  VideoSearch(this.title, this.numLike, this.account, this.thumbnailPath);
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +24,8 @@ class VideoSearch extends StatelessWidget {
               border: Border.all(style: BorderStyle.none, width: 2),
             ),
             child: ClipRect(
-              child: Image.network(
-                'https://i.pinimg.com/736x/fd/7f/48/fd7f480aa83946195f004f34a0da9ad8.jpg',
+              child: Image.file(  File(thumbnailPath)
+                ,
                 fit: BoxFit.cover,
               ),
             ),

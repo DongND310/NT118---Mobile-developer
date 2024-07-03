@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mobile_project/models/video_model.dart';
+import 'package:video_compress/video_compress.dart';
 
 class VideoService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -123,4 +124,5 @@ class VideoService {
 
     return videos;
   }
+
 }
