@@ -29,6 +29,8 @@ class VideoSearch extends StatelessWidget {
             ),
           ),
           Text(title,
+              maxLines: 1, // Giới hạn số dòng hiển thị
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,

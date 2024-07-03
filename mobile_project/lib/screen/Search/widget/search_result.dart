@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_project/constants.dart';
 import 'package:mobile_project/models/user_model.dart';
@@ -6,10 +7,7 @@ import 'package:mobile_project/screen/Search/widget/video_search.dart';
 import 'package:mobile_project/services/database_services.dart';
 
 import '../../users/profile_page.dart';
-import '../hashtagview.dart';
 import 'account_detail.dart';
-import 'hashtag.dart';
-
 class SearchResult extends StatefulWidget {
   final String query;
   final String name;
@@ -172,69 +170,129 @@ class _SearchResultState extends State<SearchResult> {
                             children: [
                               StreamBuilder<QuerySnapshot>(
                                   stream: usersRef
-                                      .orderBy('Name')
-                                      .startAt([_query])
-                                      .endAt(["$_query\uf8ff"])
                                       .where('Name', isNotEqualTo: _name)
                                       .snapshots(),
                                   builder: (context, snapshot) {
-                                    if(snapshot.connectionState==ConnectionState.waiting){
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
                                       return Container();
-                                    }else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                                    } else if (!snapshot.hasData ||
+                                        snapshot.data!.docs.isEmpty) {
                                       return Container();
                                     }
                                     else {
-                                      UserModel user = UserModel.fromDoc(snapshot.data!.docs[0]);
-                                      return FutureBuilder<bool>(
-                                        future: checkFollowing(user.uid),
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot<bool> followingSnapshot) {
-                                          if (followingSnapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return Container();
-                                          } else if (followingSnapshot.hasError) {
-                                            return Text('Error: ${followingSnapshot.error}');
-                                          } else {
-                                            bool isFollow = followingSnapshot.data ?? false;
-                                            return Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                const Padding(padding: EdgeInsets.only(top: 10, bottom: 10),
-                                                    child:Text(
-                                                      "Tài khoản",
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight: FontWeight.bold,
-                                                      ),
-                                                    )
-                                                ),
-                                                Row(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
+                                      List<String> listUids = [];
+                                      for (int i = 0; i <
+                                          snapshot.data!.size; i++) {
+                                        var data = snapshot.data!.docs[i]
+                                            .data() as Map<String, dynamic>;
+                                        String userName = removeDiacritics(
+                                            data['Name']).toLowerCase();
+                                        String id = data['UID'];
+                                        if (userName.contains(
+                                            _query.toLowerCase())) {
+                                          listUids.add(id);
+                                        }
+                                      }
+                                      if (listUids.isEmpty) {
+                                        return Container();
+                                      }
+                                      return StreamBuilder(
+                                          stream: usersRef.doc(listUids[0])
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const CircularProgressIndicator(); // Or any loading indicator
+                                            }
+
+                                            if (!snapshot.hasData ||
+                                                snapshot.data == null) {
+                                              return const Text(
+                                                  'No data available'); // Or handle the case when data is null
+                                            }
+                                            DocumentSnapshot<
+                                                Object?> docSnapshot = snapshot
+                                                .data!;
+                                            UserModel user = UserModel.fromDoc(
+                                                docSnapshot);
+                                            return FutureBuilder<bool>(
+                                              future: checkFollowing(user.uid),
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot<
+                                                      bool> followingSnapshot) {
+                                                if (followingSnapshot
+                                                    .connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return Container();
+                                                } else if (followingSnapshot
+                                                    .hasError) {
+                                                  return Text(
+                                                      'Error: ${followingSnapshot
+                                                          .error}');
+                                                } else {
+                                                  bool isFollow = followingSnapshot
+                                                      .data ?? false;
+                                                  return Column(
+                                                    mainAxisAlignment: MainAxisAlignment
+                                                        .start,
+                                                    crossAxisAlignment: CrossAxisAlignment
+                                                        .start,
                                                     children: [
-                                                      Expanded(child:
-                                                      GestureDetector(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                  ( ProfileScreen(visitedUserID:user.uid ,currentUserId: _uid)
-                                                                  ),
-                                                                ));
-                                                          },
-                                                          child:AccountDetail(user.name, user.bio??'', user.avt ?? '')
-                                                      ),),
-                                                      buildProfileButton(isFollow, user.uid)
-                                                    ]
-                                                )
-                                              ],
+                                                      const Padding(
+                                                          padding: EdgeInsets
+                                                              .only(top: 10,
+                                                              bottom: 10),
+                                                          child: Text(
+                                                            "Tài khoản",
+                                                            style: TextStyle(
+                                                              fontSize: 18,
+                                                              fontWeight: FontWeight
+                                                                  .bold,
+                                                            ),
+                                                          )
+                                                      ),
+                                                      Row(
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                          children: [
+                                                            Expanded(child:
+                                                            GestureDetector(
+                                                                onTap: () {
+                                                                  Navigator
+                                                                      .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (
+                                                                            context) =>
+                                                                        (ProfileScreen(
+                                                                            visitedUserID: user
+                                                                                .uid,
+                                                                            currentUserId: _uid)
+                                                                        ),
+                                                                      ));
+                                                                },
+                                                                child: AccountDetail(
+                                                                    user.name,
+                                                                    user.bio ??
+                                                                        '', user
+                                                                    .avt ?? '')
+                                                            ),),
+                                                            buildProfileButton(
+                                                                isFollow,
+                                                                user.uid)
+                                                          ]
+                                                      )
+                                                    ],
+                                                  );
+                                                }
+                                              },
                                             );
-                                          }
-                                        },
-                                      );
-                                    }}),
+                                          });
+                                    }
+                                  }
+                                  ),
                               const SizedBox(height: 15),
                               const Text(
                                 "Video",
@@ -274,79 +332,98 @@ class _SearchResultState extends State<SearchResult> {
                                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                                 child: StreamBuilder<QuerySnapshot>(
                                     stream: usersRef
-                                        .orderBy('Name')
-                                        .startAt([_query])
-                                        .endAt(["$_query\uf8ff"])
                                         .where('Name', isNotEqualTo: _name)
                                         .snapshots(),
                                     builder: (context, snapshot) {
                                       if(snapshot.connectionState==ConnectionState.waiting){
                                         return Container();
                                       }else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                                        return const Padding(
-                                          padding: EdgeInsets.only(left: 45, top: 50),
-                                          child: Text(
-                                            "Không có tài khoản trùng khớp!",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold, fontSize: 18),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        );
+                                        return Container();
                                       }
                                       else
                                       {
-                                        List<String> listUids = snapshot
-                                            .data!.docs
-                                            .map((doc) => doc.id)
-                                            .toList();
+                                        List<String> listUids=[];
+                                        for(int i=0; i< snapshot.data!.size; i++)
+                                        {
+                                          var data = snapshot.data!.docs[i].data() as Map<String, dynamic>;
+                                          String userName =  removeDiacritics(data['Name']).toLowerCase();
+                                          String id = data['UID'];
+                                          if(userName.contains(_query.toLowerCase())) {
+                                            listUids.add(id);
+                                          }
+                                        }
+                                        if(listUids.isEmpty)
+                                          {
+                                            return const Padding(
+                                              padding: EdgeInsets.only(left: 40, top: 50),
+                                              child: Text(
+                                                "Không có tài khoản trùng khớp!",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold, fontSize: 18),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            );
+                                          }
                                         return  ListView.builder(
                                             physics: const NeverScrollableScrollPhysics(),
                                             shrinkWrap: true,
                                             itemCount: listUids.length,
                                             itemBuilder: (BuildContext context, int index) {
-                                              UserModel user = UserModel.fromDoc(snapshot.data!.docs[index]);
-                                              return FutureBuilder<bool>(
-                                                future: checkFollowing(user.uid),
-                                                builder: (BuildContext context,
-                                                    AsyncSnapshot<bool> followingSnapshot) {
-                                                  if (followingSnapshot.connectionState ==
-                                                      ConnectionState.waiting) {
-                                                    return Container();
-                                                  } else if (followingSnapshot.hasError) {
-                                                    return Text('Error: ${followingSnapshot.error}');
-                                                  } else {
-                                                    bool isFollow = followingSnapshot.data ?? false;
-                                                    return Column(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Row(
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment.center,
+                                              return StreamBuilder(stream: usersRef.doc(listUids[index]).snapshots(),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      return const CircularProgressIndicator(); // Or any loading indicator
+                                                    }
+
+                                                    if (!snapshot.hasData || snapshot.data == null) {
+                                                      return const Text('No data available'); // Or handle the case when data is null
+                                                    }
+                                                    DocumentSnapshot<Object?> docSnapshot = snapshot.data!;
+                                                    UserModel user = UserModel.fromDoc( docSnapshot);
+                                                    return FutureBuilder<bool>(
+                                                      future: checkFollowing(user.uid),
+                                                      builder: (BuildContext context,
+                                                          AsyncSnapshot<bool> followingSnapshot) {
+                                                        if (followingSnapshot.connectionState ==
+                                                            ConnectionState.waiting) {
+                                                          return Container();
+                                                        } else if (followingSnapshot.hasError) {
+                                                          return Text('Error: ${followingSnapshot.error}');
+                                                        } else {
+                                                          bool isFollow = followingSnapshot.data ?? false;
+                                                          return Column(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
-                                                              Expanded(child:
-                                                              GestureDetector(
-                                                                  onTap: () {
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                          ( ProfileScreen(visitedUserID:user.uid ,currentUserId: _uid)
-                                                                          ),
-                                                                        ));
-                                                                  },
-                                                                  child:AccountDetail(user.name, user.bio??'', user.avt ?? '')
-                                                              ),),
-                                                              buildProfileButton(isFollow, user.uid)
-                                                            ]
-                                                        )
-                                                      ],
+                                                              Row(
+                                                                  crossAxisAlignment:
+                                                                  CrossAxisAlignment.center,
+                                                                  children: [
+                                                                    Expanded(child:
+                                                                    GestureDetector(
+                                                                        onTap: () {
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(
+                                                                                builder: (context) =>
+                                                                                ( ProfileScreen(visitedUserID:user.uid ,currentUserId: _uid)
+                                                                                ),
+                                                                              ));
+                                                                        },
+                                                                        child:AccountDetail(user.name, user.bio??'', user.avt ?? '')
+                                                                    ),),
+                                                                    buildProfileButton(isFollow, user.uid)
+                                                                  ]
+                                                              )
+                                                            ],
+                                                          );
+                                                        }
+                                                      },
                                                     );
                                                   }
-                                                },
                                               );
-
-                                            });
+                                            }
+                                            );
                                       }
                                     }
                                 )
@@ -356,48 +433,112 @@ class _SearchResultState extends State<SearchResult> {
                     Container(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: GridView.builder(
-                            physics: const PageScrollPhysics(),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 10,
-                              mainAxisExtent: 218,
-                            ),
-                            itemCount: 20,
-                            itemBuilder: (BuildContext context, int index) {
-                              return VideoSearch(
-                                "widget.title",
-                                "10",
-                                "account",
-                              );
-                            },
-                          ),
-                        )),
+                          child: StreamBuilder<QuerySnapshot>(
+                              stream: videoRef.snapshots(),
+                              builder: (context, snapshot) {
+                                if(snapshot.connectionState==ConnectionState.waiting){
+                                  return const CircularProgressIndicator();
+                                }else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                                  return Container();
+                                }
+                                else
+                                {
+                                  List<String> listVidids=[];
+                                  for(int i=0; i< snapshot.data!.size; i++)
+                                  {
+                                    var data = snapshot.data!.docs[i].data() as Map<String, dynamic>;
+                                    String videoTilte =  removeDiacritics(data['caption']).toLowerCase();
+                                    String id = data['videoId'];
+                                    if(videoTilte.contains(_query.toLowerCase())) {
+                                      listVidids.add(id);
+                                    }
+                                  }
+                                  if(listVidids.isEmpty)
+                                    {
+                                      return const Padding(
+                                        padding: EdgeInsets.only(left: 20, top: 50),
+                                        child: Text(
+                                          "Không có video trùng khớp!",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold, fontSize: 18),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      );
+                                    }
+                                  return GridView.builder(
+                                      physics: const PageScrollPhysics(),
+                                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        crossAxisSpacing: 10,
+                                        mainAxisExtent: 218,
+                                      ),
+                                      itemCount: listVidids.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return StreamBuilder(stream: videoRef.doc(listVidids[index]).snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState == ConnectionState.waiting) {
+                                              return const CircularProgressIndicator(); // Or any loading indicator
+                                            }
+
+                                            if (!snapshot.hasData || snapshot.data == null) {
+                                              return const Text('No data available'); // Or handle the case when data is null
+                                            }
+
+                                            var dataVideo = snapshot.data!.data() as Map<String, dynamic>;
+                                            return StreamBuilder(stream: usersRef.doc(dataVideo['postedById']).snapshots(),
+                                                builder: (BuildContext context,AsyncSnapshot<
+                                                    DocumentSnapshot>
+                                                userSnapshot) {
+                                                  if (userSnapshot
+                                                      .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return Container();
+                                                  } else if (!userSnapshot
+                                                      .hasData) {
+                                                    return Container();
+                                                  } else {
+                                                    UserModel userModel =
+                                                    UserModel.fromDoc(
+                                                        userSnapshot.data!);
+                                                    List<dynamic> likesList = dataVideo['likesList'] ?? [];
+
+                                                    return VideoSearch(dataVideo['caption'],
+                                                        likesList.length.toString() ,
+                                                        userModel.name);
+                                                  }
+                                                });
+                                          },);
+                                      }
+                                  );
+
+                                }
+                              }),
+                          //
+                          // }
+
+                        )
+                      // GridView.builder(
+                      //   physics: const PageScrollPhysics(),
+                      //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      //     crossAxisCount: 2,
+                      //     crossAxisSpacing: 10,
+                      //     mainAxisExtent: 218,
+                      //   ),
+                      //   itemCount: 20,
+                      //   itemBuilder: (BuildContext context, int index) {
+                      //     return VideoSearch(
+                      //       "widget.title",
+                      //       "10",
+                      //       "account",
+                      //     );
+                      //   },
+                      // ),
+                    )
                   ]
                   )
               )
             ])
     );
   }
-  // Widget buildVideo()
-  // {
-  //   return FutureBuilder(
-  //     future:usersRef
-  //         .where('name', isGreaterThanOrEqualTo: query)
-  //         .where('name', isLessThan: '${query}z')
-  //         .limit(1).get() ,
-  //     builder: (context, snapshot) {
-  //       if(snapshot.connectionState==ConnectionState.waiting){
-  //         return Container();
-  //       }else if(!snapshot.hasData){
-  //         return Container();
-  //       }
-  //       else
-  //       {
-  //         UserModel user = UserModel.fromDoc(snapshot.data!.docs[0]);
-  //         return AccountDetail(user.name, user.bio??'', user.avt ?? '');
-  //       }
-  //     },
-  //   );
-  // }
+
 }

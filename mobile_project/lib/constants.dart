@@ -8,6 +8,7 @@ const kPrimaryColor4 = Color(0x000141FF);
 
 final _fireStore = FirebaseFirestore.instance;
 final usersRef = _fireStore.collection('users');
+final videoRef = _fireStore.collection('videos');
 final followersRef = _fireStore.collection('followers');
 final followingsRef = _fireStore.collection('followings');
 
