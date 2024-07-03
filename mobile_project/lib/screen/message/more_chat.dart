@@ -90,7 +90,7 @@ class _MoreState extends State<MoreScreen> {
                           onPressed: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) =>
-                                    ProfileScreen(currentUserId: user!.uid, visitedUserID: widget.receiverId)));
+                                    ProfileScreen(currentUserId: user!.uid, visitedUserID: widget.receiverId, isBack: true,)));
                           },
                           icon: const Icon(
                             Icons.account_circle_outlined,

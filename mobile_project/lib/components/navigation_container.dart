@@ -30,6 +30,7 @@ class _NavigationContainerState extends State<NavigationContainer> {
     ProfileScreen(
       currentUserId: widget.currentUserID,
       visitedUserID: widget.currentUserID,
+      isBack: false,
     ),
   ];
 

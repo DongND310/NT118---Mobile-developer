@@ -180,7 +180,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                                           context,
                                                           MaterialPageRoute(
                                                             builder: (context) =>
-                                                                ( ProfileScreen(visitedUserID:userModel.uid ,currentUserId: widget.currentUserId,)
+                                                                ( ProfileScreen(visitedUserID:userModel.uid ,currentUserId: widget.currentUserId,isBack: true,)
                                                           ),
                                                         ));
                                                       },
@@ -263,7 +263,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                        ( ProfileScreen(visitedUserID:userModel.uid ,currentUserId: widget.currentUserId,)
+                                                        ( ProfileScreen(visitedUserID:userModel.uid ,currentUserId: widget.currentUserId,isBack: true,)
                                                         ),
                                                       ));
                                                 },
@@ -378,7 +378,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                                                   context,
                                                                   MaterialPageRoute(
                                                                     builder: (context) =>
-                                                                    ( ProfileScreen(visitedUserID:userModel.uid ,currentUserId: widget.currentUserId,)
+                                                                    ( ProfileScreen(visitedUserID:userModel.uid ,currentUserId: widget.currentUserId,isBack: true,)
                                                                     ),
                                                                   ));
                                                             },
