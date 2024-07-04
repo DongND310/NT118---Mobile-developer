@@ -46,29 +46,6 @@ class _SearchResultState extends State<SearchResult> {
     });
   }
 
-  Future<List<DocumentSnapshot>> _getUsers() async {
-    QuerySnapshot querySnapshot =
-        await usersRef.where('Name', isNotEqualTo: _name).get();
-    return querySnapshot.docs;
-  }
-
-  Future<List<DocumentSnapshot>> _getVideos() async {
-    QuerySnapshot querySnapshot = await videoRef.get();
-    return querySnapshot.docs;
-  }
-
-  Future<Map<String, List<DocumentSnapshot>>> _fetchData() async {
-    List<Future<List<DocumentSnapshot>>> futures = [
-      _getUsers(),
-      _getVideos(),
-    ];
-    List<List<DocumentSnapshot>> results = await Future.wait(futures);
-    return {
-      'users': results[0],
-      'videos': results[1],
-    };
-  }
-
   Future<bool> checkFollowing(String uerId) async {
     DocumentSnapshot doc = await followingsRef
         .doc(widget.currentId)
