@@ -95,7 +95,7 @@ class _ChatPageState extends State<ChatPage> {
         stream:
             _chatService.getMessages(_auth.currentUser!.uid, widget.receiverId),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.data != null) {
+          if (snapshot.hasData) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _controller.jumpTo(_controller.position.maxScrollExtent);
             });

@@ -69,7 +69,7 @@ class _RecentChatState extends State<RecentChats> {
                         builder: (context, AsyncSnapshot<Widget> snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Container(); // or any loading indicator
+                            return Container();
                           }
                           return snapshot.data!;
                         },
@@ -93,125 +93,131 @@ class _RecentChatState extends State<RecentChats> {
             if (snapshot.hasError) {
               return const Text('Có lỗi xảy ra.');
             }
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            else if (snapshot.connectionState == ConnectionState.waiting) {
               return Container();
             }
-            var datamessage = snapshot.data!.docs[0];
-            var data = datamessage.data() as Map<String, dynamic>;
-
-            // Kiểm tra sự tồn tại của trường 'read'
-            var read = data.containsKey('read') ? data['read'] : '';
-            bool isRead =true;
-            if(read ==''&& data['senderId'] != _auth.currentUser!.uid)
+            else if(!snapshot.hasData|| snapshot.data!.docs.isEmpty)
               {
-                isRead = false;
+                return Container();
               }
-            bool isSender = false;
-            if (data["senderId"] == _auth.currentUser!.uid) {
-              isSender = true;
-            }
-            return FutureBuilder(
-                future: usersRef
-                    .doc(isSender
+            else
+              {
+                var datamessage = snapshot.data!.docs[0];
+                var data = datamessage.data() as Map<String, dynamic>;
+                var read = data.containsKey('read') ? data['read'] : '';
+                bool isRead =true;
+                if(read ==''&& data['senderId'] != _auth.currentUser!.uid)
+                {
+                  isRead = false;
+                }
+                bool isSender = false;
+                if (data["senderId"] == _auth.currentUser!.uid) {
+                  isSender = true;
+                }
+                return FutureBuilder(
+                    future: usersRef
+                        .doc(isSender
                         ? data["receiverId"]
                         : data["senderId"])
-                    .get(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (!snapshot.hasData) {
-                    return Container();
-                  }
-                  UserModel userModel = UserModel.fromDoc(snapshot.data);
-                  return Padding(
-                    padding:
+                        .get(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (!snapshot.hasData) {
+                        return Container();
+                      }
+                      UserModel userModel = UserModel.fromDoc(snapshot.data);
+                      return Padding(
+                        padding:
                         const EdgeInsets.only(left: 15, top: 15, bottom: 15),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChatPage(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatPage(
                                     receiverId: userModel.uid,
                                     receiverName: userModel.name,
                                     chatterImg: userModel.avt ?? '',
                                   )),
-                        );
-                      },
-                      child: Container(
-                        height: 50,
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                                radius: 30,
-                                backgroundImage:
+                            );
+                          },
+                          child: Container(
+                            height: 50,
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage:
                                     NetworkImage(userModel.avt ?? '')),
-                            Padding(
-                              padding:
+                                Padding(
+                                  padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Text(userModel.name,
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.blue,
-                                          overflow: TextOverflow.ellipsis,
-                                        )),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(
-                                        width:
-                                            (MediaQuery.of(context).size.width +
-                                                    20) /
-                                                2,
-                                        child: Text(
-                                          isSender
-                                              ? "Bạn: ${data['message'] ?? ''}"
-                                              : data['message'] ?? '',
-                                          style: isRead?
-                                          const TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.black54,
-                                          )
-                                          :const TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          softWrap: false,
-                                        ),
+                                      Expanded(
+                                        child: Text(userModel.name,
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.blue,
+                                              overflow: TextOverflow.ellipsis,
+                                            )),
                                       ),
-                                      const SizedBox(width: 20),
-                                      Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: Text(
-                                          formatTimestamp(
-                                              data['timestamp']),
-                                          style: const TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.black54),
-                                          textAlign: TextAlign.end,
-                                        ),
-                                      )
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width:
+                                            (MediaQuery.of(context).size.width +
+                                                20) /
+                                                2,
+                                            child: Text(
+                                              isSender
+                                                  ? "Bạn: ${data['message'] ?? ''}"
+                                                  : data['message'] ?? '',
+                                              style: isRead?
+                                              const TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black54,
+                                              )
+                                                  :const TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              softWrap: false,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20),
+                                          Align(
+                                            alignment: Alignment.bottomRight,
+                                            child: Text(
+                                              formatTimestamp(
+                                                  data['timestamp']),
+                                              style: const TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black54),
+                                              textAlign: TextAlign.end,
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                });
-          });
+                      );
+                    });
+              }
+          }
+      );
     }
     return Container();
   }

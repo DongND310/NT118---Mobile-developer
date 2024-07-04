@@ -18,7 +18,6 @@ import 'firebase_options.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  // Cấu hình thông báo cho Android
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
   AndroidNotificationDetails(
     'chats',
@@ -75,13 +74,9 @@ void main() async {
     provisional: false,
     sound: true,
   );
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    log('Got a message whilst in the foreground!');
-    log('Message data: ${message.data}');
-    if (message.notification != null) {
-      log('Message also contained a notification: ${message.notification}');
-    }
-  });
+  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //
+  // });
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   void _handleMessage(RemoteMessage message) {
