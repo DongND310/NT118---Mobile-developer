@@ -23,7 +23,6 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
   String? _dob;
   String? _phone;
   String? _gender;
-  String? _nation;
 
   @override
   void initState() {
@@ -44,7 +43,6 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
     _dob = userDoc.get('DOB');
     _phone = userDoc.get('Phone');
     _gender = userDoc.get('Gender');
-    _nation = userDoc.get('Nation');
     setState(() {});
   }
 
