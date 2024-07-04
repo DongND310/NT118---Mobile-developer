@@ -381,11 +381,6 @@ class _PostReplyState extends State<PostReply> {
                                   ),
                                   Text('  ${replyCount} '),
                                   const SizedBox(width: 18),
-                                  SvgPicture.asset(
-                                    'assets/icons/post_repost.svg',
-                                    width: 20,
-                                    color: Colors.blue,
-                                  ),
                                 ],
                               ),
                               const SizedBox(height: 20),
