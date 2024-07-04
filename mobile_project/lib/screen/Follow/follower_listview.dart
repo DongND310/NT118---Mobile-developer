@@ -233,7 +233,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                               AsyncSnapshot<QuerySnapshot> snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const CircularProgressIndicator();
+                              return const CircularProgressIndicator(color: Colors.blue);
                             } else if (!snapshot.hasData ||
                                 snapshot.data!.docs.isEmpty) {
                               return const Text('Bạn đang không theo dõi ai!');
@@ -321,7 +321,7 @@ class _ListFollowerState extends State<ListFollowerScreen> {
                                     AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
+                                    return const CircularProgressIndicator(color: Colors.blue);
                                   } else if (!snapshot.hasData ||
                                       snapshot.data!.docs.isEmpty) {
                                     return const Text('Không có dự liệu');

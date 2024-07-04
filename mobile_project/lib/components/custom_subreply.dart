@@ -365,7 +365,7 @@ class _CustomSubReplyState extends State<CustomSubReply> {
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(color: Colors.blue),
                 );
               }
 

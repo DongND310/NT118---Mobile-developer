@@ -1,6 +1,9 @@
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile_project/models/user_model.dart';
+import 'package:mobile_project/screen/login-regis/verifyemail.dart';
+import 'package:mobile_project/services/auth_service.dart';
 import 'login.dart';
 import 'welcome.dart';
 import 'inputinfo.dart';
@@ -21,6 +24,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final passwordController = TextEditingController();
   final confirmpasswordController = TextEditingController();
   EmailOTP myauth = EmailOTP();
+  void sendemailOTP(String _email) async {
+    EmailOTP.config(
+        appEmail: "21521956@gm.uit.edu.vn",
+        appName: "Email OTP",
+        // userEmail: user.email,
+        otpLength: 6,
+        otpType: OTPType.numeric);
+    if (await EmailOTP.sendOTP(email: _email) == true) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("OTP has been sent"),
+      ));
+      print("Đã gửi OTP tới email: $_email");
+    }
+  }
 
   void signUserUp() async {
     showDialog(
@@ -36,10 +53,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text, password: passwordController.text);
         Navigator.pop(context);
-        Navigator.pushReplacement(
-            context,
-            // MaterialPageRoute(builder: (context) => VerifyEmailScreen()));
-            MaterialPageRoute(builder: (context) => InputInfoScreen()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => VerifyEmailScreen()));
+        sendemailOTP(emailController.text);
+        // MaterialPageRoute(builder: (context) => InputInfoScreen()));
       } else {
         Navigator.pop(context);
         ErrorMessageg("Mật khẩu không trùng khớp.");
@@ -143,10 +160,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(height: 20),
 
                       MyTextField(
-                          controller: emailController,
-                          label: "Email",
-                          hint: "Nhập email người dùng",
-                         ),
+                        controller: emailController,
+                        label: "Email",
+                        hint: "Nhập email người dùng",
+                      ),
 
                       MyTextField(
                           controller: passwordController,
@@ -183,7 +200,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(height: 15),
                       GestureDetector(
                         onTap: () async {
-                          // AuthService().signInWithGoogle();
+                          AuthService().signInWithGoogle();
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(

@@ -7,7 +7,7 @@ import 'package:mobile_project/screen/Search/widget/suggest_detail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchScreen extends StatefulWidget {
-  final List<String> hashtag=['has1','has2','has3','has4'];
+  final List<String> hashtag = ['has1', 'has2', 'has3', 'has4'];
 
   SearchScreen({super.key});
   @override
@@ -16,12 +16,12 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   late bool _showresult;
-  late List<String> searchHistory =[];
+  late List<String> searchHistory = [];
   late bool _show;
   final TextEditingController _textEditingController = TextEditingController();
   String? _uid;
   String? name;
-  String query='';
+  String query = '';
   final user = FirebaseAuth.instance.currentUser!;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -279,29 +279,31 @@ class _SearchScreenState extends State<SearchScreen> {
               currentId: _uid ?? '',
             )
           : SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildSearchHistoryDetail(context),
-            //SearchHistoryDetail( false, name: name??'', uid: _uid??'',),
-            const SizedBox(height: 10,),
-            const Padding(
-              padding: EdgeInsets.only(left: 15),
-              child: Text(
-                "Khám phá",
-                style: TextStyle(
-                  color: Color(0xFF107BFD),
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildSearchHistoryDetail(context),
+                  //SearchHistoryDetail( false, name: name??'', uid: _uid??'',),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 15),
+                    child: Text(
+                      "Khám phá",
+                      style: TextStyle(
+                        color: Color(0xFF107BFD),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SuggestDetail()
+                ],
               ),
             ),
-            SuggestDetail()
-          ],
-        ),
-      ),
     );
   }
   // Widget bSearchHistoryDetail(BuildContext context) {
@@ -309,7 +311,7 @@ class _SearchScreenState extends State<SearchScreen> {
   //     future: searchHistory,
   //     builder: (context, snapshot) {
   //       if (snapshot.connectionState == ConnectionState.waiting) {
-  //         return const CircularProgressIndicator();
+  //         return const CircularProgressIndicator(color: Colors.blue);
   //       } else if (snapshot.hasError) {
   //         return Text('Error: ${snapshot.error}');
   //       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {

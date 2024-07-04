@@ -75,7 +75,7 @@ class _SuggestState extends State<SuggestDetail> {
           stream: videoRef.doc(top5VideoIds[index]).snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
+              return const CircularProgressIndicator(color: Colors.blue);
             }
 
             if (!snapshot.hasData || snapshot.data == null) {
@@ -98,7 +98,7 @@ class _SuggestState extends State<SuggestDetail> {
                   future: _generateThumbnail(video.videoUrl),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
+                      return const CircularProgressIndicator(color: Colors.blue);
                     }
 
                     String? thumbnailPath = snapshot.data;
@@ -107,7 +107,7 @@ class _SuggestState extends State<SuggestDetail> {
                       builder: (context, userSnapshot) {
                         if (userSnapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
+                          return const CircularProgressIndicator(color: Colors.blue);
                         }
 
                         if (!userSnapshot.hasData ||
@@ -129,7 +129,7 @@ class _SuggestState extends State<SuggestDetail> {
                                   countsSnapshot) {
                             if (countsSnapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const CircularProgressIndicator();
+                              return const CircularProgressIndicator(color: Colors.blue);
                             }
 
                             int likeCount = 0;

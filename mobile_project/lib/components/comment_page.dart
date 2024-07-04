@@ -296,7 +296,7 @@ class _CommentPageState extends State<CommentPage> {
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return const Center(
-                            child: CircularProgressIndicator(),
+                            child: CircularProgressIndicator(color: Colors.blue,),
                           );
                         }
 

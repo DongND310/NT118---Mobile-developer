@@ -287,7 +287,7 @@ class _PostReplyState extends State<PostReply> {
               title: Text('Bình luận'),
             ),
             body: const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(color: Colors.blue),
             ),
           );
         }
@@ -452,7 +452,7 @@ class _PostReplyState extends State<PostReply> {
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return const Center(
-                              child: CircularProgressIndicator(),
+                              child: CircularProgressIndicator(color: Colors.blue),
                             );
                           }
 

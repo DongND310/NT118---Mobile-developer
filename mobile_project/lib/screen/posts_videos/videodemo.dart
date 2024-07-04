@@ -31,7 +31,7 @@ class _VideoDemoState extends State<VideoDemo> {
                 aspectRatio: _controller.value.aspectRatio,
                 child: VideoPlayer(_controller),
               )
-            : CircularProgressIndicator(),
+            : CircularProgressIndicator(color: Colors.blue),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

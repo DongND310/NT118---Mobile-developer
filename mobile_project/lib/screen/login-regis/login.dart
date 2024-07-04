@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_project/components/inputtext.dart';
@@ -39,15 +40,25 @@ class _LoginScreenState extends State<LoginScreen> {
       User? currentUser = FirebaseAuth.instance.currentUser;
 
       if (currentUser != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NavigationContainer(
-              currentUserID: currentUser.uid,
-              pageIndex: 0,
+        // Kiểm tra xem tài liệu người dùng có tồn tại hay không
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+        if (userDoc.exists) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NavigationContainer(
+                currentUserID: currentUser.uid,
+                pageIndex: 0,
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          ErrorMessageg(
+              'Tài khoản người dùng không tồn tại. Hãy kiểm tra và đăng nhập lại.');
+        }
       } else {
         Navigator.pushReplacement(
           context,
@@ -205,25 +216,29 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 15),
                       GestureDetector(
-                        onTap: () {
-                          AuthService().signInWithGoogle();
-                          StreamBuilder(
-                              stream: FirebaseAuth.instance.authStateChanges(),
-                              builder: (BuildContext context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return NavigationContainer(
-                                    currentUserID: snapshot.data!.uid,
+                        onTap: () async {
+                          User? user = await AuthService().signInWithGoogle();
+                          if (user != null) {
+                            // Kiểm tra xem tài liệu người dùng có tồn tại hay không
+                            final userDoc = await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(user.uid)
+                                .get();
+                            if (userDoc.exists) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NavigationContainer(
+                                    currentUserID: user.uid,
                                     pageIndex: 0,
-                                  );
-                                } else {
-                                  return WelcomeScreen();
-                                }
-                              });
-                          // Navigator.pushReplacement(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => NavigationContainer(
-                          //             currentUserID: snapshot.data!.uid)));
+                                  ),
+                                ),
+                              );
+                            } else {
+                              ErrorMessageg(
+                                  'Tài khoản người dùng không tồn tại. Hãy kiểm tra và đăng nhập lại.');
+                            }
+                          }
                         },
                         child: Container(
                           height: 65,

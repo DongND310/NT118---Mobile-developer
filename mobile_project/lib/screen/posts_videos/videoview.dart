@@ -76,7 +76,7 @@ class _VideoViewState extends State<VideoView> {
             );
           } else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(color: Colors.blue),
             );
           }
         },

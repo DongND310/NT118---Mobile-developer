@@ -104,7 +104,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                   ),
                 )
               else
-                const Center(child: CircularProgressIndicator()),
+                const Center(child: CircularProgressIndicator(color: Colors.blue)),
               const SizedBox(
                 height: 20,
               ),

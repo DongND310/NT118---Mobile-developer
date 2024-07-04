@@ -45,7 +45,7 @@ class _NotificationPageState extends State<NotificationPage> {
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: Colors.blue));
           }
 
           final notifications = snapshot.data?.docs ?? [];
@@ -72,7 +72,7 @@ class _NotificationPageState extends State<NotificationPage> {
             builder:
                 (context, AsyncSnapshot<List<QuerySnapshot>> combinedSnapshot) {
               if (!combinedSnapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator(color: Colors.blue));
               }
 
               // Tạo danh sách tổng hợp các reactors

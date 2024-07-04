@@ -42,20 +42,22 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
   final accountnameController = TextEditingController();
   final usernameController = TextEditingController();
   final phoneController = TextEditingController();
-  // final bio = TextEditingController();
-  // late File imgFile;
-  // String img;
 
   String? selectedMonth;
   String? preMonth;
   String? selectedDay;
   String? selectedYear;
   String? selectedGender;
-  // String? selectedNation;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  bool isValidPhoneNumber(String phoneNumber) {
+    // Số điện thoại hợp lệ phải có độ dài là 10 ký tự và bắt đầu bằng số 0
+    final regex = RegExp(r'^0\d{9}$');
+    return regex.hasMatch(phoneNumber);
   }
 
   Future inputPersonalInfo() async {
@@ -64,17 +66,16 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
     String year = selectedYear.toString();
     String dob = '$month $day, $year';
     String gender = selectedGender.toString();
-    // String nation = selectedNation.toString();
+    String phoneNumber = phoneController.text.trim();
 
-    Future<void> MissingInfoDialog() async {
+    Future<void> MissingInfoDialog(String message) async {
       return showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Chưa hoàn thành'),
-            content: const Text(
-                'Vui lòng nhập đầy đủ các thông tin để hoàn thành hồ sơ tài khoản.'),
+            content: Text(message),
             actions: <Widget>[
               TextButton(
                 child: const Text('OK', style: TextStyle(color: Colors.blue)),
@@ -87,31 +88,35 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
     }
 
     if (accountnameController.text.trim().isEmpty ||
-            usernameController.text.trim().isEmpty ||
-            phoneController.text.trim().isEmpty ||
-            dob.isEmpty ||
-            day == "null" ||
-            month == "null" ||
-            year == "null" ||
-            gender == "null"
-        // || nation == "null"
-        ) {
-      MissingInfoDialog();
+        usernameController.text.trim().isEmpty ||
+        phoneController.text.trim().isEmpty ||
+        dob.isEmpty ||
+        day == "null" ||
+        month == "null" ||
+        year == "null" ||
+        gender == "null") {
+      MissingInfoDialog(
+          'Vui lòng nhập đầy đủ các thông tin để hoàn thành hồ sơ tài khoản.');
+      return;
+    }
+
+    if (!isValidPhoneNumber(phoneNumber)) {
+      MissingInfoDialog(
+          'Số điện thoại không hợp lệ. Số điện thoại phải có 10 ký tự và bắt đầu bằng số 0.');
       return;
     }
 
     await addPersonalDetail(
-      user.uid,
-      accountnameController.text.trim(),
-      usernameController.text.trim(),
-      phoneController.text.trim(),
-      dob,
-      user.email!,
-      gender,
-      // nation,
-      null,
-      'https://i.pinimg.com/564x/47/09/80/470980b112a44064cd88290ac0edf6a6.jpg',
-    );
+        user.uid,
+        accountnameController.text.trim(),
+        usernameController.text.trim(),
+        phoneController.text.trim(),
+        dob,
+        user.email!,
+        gender,
+        null,
+        'https://i.pinimg.com/564x/47/09/80/470980b112a44064cd88290ac0edf6a6.jpg',
+        '');
   }
 
   Future addPersonalDetail(
@@ -122,9 +127,9 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       String dob,
       String email,
       String gender,
-      // String nation,
       String? bio,
-      String? img) async {
+      String? img,
+      String token) async {
     // DocumentReference userRef =
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
       'UID': uid,
@@ -134,9 +139,9 @@ class _InputInfoScreenState extends State<InputInfoScreen> {
       'DOB': dob,
       'Email': email,
       'Gender': gender,
-      // 'Nation': nation,
       'Bio': bio,
       'Avt': img,
+      'push_token': token
     });
     user.updateDisplayName(name);
     Navigator.pushReplacement(context,

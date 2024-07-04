@@ -55,7 +55,7 @@ class _RecentChatState extends State<RecentChats> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(color: Colors.blue),
                 );
               }
               else if(!snapshot.hasData || snapshot.data!.docs.isEmpty)

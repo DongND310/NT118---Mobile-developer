@@ -249,7 +249,7 @@ class _SearchResultState extends State<SearchResult> {
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return const CircularProgressIndicator(); // Or any loading indicator
+                                  return const CircularProgressIndicator(color: Colors.blue); // Or any loading indicator
                                 }
 
                                 if (!snapshot.hasData ||
@@ -320,7 +320,7 @@ class _SearchResultState extends State<SearchResult> {
                     stream: videoRef.snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
+                        return const CircularProgressIndicator(color: Colors.blue);
                       } else if (!snapshot.hasData ||
                           snapshot.data!.docs.isEmpty) {
                         return Container();
@@ -365,7 +365,7 @@ class _SearchResultState extends State<SearchResult> {
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return const CircularProgressIndicator();
+                                  return const CircularProgressIndicator(color: Colors.blue);
                                 }
 
                                 if (!snapshot.hasData ||
@@ -485,7 +485,7 @@ class _SearchResultState extends State<SearchResult> {
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState ==
                                                 ConnectionState.waiting) {
-                                              return const CircularProgressIndicator(); // Or any loading indicator
+                                              return const CircularProgressIndicator(color: Colors.blue); // Or any loading indicator
                                             }
 
                                             if (!snapshot.hasData ||
@@ -571,7 +571,7 @@ class _SearchResultState extends State<SearchResult> {
                   stream: videoRef.snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
+                      return const CircularProgressIndicator(color: Colors.blue);
                     } else if (!snapshot.hasData ||
                         snapshot.data!.docs.isEmpty) {
                       return Container();
@@ -614,7 +614,7 @@ class _SearchResultState extends State<SearchResult> {
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return const CircularProgressIndicator(); // Or any loading indicator
+                                  return const CircularProgressIndicator(color: Colors.blue); // Or any loading indicator
                                 }
 
                                 if (!snapshot.hasData ||

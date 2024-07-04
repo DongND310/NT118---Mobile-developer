@@ -283,7 +283,7 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(color: Colors.blue),
                 );
               }
 

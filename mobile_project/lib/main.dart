@@ -14,12 +14,12 @@ import 'package:mobile_project/screen/login-regis/welcome.dart';
 import 'package:mobile_project/screen/message/chat_page.dart';
 import 'firebase_options.dart';
 
-
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
-  AndroidNotificationDetails(
+      AndroidNotificationDetails(
     'chats',
     'Reels Replay',
     importance: Importance.max,
@@ -30,7 +30,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   );
 
   const NotificationDetails platformChannelSpecifics =
-  NotificationDetails(android: androidPlatformChannelSpecifics);
+      NotificationDetails(android: androidPlatformChannelSpecifics);
 
   await flutterLocalNotificationsPlugin.show(
     0,
@@ -40,20 +40,21 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     payload: 'Default_Sound',
   );
 }
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Platform.isAndroid
       ? await Firebase.initializeApp(
-      options: const FirebaseOptions(
-          apiKey: 'AIzaSyBDryibj-98tAmkyJcC7J0qjyqwIoL60-I',
-          appId: '1:402679655358:android:360da8ee3356bd94ce27ef',
-          messagingSenderId: '402679655358',
-          projectId: 'nt118-reelreplay'))
+          options: const FirebaseOptions(
+              apiKey: 'AIzaSyBDryibj-98tAmkyJcC7J0qjyqwIoL60-I',
+              appId: '1:402679655358:android:360da8ee3356bd94ce27ef',
+              messagingSenderId: '402679655358',
+              projectId: 'nt118-reelreplay'))
       : await Firebase.initializeApp(
-    name: "Reels Replay",
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+          name: "Reels Replay",
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
   var result = await FlutterNotificationChannel().registerNotificationChannel(
     description: 'Your channel description',
     id: 'chats',
@@ -62,7 +63,8 @@ void main() async {
     allowBubbles: true,
     enableVibration: true,
     enableSound: true,
-    showBadge: true,);
+    showBadge: true,
+  );
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   NotificationSettings settings = await messaging.requestPermission(
@@ -95,10 +97,10 @@ void main() async {
       );
     }
   }
+
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     _handleMessage(message);
   });
-
 
   runApp(const MainApp());
 }
@@ -126,7 +128,8 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Inter'),
-      home: getScreenID(),
+      // home: getScreenID(),
+      home: WelcomeScreen(),
       navigatorKey: navigatorKey,
     );
   }

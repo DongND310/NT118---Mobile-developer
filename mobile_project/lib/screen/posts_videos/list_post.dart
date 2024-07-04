@@ -60,7 +60,7 @@ class _ListPostsState extends State<ListPosts> {
                 (BuildContext context, AsyncSnapshot<UserModel> snapshotUser) {
               if (!snapshotUser.hasData) {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(color: Colors.blue),
                 );
               }
 
@@ -73,7 +73,7 @@ class _ListPostsState extends State<ListPosts> {
                         .doc(post.postId);
 
                     if (!snapshotLike.hasData) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator(color: Colors.blue));
                     }
                     return Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),

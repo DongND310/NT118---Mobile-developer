@@ -53,7 +53,7 @@ class VideoTab extends StatelessWidget {
                   builder: (context, thumbnailSnapshot) {
                     if (thumbnailSnapshot.connectionState ==
                         ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator(color: Colors.blue));
                     }
 
                     String? thumbnailPath = thumbnailSnapshot.data;
