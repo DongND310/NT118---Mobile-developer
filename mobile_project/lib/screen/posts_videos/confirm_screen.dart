@@ -12,10 +12,11 @@ class ConfirmScreen extends StatefulWidget {
   final File videoFile;
   final String videoPath;
   const ConfirmScreen(
-      {super.key, required this.videoFile, required this.videoPath});
+      {Key? key, required this.videoFile, required this.videoPath})
+      : super(key: key);
 
   @override
-  State<ConfirmScreen> createState() => _ConfirmScreenState();
+  _ConfirmScreenState createState() => _ConfirmScreenState();
 }
 
 class _ConfirmScreenState extends State<ConfirmScreen> {
@@ -104,7 +105,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                   ),
                 )
               else
-                const Center(child: CircularProgressIndicator(color: Colors.blue)),
+                const Center(
+                    child: CircularProgressIndicator(color: Colors.blue)),
               const SizedBox(
                 height: 20,
               ),
@@ -156,8 +158,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 0, horizontal: 10),
                         enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(width: 2, color: Colors.black12),
+                            borderSide: const BorderSide(
+                                width: 2, color: Colors.black12),
                             borderRadius: BorderRadius.circular(5)),
                         focusedBorder: OutlineInputBorder(
                             borderSide:
@@ -208,19 +210,29 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
   }
 
   void _uploadVideo() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NavigationContainer(
+          currentUserID: user.uid,
+          pageIndex: 0,
+        ),
+      ),
+    );
+
     try {
       _downloadURL = await _videoService.uploadVideoToStorage(widget.videoPath);
-      await _videoService.createVideoPost(
-          '', user.uid, content, _downloadURL!);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => NavigationContainer(
-            currentUserID: user.uid,
-            pageIndex: 0,
-          ),
+      await _videoService.createVideoPost('', user.uid, content, _downloadURL!);
+
+      // Hiển thị thông báo thành công
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Đã đăng tải video thành công!'),
+          duration: Duration(seconds: 2), // Thời gian hiển thị thông báo
         ),
       );
+
+      // Điều hướng đến màn hình khác sau khi đăng tải thành công
     } catch (e) {
       // Xử lý lỗi nếu không upload được video
       print("Lỗi upload video: $e");

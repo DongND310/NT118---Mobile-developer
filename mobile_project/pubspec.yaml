@@ -47,6 +47,7 @@ dependencies:
   flutter_local_notifications: ^17.2.1
   rxdart: ^0.27.0
   video_thumbnail: ^0.5.3
+  progress_dialog: ^1.2.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

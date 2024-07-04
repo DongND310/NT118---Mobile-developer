@@ -26,6 +26,7 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
   late String videoPath;
   bool isRecording = false;
   bool isCameraInitialized = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -70,8 +71,14 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
 
   // Pick video from the gallery
   pickVideo(ImageSource src, BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
     final video = await ImagePicker().pickVideo(source: src);
     if (video != null) {
+      setState(() {
+        isLoading = false;
+      });
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => ConfirmScreen(
@@ -80,6 +87,10 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
           ),
         ),
       );
+    } else {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -204,32 +215,33 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          centerTitle: true,
-          shadowColor: Colors.black,
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          elevation: 0.5,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: SvgPicture.asset(
-              'assets/icons/ep_back.svg',
-              width: 30,
-              height: 30,
-            ),
-          ),
-          title: const Text(
-            'Thêm video',
-            style: TextStyle(
-                fontSize: 20, color: Colors.blue, fontWeight: FontWeight.bold),
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        centerTitle: true,
+        shadowColor: Colors.black,
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        elevation: 0.5,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: SvgPicture.asset(
+            'assets/icons/ep_back.svg',
+            width: 30,
+            height: 30,
           ),
         ),
-        body: SafeArea(
-          child: Column(
+        title: const Text(
+          'Thêm video',
+          style: TextStyle(
+              fontSize: 20, color: Colors.blue, fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: Stack(
+        children: [
+          Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Expanded(
@@ -255,7 +267,16 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
               ),
             ],
           ),
-        ));
+          if (isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.5),
+              child: const Center(
+                child: CircularProgressIndicator(color: Colors.blue),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
   void _showCameraException(CameraException e) {
