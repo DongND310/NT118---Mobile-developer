@@ -195,340 +195,339 @@ class _SearchResultState extends State<SearchResult> {
           ),
           Expanded(
               child: TabBarView(children: [
-                SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const Padding(
-                              padding: EdgeInsets.only(top: 10, bottom: 10),
+            SingleChildScrollView(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Padding(
+                      padding: EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text(
+                        "Tài khoản",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )),
+                  StreamBuilder<QuerySnapshot>(
+                      stream: usersRef
+                          .where('Name', isNotEqualTo: _name)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Container();
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return Container();
+                        } else {
+                          List<String> listUids = [];
+                          for (int i = 0; i < snapshot.data!.size; i++) {
+                            var data = snapshot.data!.docs[i].data()
+                                as Map<String, dynamic>;
+                            String userName =
+                                removeDiacritics(data['Name']).toLowerCase();
+                            String id = data['UID'];
+                            if (userName.contains(_query.toLowerCase())) {
+                              listUids.add(id);
+                            }
+                          }
+                          if (listUids.isEmpty) {
+                            return const Center(
                               child: Text(
-                                "Tài khoản",
+                                "Không có tài khoản trùng khớp!",
                                 style: TextStyle(
                                   fontSize: 18,
-                                  fontWeight: FontWeight.bold,
                                 ),
-                              )),
-                          StreamBuilder<QuerySnapshot>(
-                              stream: usersRef
-                                  .where('Name', isNotEqualTo: _name)
-                                  .snapshots(),
+                              ),
+                            );
+                          }
+                          return StreamBuilder(
+                              stream: usersRef.doc(listUids[0]).snapshots(),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return Container();
-                                } else if (!snapshot.hasData ||
-                                    snapshot.data!.docs.isEmpty) {
-                                  return Container();
-                                } else {
-                                  List<String> listUids = [];
-                                  for (int i = 0; i < snapshot.data!.size; i++) {
-                                    var data = snapshot.data!.docs[i].data()
-                                    as Map<String, dynamic>;
-                                    String userName =
-                                    removeDiacritics(data['Name']).toLowerCase();
-                                    String id = data['UID'];
-                                    if (userName.contains(_query.toLowerCase())) {
-                                      listUids.add(id);
-                                    }
-                                  }
-                                  if (listUids.isEmpty) {
-                                    return const Center(
-                                      child: Text(
-                                        "Không có tài khoản trùng khớp!",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                  return StreamBuilder(
-                                      stream: usersRef.doc(listUids[0]).snapshots(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const CircularProgressIndicator(); // Or any loading indicator
-                                        }
-
-                                        if (!snapshot.hasData ||
-                                            snapshot.data == null) {
-                                          return const Text(
-                                              'No data available'); // Or handle the case when data is null
-                                        }
-                                        UserModel user =
-                                        UserModel.fromDoc(snapshot.data!);
-                                        return FutureBuilder<bool>(
-                                          future: checkFollowing(user.uid),
-                                          builder: (BuildContext context,
-                                              AsyncSnapshot<bool> followingSnapshot) {
-                                            if (followingSnapshot.connectionState ==
-                                                ConnectionState.waiting) {
-                                              return Container();
-                                            } else if (followingSnapshot.hasError) {
-                                              return Text(
-                                                  'Error: ${followingSnapshot.error}');
-                                            } else {
-                                              bool isFollow =
-                                                  followingSnapshot.data ?? false;
-                                              return Row(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                                  children: [
-                                                    Expanded(
-                                                      child: GestureDetector(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                  (ProfileScreen(
-                                                                    visitedUserID:
-                                                                    user.uid,
-                                                                    currentUserId: _uid,
-                                                                    isBack: true,
-                                                                  )),
-                                                                ));
-                                                          },
-                                                          child: AccountDetail(
-                                                              user.name,
-                                                              user.bio ?? '',
-                                                              user.avt ?? '')),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 20,
-                                                    ),
-                                                    buildProfileButton(
-                                                        isFollow, user.uid)
-                                                  ]);
-                                            }
-                                          },
-                                        );
-                                      });
+                                  return const CircularProgressIndicator(); // Or any loading indicator
                                 }
-                              }),
-                          const SizedBox(height: 15),
-                          const Text(
-                            "Video",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+
+                                if (!snapshot.hasData ||
+                                    snapshot.data == null) {
+                                  return const Text(
+                                      'No data available'); // Or handle the case when data is null
+                                }
+                                UserModel user =
+                                    UserModel.fromDoc(snapshot.data!);
+                                return FutureBuilder<bool>(
+                                  future: checkFollowing(user.uid),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<bool> followingSnapshot) {
+                                    if (followingSnapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Container();
+                                    } else if (followingSnapshot.hasError) {
+                                      return Text(
+                                          'Error: ${followingSnapshot.error}');
+                                    } else {
+                                      bool isFollow =
+                                          followingSnapshot.data ?? false;
+                                      return Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              child: GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              (ProfileScreen(
+                                                            visitedUserID:
+                                                                user.uid,
+                                                            currentUserId: _uid,
+                                                            isBack: true,
+                                                          )),
+                                                        ));
+                                                  },
+                                                  child: AccountDetail(
+                                                      user.name,
+                                                      user.bio ?? '',
+                                                      user.avt ?? '')),
+                                            ),
+                                            const SizedBox(
+                                              width: 20,
+                                            ),
+                                            buildProfileButton(
+                                                isFollow, user.uid)
+                                          ]);
+                                    }
+                                  },
+                                );
+                              });
+                        }
+                      }),
+                  const SizedBox(height: 15),
+                  const Text(
+                    "Video",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  StreamBuilder<QuerySnapshot>(
+                    stream: videoRef.snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (!snapshot.hasData ||
+                          snapshot.data!.docs.isEmpty) {
+                        return Container();
+                      } else {
+                        List<String> listVidids = [];
+                        for (int i = 0; i < snapshot.data!.size; i++) {
+                          var data = snapshot.data!.docs[i].data()
+                              as Map<String, dynamic>;
+                          String videoTitle =
+                              removeDiacritics(data['caption']).toLowerCase();
+                          String id = data['videoId'];
+                          if (videoTitle.contains(_query.toLowerCase())) {
+                            listVidids.add(id);
+                          }
+                        }
+                        if (listVidids.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              "Không có video trùng khớp!",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
+                          );
+                        }
+                        return GridView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisExtent: 218,
                           ),
-                          StreamBuilder<QuerySnapshot>(
-                            stream: videoRef.snapshots(),
+                          itemCount: listVidids.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return StreamBuilder(
+                              stream:
+                                  videoRef.doc(listVidids[index]).snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const CircularProgressIndicator();
+                                }
+
+                                if (!snapshot.hasData ||
+                                    snapshot.data == null) {
+                                  return const Text('No data available');
+                                }
+
+                                var dataVideo = snapshot.data!.data()
+                                    as Map<String, dynamic>;
+
+                                return StreamBuilder(
+                                  stream: usersRef
+                                      .doc(dataVideo['postedById'])
+                                      .snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<DocumentSnapshot>
+                                          userSnapshot) {
+                                    if (userSnapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Container();
+                                    } else if (!userSnapshot.hasData) {
+                                      return Container();
+                                    } else {
+                                      UserModel userModel =
+                                          UserModel.fromDoc(userSnapshot.data!);
+                                      VideoModel video =
+                                          VideoModel.fromDocument(
+                                              snapshot.data!);
+                                      List<dynamic> likesList =
+                                          dataVideo['likesList'] ?? [];
+                                      return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    VideoDetailScreen(
+                                                        video: video),
+                                              ),
+                                            );
+                                          },
+                                          child: VideoSearch(
+                                            dataVideo['caption'],
+                                            likesList.length.toString(),
+                                            dataVideo['videoUrl'],
+                                            userModel.name,
+                                          ));
+                                    }
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        );
+                      }
+                    },
+                  )
+                ],
+              ),
+            )),
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: StreamBuilder<QuerySnapshot>(
+                            stream: usersRef
+                                .where('Name', isNotEqualTo: _name)
+                                .snapshots(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
+                                return Container();
                               } else if (!snapshot.hasData ||
                                   snapshot.data!.docs.isEmpty) {
                                 return Container();
                               } else {
-                                List<String> listVidids = [];
+                                List<String> listUids = [];
                                 for (int i = 0; i < snapshot.data!.size; i++) {
                                   var data = snapshot.data!.docs[i].data()
-                                  as Map<String, dynamic>;
-                                  String videoTitle =
-                                  removeDiacritics(data['caption']).toLowerCase();
-                                  String id = data['videoId'];
-                                  if (videoTitle.contains(_query.toLowerCase())) {
-                                    listVidids.add(id);
+                                      as Map<String, dynamic>;
+                                  String userName =
+                                      removeDiacritics(data['Name'])
+                                          .toLowerCase();
+                                  String id = data['UID'];
+                                  if (userName.contains(_query.toLowerCase())) {
+                                    listUids.add(id);
                                   }
                                 }
-                                if (listVidids.isEmpty) {
-                                  return const Center(
+                                if (listUids.isEmpty) {
+                                  return const Padding(
+                                    padding: EdgeInsets.only(left: 40, top: 50),
                                     child: Text(
-                                      "Không có video trùng khớp!",
+                                      "Không có tài khoản trùng khớp!",
                                       style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
                                       textAlign: TextAlign.center,
                                     ),
                                   );
                                 }
-                                return GridView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 10,
-                                    mainAxisExtent: 218,
-                                  ),
-                                  itemCount: listVidids.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return StreamBuilder(
-                                      stream:
-                                      videoRef.doc(listVidids[index]).snapshots(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const CircularProgressIndicator();
-                                        }
-
-                                        if (!snapshot.hasData ||
-                                            snapshot.data == null) {
-                                          return const Text('No data available');
-                                        }
-
-                                        var dataVideo = snapshot.data!.data()
-                                        as Map<String, dynamic>;
-
-                                        return StreamBuilder(
-                                          stream: usersRef
-                                              .doc(dataVideo['postedById'])
-                                              .snapshots(),
-                                          builder: (BuildContext context,
-                                              AsyncSnapshot<DocumentSnapshot>
-                                              userSnapshot) {
-                                            if (userSnapshot.connectionState ==
-                                                ConnectionState.waiting) {
-                                              return Container();
-                                            } else if (!userSnapshot.hasData) {
-                                              return Container();
-                                            } else {
-                                              UserModel userModel = UserModel.fromDoc(
-                                                  userSnapshot.data!);
-                                              VideoModel video =
-                                              VideoModel.fromDocument(
-                                                  snapshot.data!);
-                                              List<dynamic> likesList =
-                                                  dataVideo['likesList'] ?? [];
-                                              return GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            VideoDetailScreen(
-                                                                video: video),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: VideoSearch(
-                                                    dataVideo['caption'],
-                                                    likesList.length.toString(),
-                                                    userModel.name,
-                                                    '',
-                                                  ));
-                                            }
-                                          },
-                                        );
-                                      },
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                          )
-                        ],
-                      ),
-                    )),
-                SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: StreamBuilder<QuerySnapshot>(
-                                stream: usersRef
-                                    .where('Name', isNotEqualTo: _name)
-                                    .snapshots(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Container();
-                                  } else if (!snapshot.hasData ||
-                                      snapshot.data!.docs.isEmpty) {
-                                    return Container();
-                                  } else {
-                                    List<String> listUids = [];
-                                    for (int i = 0; i < snapshot.data!.size; i++) {
-                                      var data = snapshot.data!.docs[i].data()
-                                      as Map<String, dynamic>;
-                                      String userName =
-                                      removeDiacritics(data['Name'])
-                                          .toLowerCase();
-                                      String id = data['UID'];
-                                      if (userName.contains(_query.toLowerCase())) {
-                                        listUids.add(id);
-                                      }
-                                    }
-                                    if (listUids.isEmpty) {
-                                      return const Padding(
-                                        padding: EdgeInsets.only(left: 40, top: 50),
-                                        child: Text(
-                                          "Không có tài khoản trùng khớp!",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      );
-                                    }
-                                    return ListView.builder(
-                                        physics:
+                                return ListView.builder(
+                                    physics:
                                         const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: listUids.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return StreamBuilder(
-                                              stream: usersRef
-                                                  .doc(listUids[index])
-                                                  .snapshots(),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const CircularProgressIndicator(); // Or any loading indicator
-                                                }
+                                    shrinkWrap: true,
+                                    itemCount: listUids.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return StreamBuilder(
+                                          stream: usersRef
+                                              .doc(listUids[index])
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const CircularProgressIndicator(); // Or any loading indicator
+                                            }
 
-                                                if (!snapshot.hasData ||
-                                                    snapshot.data == null) {
-                                                  return const Text(
-                                                      'No data available'); // Or handle the case when data is null
-                                                }
-                                                DocumentSnapshot<Object?>
+                                            if (!snapshot.hasData ||
+                                                snapshot.data == null) {
+                                              return const Text(
+                                                  'No data available'); // Or handle the case when data is null
+                                            }
+                                            DocumentSnapshot<Object?>
                                                 docSnapshot = snapshot.data!;
-                                                UserModel user =
+                                            UserModel user =
                                                 UserModel.fromDoc(docSnapshot);
-                                                return FutureBuilder<bool>(
-                                                  future: checkFollowing(user.uid),
-                                                  builder: (BuildContext context,
-                                                      AsyncSnapshot<bool>
+                                            return FutureBuilder<bool>(
+                                              future: checkFollowing(user.uid),
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot<bool>
                                                       followingSnapshot) {
-                                                    if (followingSnapshot
+                                                if (followingSnapshot
                                                         .connectionState ==
-                                                        ConnectionState.waiting) {
-                                                      return Container();
-                                                    } else if (followingSnapshot
-                                                        .hasError) {
-                                                      return Text(
-                                                          'Error: ${followingSnapshot.error}');
-                                                    } else {
-                                                      bool isFollow =
-                                                          followingSnapshot.data ??
-                                                              false;
-                                                      return Column(
-                                                        mainAxisAlignment:
+                                                    ConnectionState.waiting) {
+                                                  return Container();
+                                                } else if (followingSnapshot
+                                                    .hasError) {
+                                                  return Text(
+                                                      'Error: ${followingSnapshot.error}');
+                                                } else {
+                                                  bool isFollow =
+                                                      followingSnapshot.data ??
+                                                          false;
+                                                  return Column(
+                                                    mainAxisAlignment:
                                                         MainAxisAlignment.start,
-                                                        crossAxisAlignment:
+                                                    crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
-                                                        children: [
-                                                          Row(
-                                                              crossAxisAlignment:
+                                                    children: [
+                                                      Row(
+                                                          crossAxisAlignment:
                                                               CrossAxisAlignment
                                                                   .center,
-                                                              children: [
-                                                                Expanded(
-                                                                  child:
+                                                          children: [
+                                                            Expanded(
+                                                              child:
                                                                   GestureDetector(
                                                                       onTap:
                                                                           () {
@@ -549,128 +548,134 @@ class _SearchResultState extends State<SearchResult> {
                                                                               '',
                                                                           user.avt ??
                                                                               '')),
-                                                                ),
-                                                                buildProfileButton(
-                                                                    isFollow,
-                                                                    user.uid)
-                                                              ])
-                                                        ],
-                                                      );
-                                                    }
-                                                  },
-                                                );
-                                              });
-                                        });
-                                  }
-                                }))
-                      ]),
-                ),
-                Container(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: StreamBuilder<QuerySnapshot>(
-                          stream: videoRef.snapshots(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const CircularProgressIndicator();
-                            } else if (!snapshot.hasData ||
-                                snapshot.data!.docs.isEmpty) {
-                              return Container();
-                            } else {
-                              List<String> listVidids = [];
-                              for (int i = 0; i < snapshot.data!.size; i++) {
-                                var data = snapshot.data!.docs[i].data()
-                                as Map<String, dynamic>;
-                                String videoTilte =
-                                removeDiacritics(data['caption']).toLowerCase();
-                                String id = data['videoId'];
-                                if (videoTilte.contains(_query.toLowerCase())) {
-                                  listVidids.add(id);
+                                                            ),
+                                                            buildProfileButton(
+                                                                isFollow,
+                                                                user.uid)
+                                                          ])
+                                                    ],
+                                                  );
+                                                }
+                                              },
+                                            );
+                                          });
+                                    });
+                              }
+                            }))
+                  ]),
+            ),
+            Container(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: videoRef.snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (!snapshot.hasData ||
+                        snapshot.data!.docs.isEmpty) {
+                      return Container();
+                    } else {
+                      List<String> listVidids = [];
+                      for (int i = 0; i < snapshot.data!.size; i++) {
+                        var data = snapshot.data!.docs[i].data()
+                            as Map<String, dynamic>;
+                        String videoTilte =
+                            removeDiacritics(data['caption']).toLowerCase();
+                        String id = data['videoId'];
+                        if (videoTilte.contains(_query.toLowerCase())) {
+                          listVidids.add(id);
+                        }
+                      }
+                      if (listVidids.isEmpty) {
+                        return const Padding(
+                          padding: EdgeInsets.only(left: 20, top: 50),
+                          child: Text(
+                            "Không có video trùng khớp!",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      }
+                      return GridView.builder(
+                          physics: const PageScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisExtent: 218,
+                          ),
+                          itemCount: listVidids.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return StreamBuilder(
+                              stream:
+                                  videoRef.doc(listVidids[index]).snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const CircularProgressIndicator(); // Or any loading indicator
                                 }
-                              }
-                              if (listVidids.isEmpty) {
-                                return const Padding(
-                                  padding: EdgeInsets.only(left: 20, top: 50),
-                                  child: Text(
-                                    "Không có video trùng khớp!",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold, fontSize: 18),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                );
-                              }
-                              return GridView.builder(
-                                  physics: const PageScrollPhysics(),
-                                  gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 10,
-                                    mainAxisExtent: 218,
-                                  ),
-                                  itemCount: listVidids.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return StreamBuilder(
-                                      stream:
-                                      videoRef.doc(listVidids[index]).snapshots(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const CircularProgressIndicator(); // Or any loading indicator
-                                        }
 
-                                        if (!snapshot.hasData ||
-                                            snapshot.data == null) {
-                                          return const Text(
-                                              'No data available'); // Or handle the case when data is null
-                                        }
+                                if (!snapshot.hasData ||
+                                    snapshot.data == null) {
+                                  return const Text(
+                                      'No data available'); // Or handle the case when data is null
+                                }
 
-                                        var dataVideo = snapshot.data!.data()
-                                        as Map<String, dynamic>;
+                                var dataVideo = snapshot.data!.data()
+                                    as Map<String, dynamic>;
 
-                                        return StreamBuilder(
-                                            stream: usersRef
-                                                .doc(dataVideo['postedById'])
-                                                .snapshots(),
-                                            builder: (BuildContext context,
-                                                AsyncSnapshot<DocumentSnapshot>
-                                                userSnapshot) {
-                                              if (userSnapshot.connectionState ==
-                                                  ConnectionState.waiting) {
-                                                return Container();
-                                              } else if (!userSnapshot.hasData) {
-                                                return Container();
-                                              } else {
-                                                UserModel userModel = UserModel.fromDoc(
-                                                    userSnapshot.data!);
-                                                List<dynamic> likesList =
-                                                    dataVideo['likesList'] ?? [];
-                                                return VideoSearch(
-                                                    dataVideo['caption'],
-                                                    likesList.length.toString(),
-                                                    userModel.name,
-                                                    '');
-                                              }
-                                            });
-                                      },
-                                    );
-                                  });
-                            }
-                          }),
-                      // }
-                    ))
-              ]))
+                                return StreamBuilder(
+                                    stream: usersRef
+                                        .doc(dataVideo['postedById'])
+                                        .snapshots(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<DocumentSnapshot>
+                                            userSnapshot) {
+                                      if (userSnapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Container();
+                                      } else if (!userSnapshot.hasData) {
+                                        return Container();
+                                      } else {
+                                        UserModel userModel = UserModel.fromDoc(
+                                            userSnapshot.data!);
+                                        List<dynamic> likesList =
+                                            dataVideo['likesList'] ?? [];
+                                        return VideoSearch(
+                                          dataVideo['caption'],
+                                          likesList.length.toString(),
+                                          dataVideo['videoUrl'],
+                                          userModel.name,
+                                        );
+                                      }
+                                    });
+                              },
+                            );
+                          });
+                    }
+                  }),
+              // }
+            ))
+          ]))
         ]));
   }
-  // Future<String> _getThumbnail(String videoUrl) async {
-  //   final tempDir = await getTemporaryDirectory();
-  //   final thumbnailPath = await VideoThumbnail.thumbnailFile(
-  //     video: videoUrl,
-  //     thumbnailPath: tempDir.path,
-  //     imageFormat: ImageFormat.PNG,
-  //     maxHeight: 200, // you can specify the height of the thumbnail, optional
-  //     quality: 75, // quality of the thumbnail, from 0 to 100, optional
-  //   );
-  //
-  //   return thumbnailPath!;
-  // }
+
+  Future<String?> _generateThumbnail(String videoUrl) async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final thumbnailPath = await VideoThumbnail.thumbnailFile(
+        video: videoUrl,
+        thumbnailPath: tempDir.path,
+        imageFormat: ImageFormat.PNG,
+        maxHeight: 200,
+        quality: 75,
+      );
+      return thumbnailPath;
+    } catch (e) {
+      print('Error generating thumbnail: $e');
+      return null;
+    }
+  }
 }
