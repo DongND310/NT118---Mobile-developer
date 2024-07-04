@@ -76,6 +76,7 @@ class _HPPostTabState extends State<HPPostTab> {
                   repliesList: repliesList,
                   time: postData['timestamp'] ?? '0',
                   id: widget.currentId,
+                  creatorId: postData['creatorId'] ?? '',
                 );
               },
             );

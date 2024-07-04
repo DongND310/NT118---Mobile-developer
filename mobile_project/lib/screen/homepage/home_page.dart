@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage>
                       AppBar(
                         toolbarHeight: 80,
                         elevation: 0,
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Colors.black.withOpacity(0.3),
                         centerTitle: true,
                         leading: IconButton(
                           icon: const Icon(Icons.search),

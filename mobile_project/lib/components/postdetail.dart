@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/components/custom_delete.dart';
 import 'package:mobile_project/screen/posts_videos/like_button.dart';
 
 import '../screen/posts_videos/post_reply.dart';
@@ -11,21 +12,24 @@ class PostDetailScreen extends StatefulWidget {
   final String content;
   final String img;
   final String postId;
+  final String creatorId;
   final List<String> likesList;
   final List<String> repliesList;
   final Timestamp time;
   final String id;
 
-  PostDetailScreen(
-      {super.key,
-      required this.name,
-      required this.content,
-      required this.img,
-      required this.postId,
-      required this.likesList,
-      required this.repliesList,
-      required this.time,
-      required this.id});
+  PostDetailScreen({
+    super.key,
+    required this.name,
+    required this.content,
+    required this.img,
+    required this.postId,
+    required this.creatorId,
+    required this.likesList,
+    required this.repliesList,
+    required this.time,
+    required this.id,
+  });
 
   @override
   State<PostDetailScreen> createState() => _PostDetailScreenState();
@@ -56,6 +60,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   late bool isLiked;
   int likeCount = 0;
   int replyCount = 0;
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   void initState() {
@@ -219,7 +224,23 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                             ),
                             IconButton(
                               onPressed: () {
-                                // Navigator.pop(context);
+                                if (widget.creatorId == user.uid) {
+                                  showBottomSheet(
+                                      backgroundColor: Colors.transparent,
+                                      context: context,
+                                      builder: (context) {
+                                        return DraggableScrollableSheet(
+                                          maxChildSize: 0.15,
+                                          initialChildSize: 0.15,
+                                          minChildSize: 0.1,
+                                          builder: (context, scrollController) {
+                                            return DeleteScreen(
+                                              id: widget.postId,
+                                            );
+                                          },
+                                        );
+                                      });
+                                }
                               },
                               icon: SvgPicture.asset(
                                 'assets/icons/post_option.svg',
