@@ -46,6 +46,7 @@ class _PostReplyState extends State<PostReply> {
     getCurrentUserData();
     getsumReplyCount();
     isLiked = false;
+    print("trang cá nhân người đăng: ${widget.creatorId}");
     FirebaseFirestore.instance
         .collection('posts')
         .doc(widget.postId)

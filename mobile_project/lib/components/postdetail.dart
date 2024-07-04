@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/components/custom_delete.dart';
 import 'package:mobile_project/screen/posts_videos/like_button.dart';
+import 'package:mobile_project/screen/users/profile_page.dart';
 
 import '../screen/posts_videos/post_reply.dart';
 
@@ -12,11 +13,11 @@ class PostDetailScreen extends StatefulWidget {
   final String content;
   final String img;
   final String postId;
-  final String creatorId;
   final List<String> likesList;
   final List<String> repliesList;
   final Timestamp time;
   final String id;
+  final String creatorId;
 
   PostDetailScreen({
     super.key,
@@ -24,11 +25,11 @@ class PostDetailScreen extends StatefulWidget {
     required this.content,
     required this.img,
     required this.postId,
-    required this.creatorId,
     required this.likesList,
     required this.repliesList,
     required this.time,
     required this.id,
+    required this.creatorId,
   });
 
   @override
@@ -196,13 +197,26 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Text(
-                          widget.name ?? '',
-                          style: const TextStyle(
-                              color: Colors.blue,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              overflow: TextOverflow.ellipsis),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProfileScreen(
+                                    visitedUserID: widget.creatorId,
+                                    currentUserId: currentUser.uid,
+                                    isBack: true,
+                                  ),
+                                ));
+                          },
+                          child: Text(
+                            widget.name ?? '',
+                            style: const TextStyle(
+                                color: Colors.blue,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis),
+                          ),
                         ),
                       ),
 
@@ -283,7 +297,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                         postId: widget.postId,
                                         name: widget.name!,
                                         img: widget.img!,
-                                        creatorId: widget.id,
+                                        creatorId: widget.creatorId,
                                       )),
                             );
                           },

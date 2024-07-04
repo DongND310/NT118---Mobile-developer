@@ -58,6 +58,8 @@ class _HPPostTabState extends State<HPPostTab> {
                 var userData = userSnapshot.data!;
                 var name = userData['name'];
                 var avt = userData['avt'];
+                print('tên trang cá nhân người dùng: ${name}');
+                print('trang cá nhân người dùng: ${postData['creatorId']}');
 
                 // Ensure the lists are of type List<String> and not null
                 List<String> likesList = postData.containsKey('likesList')
