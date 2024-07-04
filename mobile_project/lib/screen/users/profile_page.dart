@@ -554,18 +554,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ? TabBarView(
                             controller: _tabController,
                             children: [
-                              const VideoTab(),
+                              VideoTab(userId: widget.visitedUserID),
                               Expanded(
                                   child: PostTab(
                                       visitedUserID: widget.visitedUserID)),
-                              const SaveTab(),
-                              const LikeTab(),
+                              SaveTab(userId: widget.visitedUserID,),
+                              LikeTab(userId: widget.visitedUserID,),
                             ],
                           )
                         : TabBarView(
                             controller: _tabController,
                             children: [
-                              const VideoTab(),
+                              VideoTab(userId: widget.visitedUserID,),
                               Expanded(
                                   child: PostTab(
                                       visitedUserID: widget.visitedUserID)),
