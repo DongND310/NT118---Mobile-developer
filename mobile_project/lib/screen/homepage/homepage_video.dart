@@ -55,7 +55,7 @@ class _HPVideoTabState extends State<HPVideoTab> {
                           flex: 1,
                           child: Container(
                             alignment: Alignment.centerRight,
-                            height: MediaQuery.of(context).size.height / 3,
+                            height: MediaQuery.of(context).size.height / 2.5,
                             child: HomeSideBar(
                               video: video,
                               likesList: [],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/components/custom_comment_reply.dart';
+import 'package:mobile_project/components/delete_cmt.dart';
 import 'package:mobile_project/screen/users/profile_page.dart';
 
 class CustomComment extends StatefulWidget {
@@ -84,6 +85,9 @@ class _CustomCommentState extends State<CustomComment> {
         });
       }
     });
+
+    print("trang cá nhân người đăng: ${widget.userId}");
+    print("trang cá nhân người đăng uid: ${user.uid}");
   }
 
   String? _name;
@@ -154,6 +158,64 @@ class _CustomCommentState extends State<CustomComment> {
     }
   }
 
+  final user = FirebaseAuth.instance.currentUser!;
+  void deleteComment() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text(
+                'Cảnh báo!',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: const Text(
+                'Bạn có chắc chắn muốn xóa bình luận này không?',
+                style: TextStyle(fontSize: 18),
+              ),
+              actions: <Widget>[
+                TextButton(
+                    child: const Text('Xóa',
+                        style: TextStyle(color: Colors.red, fontSize: 17)),
+                    onPressed: () async {
+                      final commentDocs = await FirebaseFirestore.instance
+                          .collection('videos')
+                          .doc(widget.videoId)
+                          .collection('replies')
+                          .doc(widget.replyId)
+                          .collection('subreplies')
+                          .get();
+
+                      for (var doc in commentDocs.docs) {
+                        await FirebaseFirestore.instance
+                            .collection('videos')
+                            .doc(widget.videoId)
+                            .collection('replies')
+                            .doc(widget.replyId)
+                            .delete();
+                      }
+
+                      FirebaseFirestore.instance
+                          .collection('videos')
+                          .doc(widget.videoId)
+                          .collection('replies')
+                          .doc(widget.replyId)
+                          .delete()
+                          .then((value) => print("đã xóa comment video"))
+                          .catchError((error) =>
+                              print("lỗi xóa comment video: $error"));
+                      Navigator.pop(context);
+                    }),
+                const SizedBox(
+                  width: 10,
+                ),
+                TextButton(
+                  child: const Text('Hủy',
+                      style: TextStyle(color: Colors.blue, fontSize: 17)),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -189,16 +251,37 @@ class _CustomCommentState extends State<CustomComment> {
                           ),
                         ));
                   },
-                  child: Text(
-                    _name ?? '',
-                    style: const TextStyle(
-                        color: Colors.blue,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        overflow: TextOverflow.ellipsis),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        _name ?? '',
+                        style: const TextStyle(
+                            color: Colors.blue,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            overflow: TextOverflow.ellipsis),
+                      ),
+                      widget.userId == user.uid
+                          ? IconButton(
+                              onPressed: deleteComment,
+                              icon: SvgPicture.asset(
+                                'assets/icons/post_option.svg',
+                                width: 5,
+                                height: 6,
+                              ),
+                            )
+                          : IconButton(
+                              onPressed: null,
+                              icon: SvgPicture.asset(
+                                'assets/icons/post_option.svg',
+                                width: 5,
+                                height: 6,
+                              ),
+                            ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 5),
                 SizedBox(
                   width: 320,
                   child: Text(
@@ -209,7 +292,7 @@ class _CustomCommentState extends State<CustomComment> {
                     textAlign: TextAlign.start,
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

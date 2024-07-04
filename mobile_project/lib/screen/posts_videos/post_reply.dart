@@ -385,19 +385,23 @@ class _PostReplyState extends State<PostReply> {
                                     textAlign: TextAlign.end,
                                   ),
                                 ),
-                                IconButton(
-                                  onPressed: () {
-                                    if (widget.creatorId == user.uid) {
-                                      deletePost;
-                                    }
-                                    // deletePost;
-                                  },
-                                  icon: SvgPicture.asset(
-                                    'assets/icons/post_option.svg',
-                                    width: 5,
-                                    height: 6,
-                                  ),
-                                ),
+                                widget.creatorId == user.uid
+                                    ? IconButton(
+                                        onPressed: deletePost,
+                                        icon: SvgPicture.asset(
+                                          'assets/icons/post_option.svg',
+                                          width: 5,
+                                          height: 6,
+                                        ),
+                                      )
+                                    : IconButton(
+                                        onPressed: null,
+                                        icon: SvgPicture.asset(
+                                          'assets/icons/post_option.svg',
+                                          width: 5,
+                                          height: 6,
+                                        ),
+                                      ),
                               ],
                             ),
                           ],

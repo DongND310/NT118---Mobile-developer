@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/components/delete_subcmt.dart';
 import 'package:mobile_project/screen/users/profile_page.dart';
 
 import '../screen/posts_videos/like_button.dart';
@@ -66,6 +67,7 @@ class _CustomSubReplyState extends State<CustomSubReply> {
   void initState() {
     super.initState();
     getUserData();
+    getCurrentUserData();
 
     isLiked = false;
     FirebaseFirestore.instance
@@ -104,6 +106,18 @@ class _CustomSubReplyState extends State<CustomSubReply> {
   }
 
   final currentUser = FirebaseAuth.instance.currentUser!;
+  String? _useravt;
+
+  void getCurrentUserData() async {
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+
+    setState(() {
+      _useravt = userDoc.get('Avt');
+    });
+  }
 
   void toggleLike() async {
     setState(() {
@@ -293,17 +307,49 @@ class _CustomSubReplyState extends State<CustomSubReply> {
 
                           // time
                           Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 15),
-                              child: Text(
-                                formatTimestamp(widget.timestamp),
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  formatTimestamp(widget.timestamp),
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  textAlign: TextAlign.end,
                                 ),
-                                textAlign: TextAlign.end,
-                              ),
+                                IconButton(
+                                  onPressed: () {
+                                    if (widget.userId == user.uid) {
+                                      showBottomSheet(
+                                          backgroundColor: Colors.transparent,
+                                          context: context,
+                                          builder: (context) {
+                                            return DraggableScrollableSheet(
+                                              maxChildSize: 0.15,
+                                              initialChildSize: 0.15,
+                                              minChildSize: 0.1,
+                                              builder:
+                                                  (context, scrollController) {
+                                                return DeleteSubReply(
+                                                  id: widget.postId,
+                                                  cmtId: widget.replyId,
+                                                  userId: user.uid,
+                                                  subreplyId: widget.subreplyId,
+                                                );
+                                              },
+                                            );
+                                          });
+                                    }
+                                  },
+                                  icon: SvgPicture.asset(
+                                    'assets/icons/post_option.svg',
+                                    width: 6,
+                                    height: 6,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ]),
@@ -408,8 +454,8 @@ class _CustomSubReplyState extends State<CustomSubReply> {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundImage: _avt != null
-                      ? NetworkImage(_avt!)
+                  backgroundImage: _useravt != null
+                      ? NetworkImage(_useravt!)
                       : const AssetImage('assets/images/default_avt.png')
                           as ImageProvider,
                 ),

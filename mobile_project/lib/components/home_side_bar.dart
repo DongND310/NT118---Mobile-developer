@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobile_project/components/comment_page.dart';
+import 'package:mobile_project/components/custom_delete.dart';
+import 'package:mobile_project/components/delete_video.dart';
 import 'package:mobile_project/models/video_model.dart'; // Thay đổi này
 
 class HomeSideBar extends StatefulWidget {
@@ -197,6 +199,8 @@ class _HomeSideBarState extends State<HomeSideBar>
     });
   }
 
+  final user = FirebaseAuth.instance.currentUser!;
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -218,6 +222,33 @@ class _HomeSideBarState extends State<HomeSideBar>
           _sideBarItem('heart', "${likeCount}", style, toggleLike, isLiked),
           _sideBarComment('comment', '${replyCount}', style),
           _sideBarItem('bookmark', '${saveCount}', style, toggleSave, isSaved),
+          widget.video.postedById == user.uid
+              ? IconButton(
+                  onPressed: () {
+                    showBottomSheet(
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (context) {
+                          return DraggableScrollableSheet(
+                            maxChildSize: 0.15,
+                            initialChildSize: 0.15,
+                            minChildSize: 0.1,
+                            builder: (context, scrollController) {
+                              return DeleteVideo(
+                                id: widget.video.videoId,
+                              );
+                            },
+                          );
+                        });
+                  },
+                  icon: SvgPicture.asset(
+                    'assets/icons/post_option.svg',
+                    width: 6,
+                    height: 6,
+                    color: Colors.white,
+                  ),
+                )
+              : SizedBox(),
         ],
       ),
     );

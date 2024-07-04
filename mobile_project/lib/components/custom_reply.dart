@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/components/custom_delete.dart';
 import 'package:mobile_project/components/custom_subreply.dart';
+import 'package:mobile_project/components/delete_cmt.dart';
 import 'package:mobile_project/screen/users/profile_page.dart';
 
 import '../screen/posts_videos/like_button.dart';
@@ -264,6 +266,8 @@ class _CustomPostReplyState extends State<CustomPostReply> {
     });
   }
 
+  final user = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -303,7 +307,8 @@ class _CustomPostReplyState extends State<CustomPostReply> {
                                     MaterialPageRoute(
                                       builder: (context) => ProfileScreen(
                                         visitedUserID: widget.userId,
-                                        currentUserId: currentUser.uid,isBack: true,
+                                        currentUserId: currentUser.uid,
+                                        isBack: true,
                                       ),
                                     ));
                               },
@@ -320,17 +325,48 @@ class _CustomPostReplyState extends State<CustomPostReply> {
 
                           // time
                           Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 15),
-                              child: Text(
-                                formatTimestamp(widget.timestamp),
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  formatTimestamp(widget.timestamp),
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  textAlign: TextAlign.end,
                                 ),
-                                textAlign: TextAlign.end,
-                              ),
+                                IconButton(
+                                  onPressed: () {
+                                    if (widget.userId == user.uid) {
+                                      showBottomSheet(
+                                          backgroundColor: Colors.transparent,
+                                          context: context,
+                                          builder: (context) {
+                                            return DraggableScrollableSheet(
+                                              maxChildSize: 0.15,
+                                              initialChildSize: 0.15,
+                                              minChildSize: 0.1,
+                                              builder:
+                                                  (context, scrollController) {
+                                                return DeleteComment(
+                                                  id: widget.postId,
+                                                  cmtId: widget.replyId,
+                                                  userId: user.uid,
+                                                );
+                                              },
+                                            );
+                                          });
+                                    }
+                                  },
+                                  icon: SvgPicture.asset(
+                                    'assets/icons/post_option.svg',
+                                    width: 6,
+                                    height: 6,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ]),

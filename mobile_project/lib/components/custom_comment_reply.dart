@@ -66,6 +66,48 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
   TextEditingController comment = TextEditingController();
   bool _showClearButton = false;
 
+  void deleteSubComment() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text(
+                'Cảnh báo!',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: const Text(
+                'Bạn có chắc chắn muốn xóa bình luận này không?',
+                style: TextStyle(fontSize: 18),
+              ),
+              actions: <Widget>[
+                TextButton(
+                    child: const Text('Xóa',
+                        style: TextStyle(color: Colors.red, fontSize: 17)),
+                    onPressed: () async {
+                      FirebaseFirestore.instance
+                          .collection('videos')
+                          .doc(widget.videoId)
+                          .collection('replies')
+                          .doc(widget.replyId)
+                          .collection('subreplies')
+                          .doc(widget.subreplyId)
+                          .delete()
+                          .then((value) => print("đã xóa subcomment video"))
+                          .catchError((error) =>
+                              print("lỗi xóa subcomment video: $error"));
+                      Navigator.pop(context);
+                    }),
+                const SizedBox(
+                  width: 10,
+                ),
+                TextButton(
+                  child: const Text('Hủy',
+                      style: TextStyle(color: Colors.blue, fontSize: 17)),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -198,16 +240,37 @@ class _CustomCommentReplyState extends State<CustomCommentReply> {
                               ),
                             ));
                       },
-                      child: Text(
-                        _name ?? '',
-                        style: const TextStyle(
-                            color: Colors.blue,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _name ?? '',
+                            style: const TextStyle(
+                                color: Colors.blue,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis),
+                          ),
+                          widget.userId == user.uid
+                              ? IconButton(
+                                  onPressed: deleteSubComment,
+                                  icon: SvgPicture.asset(
+                                    'assets/icons/post_option.svg',
+                                    width: 5,
+                                    height: 6,
+                                  ),
+                                )
+                              : IconButton(
+                                  onPressed: null,
+                                  icon: SvgPicture.asset(
+                                    'assets/icons/post_option.svg',
+                                    width: 5,
+                                    height: 6,
+                                  ),
+                                ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 5),
                     SizedBox(
                       width: 320,
                       child: Text(
