@@ -128,8 +128,8 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Inter'),
-      // home: getScreenID(),
-      home: WelcomeScreen(),
+      home: getScreenID(),
+      // home: WelcomeScreen(),
       navigatorKey: navigatorKey,
     );
   }
