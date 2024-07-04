@@ -385,7 +385,12 @@ class _PostReplyState extends State<PostReply> {
                                   ),
                                 ),
                                 IconButton(
-                                  onPressed: deletePost,
+                                  onPressed: () {
+                                    if (widget.creatorId == user.uid) {
+                                      deletePost;
+                                    }
+                                    // deletePost;
+                                  },
                                   icon: SvgPicture.asset(
                                     'assets/icons/post_option.svg',
                                     width: 5,
@@ -452,7 +457,8 @@ class _PostReplyState extends State<PostReply> {
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return const Center(
-                              child: CircularProgressIndicator(color: Colors.blue),
+                              child:
+                                  CircularProgressIndicator(color: Colors.blue),
                             );
                           }
 
