@@ -42,7 +42,6 @@ class ChatService extends ChangeNotifier {
 
     DocumentSnapshot chatRoomSnapshot = await _firestore.collection("chatrooms").doc(chatRoomId).get();
     if (!chatRoomSnapshot.exists) {
-      // Create a new chatroom document
       _firestore.collection("chatrooms").doc(chatRoomId).set({
         "chatroomId": chatRoomId,
       });

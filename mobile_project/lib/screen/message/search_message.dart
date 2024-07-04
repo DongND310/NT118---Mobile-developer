@@ -79,10 +79,25 @@ class _SearchMessageState extends State<SearchMessageScreen> {
         stream: _databaseServices.listFollower(user.uid),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot> snapshot) {
-           if (!snapshot.hasData ||
-              snapshot.data!.docs.isEmpty) {
-            return const Text('Không có dữ liệu.');
-          } else {
+          if (snapshot.hasError) {
+            return const Text('Có lỗi xảy ra.');
+          }
+          else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container();
+          }
+          else if(!snapshot.hasData|| snapshot.data!.docs.isEmpty)
+          {
+            return const Center(
+              child: Text(
+                'Danh sách bạn bè trống',
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 18
+                ),
+              ),
+            );
+          }
+          else {
             List<String> listFollowerUids = snapshot
                 .data!.docs
                 .map((doc) => doc.id)
