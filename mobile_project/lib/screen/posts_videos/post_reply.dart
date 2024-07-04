@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_project/components/custom_delete.dart';
 import 'package:mobile_project/models/post_model.dart';
 import 'package:mobile_project/screen/users/profile_page.dart';
 import 'package:mobile_project/services/post_service.dart';
@@ -221,6 +222,57 @@ class _PostReplyState extends State<PostReply> {
     }
   }
 
+  void deletePost() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text(
+                'Cảnh báo!',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: const Text(
+                'Bạn có chắc chắn muốn xóa bài đăng này không?',
+                style: TextStyle(fontSize: 18),
+              ),
+              actions: <Widget>[
+                TextButton(
+                    child: const Text('Xóa',
+                        style: TextStyle(color: Colors.red, fontSize: 17)),
+                    onPressed: () async {
+                      final commentDocs = await FirebaseFirestore.instance
+                          .collection('posts')
+                          .doc(widget.postId)
+                          .collection('replies')
+                          .get();
+
+                      for (var doc in commentDocs.docs) {
+                        await FirebaseFirestore.instance
+                            .collection('posts')
+                            .doc(widget.postId)
+                            .delete();
+                      }
+
+                      FirebaseFirestore.instance
+                          .collection('posts')
+                          .doc(widget.postId)
+                          .delete()
+                          .then((value) => print("đã xóa post"))
+                          .catchError((error) => print("lỗi xóa post: $error"));
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    }),
+                const SizedBox(
+                  width: 10,
+                ),
+                TextButton(
+                  child: const Text('Hủy',
+                      style: TextStyle(color: Colors.blue, fontSize: 17)),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
@@ -333,9 +385,7 @@ class _PostReplyState extends State<PostReply> {
                                   ),
                                 ),
                                 IconButton(
-                                  onPressed: () {
-                                    // Navigator.pop(context);
-                                  },
+                                  onPressed: deletePost,
                                   icon: SvgPicture.asset(
                                     'assets/icons/post_option.svg',
                                     width: 5,
