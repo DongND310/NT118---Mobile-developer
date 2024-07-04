@@ -40,8 +40,6 @@ class _ListPostsState extends State<ListPosts> {
         _avt = userDoc.get('Avt');
       });
     }
-
-    print("tên trang cá nhân: $_name");
   }
 
   final UserService _userService = UserService();
@@ -83,8 +81,6 @@ class _ListPostsState extends State<ListPosts> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           PostDetailScreen(
-                            // name: _name ?? '',
-                            name: _name ?? '',
                             content: post.content,
                             img: _avt ?? '',
                             postId: post.postId,
