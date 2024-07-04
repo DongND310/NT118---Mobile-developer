@@ -103,6 +103,13 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                 children: [
                   const SizedBox(
                     height: 20,
+                  ), //Email
+                  UserDetailInfo(
+                    text: "Email",
+                    // change: maskString(_email ?? '', 12),
+                    change: _email ?? '',
+                    lead: "_email",
+                    isChange: false,
                   ),
 
                   // ID
@@ -110,6 +117,7 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                     text: "ID người dùng",
                     change: _id ?? '',
                     lead: "_id",
+                    isChange: true,
                   ),
 
                   // pass
@@ -117,6 +125,7 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                     text: "Mật khẩu",
                     change: "********",
                     lead: "_pass",
+                    isChange: true,
                   ),
 
                   // sdt
@@ -125,14 +134,7 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                     // change: maskString(_phone ?? '', 3),
                     change: _phone ?? '',
                     lead: "_phone",
-                  ),
-
-                  //Email
-                  UserDetailInfo(
-                    text: "Email",
-                    // change: maskString(_email ?? '', 12),
-                    change: _email ?? '',
-                    lead: "_email",
+                    isChange: true,
                   ),
 
                   // dob
@@ -140,6 +142,7 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                     text: "Ngày sinh",
                     change: _dob ?? '',
                     lead: "_dob",
+                    isChange: true,
                   ),
 
                   // gender
@@ -147,6 +150,7 @@ class _DetailProfileScreenState extends State<DetailProfileScreen> {
                     text: "Giới tính",
                     change: _gender ?? '',
                     lead: "_gender",
+                    isChange: true,
                   ),
                 ]),
           ],

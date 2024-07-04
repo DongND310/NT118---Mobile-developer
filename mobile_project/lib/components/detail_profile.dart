@@ -12,11 +12,13 @@ class UserDetailInfo extends StatelessWidget {
   final String text;
   final String change;
   final String lead;
+  final bool isChange;
   UserDetailInfo({
     super.key,
     required this.text,
     required this.change,
     required this.lead,
+    required this.isChange,
   });
 
   final Map<String, Widget Function(String)> screenMap = {
@@ -54,22 +56,27 @@ class UserDetailInfo extends StatelessWidget {
                   textAlign: TextAlign.end,
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => screenMap[lead] != null
-                            ? screenMap[lead]!(change)
-                            : Container(),
-                      ));
-                },
-                icon: const Icon(
-                  Icons.arrow_forward_ios_sharp,
-                  color: Color.fromARGB(255, 95, 95, 95),
-                  size: 20,
-                ),
-              ),
+              isChange
+                  ? IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => screenMap[lead] != null
+                                  ? screenMap[lead]!(change)
+                                  : Container(),
+                            ));
+                      },
+                      icon: const Icon(
+                        Icons.arrow_forward_ios_sharp,
+                        color: Color.fromARGB(255, 95, 95, 95),
+                        size: 20,
+                      ),
+                    )
+                  : const SizedBox(
+                      width: 15,
+                      height: 40,
+                    ),
             ],
           ),
         ),

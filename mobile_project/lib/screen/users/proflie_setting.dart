@@ -54,7 +54,7 @@ class _ProfileSettingPageState extends State<ProfileSettingPage> {
                   Navigator.pop(context);
                   signUserOut();
                 }),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             TextButton(

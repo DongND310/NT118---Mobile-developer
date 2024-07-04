@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobile_project/components/navigation_container.dart';
 
 import 'change_info/change_avt.dart';
+
 class ChangeProfilePage extends StatefulWidget {
   ChangeProfilePage({super.key});
 
@@ -150,6 +151,7 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
                     text: "Tên người dùng",
                     change: _name ?? '',
                     lead: "_name",
+                    isChange: true,
                   ),
 
                   // nation
@@ -157,6 +159,7 @@ class _ChangeProfilePageState extends State<ChangeProfilePage> {
                     text: "Tiểu sử",
                     change: _bio ?? '',
                     lead: "_bio",
+                    isChange: true,
                   ),
                 ]),
           ],
