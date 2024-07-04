@@ -43,9 +43,7 @@ class _VideoCreatorInfoState extends State<VideoCreatorInfo> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center();
     }
 
     return Padding(

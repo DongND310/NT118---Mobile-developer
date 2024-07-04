@@ -21,10 +21,11 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
   final user = FirebaseAuth.instance.currentUser;
 
   CameraController? cameraController;
-  late final List<CameraDescription> cameras;
-  late int selectedCameraIndex;
+  List<CameraDescription>? cameras;
+  int selectedCameraIndex = 0;
   late String videoPath;
   bool isRecording = false;
+  bool isCameraInitialized = false;
 
   @override
   void initState() {
@@ -34,11 +35,11 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
 
   Future<void> _initCameras() async {
     cameras = await availableCameras();
-    if (cameras.isNotEmpty) {
+    if (cameras!.isNotEmpty) {
       setState(() {
         selectedCameraIndex = 0;
       });
-      _initCameraController(cameras[selectedCameraIndex]);
+      await _initCameraController(cameras![selectedCameraIndex]);
     } else {
       print("No cameras found");
     }
@@ -61,11 +62,13 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
     }
 
     if (mounted) {
-      setState(() {});
+      setState(() {
+        isCameraInitialized = true;
+      });
     }
   }
 
-  //Pick video from the gallery
+  // Pick video from the gallery
   pickVideo(ImageSource src, BuildContext context) async {
     final video = await ImagePicker().pickVideo(source: src);
     if (video != null) {
@@ -83,14 +86,10 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
   // Display camera preview
   Widget _cameraPreviewWidget() {
     if (cameraController == null || !cameraController!.value.isInitialized) {
-      return const Text(
-        'Loading',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 20.0,
-          fontWeight: FontWeight.w600,
+      return const Center(
+        child: CircularProgressIndicator(
+          color: Colors.blue,
         ),
-        textAlign: TextAlign.center,
       );
     }
 
@@ -151,10 +150,10 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
 
   // Display a row of toggle to select the camera
   Widget _cameraToggleRowWidget() {
-    if (cameras.isEmpty) {
+    if (cameras == null || cameras!.isEmpty) {
       return const Spacer();
     }
-    CameraDescription selectedCamera = cameras[selectedCameraIndex];
+    CameraDescription selectedCamera = cameras![selectedCameraIndex];
     CameraLensDirection lensDirection = selectedCamera.lensDirection;
     return Expanded(
         child: Align(
@@ -266,8 +265,8 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
 
   void _onSwitchCamera() {
     selectedCameraIndex =
-        selectedCameraIndex < cameras.length - 1 ? selectedCameraIndex + 1 : 0;
-    CameraDescription selectedCamera = cameras[selectedCameraIndex];
+        selectedCameraIndex < cameras!.length - 1 ? selectedCameraIndex + 1 : 0;
+    CameraDescription selectedCamera = cameras![selectedCameraIndex];
     _initCameraController(selectedCamera);
   }
 

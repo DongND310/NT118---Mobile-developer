@@ -25,7 +25,10 @@ class _HPVideoTabState extends State<HPVideoTab> {
     return Scaffold(
       body: Obx(() {
         if (widget.controller.videos.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+              child: CircularProgressIndicator(
+            color: Colors.blue,
+          ));
         }
         return PageView.builder(
             onPageChanged: (int page) {
