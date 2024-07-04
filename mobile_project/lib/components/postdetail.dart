@@ -7,9 +7,9 @@ import 'package:mobile_project/screen/posts_videos/like_button.dart';
 import '../screen/posts_videos/post_reply.dart';
 
 class PostDetailScreen extends StatefulWidget {
-  String? name;
+  final String name;
   final String content;
-  String? img;
+  final String img;
   final String postId;
   final List<String> likesList;
   final List<String> repliesList;
@@ -18,7 +18,7 @@ class PostDetailScreen extends StatefulWidget {
 
   PostDetailScreen(
       {super.key,
-      this.name,
+      required this.name,
       required this.content,
       required this.img,
       required this.postId,

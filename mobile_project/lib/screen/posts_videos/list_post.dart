@@ -81,6 +81,7 @@ class _ListPostsState extends State<ListPosts> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           PostDetailScreen(
+                            name: _name ?? '',
                             content: post.content,
                             img: _avt ?? '',
                             postId: post.postId,
