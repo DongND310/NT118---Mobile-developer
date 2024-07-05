@@ -50,45 +50,43 @@ class _RecentChatState extends State<RecentChats> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Column(children: [
-          StreamBuilder<QuerySnapshot>(
-            stream: _firestore.collection("chatrooms").snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(color: Colors.blue),
-                );
-              }
-              else if(!snapshot.hasData || snapshot.data!.docs.isEmpty)
-                {
-                  return Container();
-                }
-              return SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        for (var doc in snapshot.data!.docs)
-                          FutureBuilder(
-                            future: _buildChatRoomList(doc),
-                            builder: (context, AsyncSnapshot<Widget> snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Container();
-                              }
-                              return snapshot.data!;
-                            },
-                          ),
-                      ],
-                    ),
-                  ));
-            },
-          ),
-        ]));
+      StreamBuilder<QuerySnapshot>(
+        stream: _firestore.collection("chatrooms").snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.blue),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Container();
+          }
+          return SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    for (var doc in snapshot.data!.docs)
+                      FutureBuilder(
+                        future: _buildChatRoomList(doc),
+                        builder: (context, AsyncSnapshot<Widget> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container();
+                          }
+                          return snapshot.data!;
+                        },
+                      ),
+                  ],
+                ),
+              ));
+        },
+      ),
+    ]));
   }
 
   Future<Widget> _buildChatRoomList(DocumentSnapshot documentSnapshot) async {
     Map<String, dynamic> data =
-    documentSnapshot.data()! as Map<String, dynamic>;
+        documentSnapshot.data()! as Map<String, dynamic>;
     if (data['chatroomId'].contains(_auth.currentUser!.uid)) {
       String chatRoomId = data['chatroomId'];
       return StreamBuilder<QuerySnapshot>(
@@ -96,22 +94,16 @@ class _RecentChatState extends State<RecentChats> {
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return const Text('Có lỗi xảy ra.');
-            }
-            else if (snapshot.connectionState == ConnectionState.waiting) {
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
               return Container();
-            }
-            else if(!snapshot.hasData|| snapshot.data!.docs.isEmpty)
-            {
+            } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
               return Container();
-            }
-            else
-            {
+            } else {
               var datamessage = snapshot.data!.docs[0];
               var data = datamessage.data() as Map<String, dynamic>;
               var read = data.containsKey('read') ? data['read'] : '';
-              bool isRead =true;
-              if(read ==''&& data['senderId'] != _auth.currentUser!.uid)
-              {
+              bool isRead = true;
+              if (read == '' && data['senderId'] != _auth.currentUser!.uid) {
                 isRead = false;
               }
               bool isSender = false;
@@ -120,9 +112,7 @@ class _RecentChatState extends State<RecentChats> {
               }
               return FutureBuilder(
                   future: usersRef
-                      .doc(isSender
-                      ? data["receiverId"]
-                      : data["senderId"])
+                      .doc(isSender ? data["receiverId"] : data["senderId"])
                       .get(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (!snapshot.hasData) {
@@ -131,17 +121,17 @@ class _RecentChatState extends State<RecentChats> {
                     UserModel userModel = UserModel.fromDoc(snapshot.data);
                     return Padding(
                       padding:
-                      const EdgeInsets.only(left: 15, top: 15, bottom: 15),
+                          const EdgeInsets.only(left: 15, top: 15, bottom: 15),
                       child: InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ChatPage(
-                                  receiverId: userModel.uid,
-                                  receiverName: userModel.name,
-                                  chatterImg: userModel.avt ?? '',
-                                )),
+                                      receiverId: userModel.uid,
+                                      receiverName: userModel.name,
+                                      chatterImg: userModel.avt ?? '',
+                                    )),
                           );
                         },
                         child: Container(
@@ -151,10 +141,10 @@ class _RecentChatState extends State<RecentChats> {
                               CircleAvatar(
                                   radius: 30,
                                   backgroundImage:
-                                  NetworkImage(userModel.avt ?? '')),
+                                      NetworkImage(userModel.avt ?? '')),
                               Padding(
                                 padding:
-                                const EdgeInsets.symmetric(horizontal: 20),
+                                    const EdgeInsets.symmetric(horizontal: 20),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -170,27 +160,28 @@ class _RecentChatState extends State<RecentChats> {
                                     const SizedBox(height: 5),
                                     Row(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
-                                          width:
-                                          (MediaQuery.of(context).size.width +
-                                              20) /
+                                          width: (MediaQuery.of(context)
+                                                      .size
+                                                      .width +
+                                                  0) /
                                               2,
                                           child: Text(
                                             isSender
                                                 ? "Bạn: ${data['message'] ?? ''}"
                                                 : data['message'] ?? '',
-                                            style: isRead?
-                                            const TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.black54,
-                                            )
-                                                :const TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                            ),
+                                            style: isRead
+                                                ? const TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.black54,
+                                                  )
+                                                : const TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
                                             softWrap: false,
@@ -200,8 +191,7 @@ class _RecentChatState extends State<RecentChats> {
                                         Align(
                                           alignment: Alignment.bottomRight,
                                           child: Text(
-                                            formatTimestamp(
-                                                data['timestamp']),
+                                            formatTimestamp(data['timestamp']),
                                             style: const TextStyle(
                                                 fontSize: 15,
                                                 color: Colors.black54),
@@ -220,8 +210,7 @@ class _RecentChatState extends State<RecentChats> {
                     );
                   });
             }
-          }
-      );
+          });
     }
     return Container();
   }
