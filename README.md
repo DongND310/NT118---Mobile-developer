@@ -32,7 +32,7 @@
 - File report: <a href="https://drive.google.com/file/d/1E0VRW-Mx6Kcwwd42cJXJm1Li6pWZZbIl/view?usp=sharing"> Final Report
 - Video demo: <a href="https://drive.google.com/file/d/1vEJTDTk2pNXU7EpGE6Jrg1TEhIszlU53/view"> ReelReplay Mobile App
 
-<p align='center'><img style="height: 1200px" src="https://github.com/DongND310/NT118---Mobile-developer/blob/main/Report/1.png"></p>
-<p align='center'><img style="height: 1200px" src="https://github.com/DongND310/NT118---Mobile-developer/blob/main/Report/3.png"></p>
-<p align='center'><img style="height: 1200px" src="https://github.com/DongND310/NT118---Mobile-developer/blob/main/Report/2.png"></p>
+<p align='center'><img src="https://github.com/DongND310/NT118---Mobile-developer/blob/main/Report/1.png"></p>
+<p align='center'><img src="https://github.com/DongND310/NT118---Mobile-developer/blob/main/Report/3.png"></p>
+<p align='center'><img src="https://github.com/DongND310/NT118---Mobile-developer/blob/main/Report/2.png"></p>
 
