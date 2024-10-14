@@ -28,6 +28,11 @@
 - UX/UI: <a href="https://www.figma.com/file/BfMECEUUiFOPxp0o5YXWNz/%5BNT118%5D-MOBILE?type=design&node-id=0%3A1&mode=design&t=fMKpjsw6MxIq7xeS-1"> Short Video Social Media
 - IDE: Visual Studio Code
 - Database: Firebase
-- File UI/UX: <a href="https://github.com/DongND310/NT118---Mobile-developer/blob/main/%5BNT118-G6%5D%20MOBILE.pdf"> Final UX/UI
+- File PPTX: <a href="https://drive.google.com/file/d/19oSvdYgVLc6606XsSvydzwUW5F5ZrKSx/view?usp=sharing"> PPTX Mobile
 - File report: <a href="https://github.com/DongND310/NT118---Mobile-developer/blob/main/%5BG6%5D%20Final%20report.pdf"> Final Report
+- Video demo: <a href="https://drive.google.com/file/d/1vEJTDTk2pNXU7EpGE6Jrg1TEhIszlU53/view"> ReelReplay Mobile App
+
+<p align='center'><img style="height: 1200px" src="https://drive.google.com/drive/folders/1X7oiYx5ZEA3jW9qMmhS4EHcXudfmb7yx"></p>
+<p align='center'><img style="height: 1200px" src="https://drive.google.com/drive/folders/1X7oiYx5ZEA3jW9qMmhS4EHcXudfmb7yx"></p>
+<p align='center'><img style="height: 1200px" src="https://drive.google.com/drive/folders/1X7oiYx5ZEA3jW9qMmhS4EHcXudfmb7yx"></p>
 
