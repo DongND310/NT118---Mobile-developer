@@ -28,5 +28,6 @@
 - UX/UI: <a href="https://www.figma.com/file/BfMECEUUiFOPxp0o5YXWNz/%5BNT118%5D-MOBILE?type=design&node-id=0%3A1&mode=design&t=fMKpjsw6MxIq7xeS-1"> Short Video Social Media
 - IDE: Visual Studio Code
 - Database: Firebase
-- File report: <a href=""> Final Report
+- File UI/UX: <a href="[NT118-G6] MOBILE.pdf"> Final UX/UI
+- File report: <a href="https://github.com/DongND310/NT118---Mobile-developer/blob/main/%5BG6%5D%20Final%20report.pdf"> Final Report
 
